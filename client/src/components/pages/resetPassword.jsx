@@ -29,7 +29,14 @@ function Copyright(props) {
   );
 }
 
-const theme = createTheme();
+const theme = createTheme({
+  palette: {
+    neutral: {
+      main: '#0C0B0B',
+      contrastText: '#fff',
+    },
+  },
+});
 
 export default function ResetPassword() {
   const handleSubmit = (event) => {
@@ -49,7 +56,7 @@ export default function ResetPassword() {
       <Container component="main" maxWidth="xs">
         <CssBaseline />
         <Box sx={{marginTop: 10,display: 'flex',flexDirection: 'column',alignItems: 'center',}}>
-          <Avatar sx={{ m: 1, bgcolor: 'secondary.main' }}>
+          <Avatar sx={{ m: 1, bgcolor: '#0C0B0B' }}>
             <LockOutlinedIcon />
           </Avatar>
           <Typography component="h1" variant="h5">
@@ -98,10 +105,12 @@ export default function ResetPassword() {
             <Button
               type="submit"
               fullWidth
+              color='neutral'
               variant="contained"
               sx={{ mt: 3, mb: 2 }}
+              
             >
-              Sign In
+              Set-Password
             </Button>
             <Grid container>
               <Grid item>

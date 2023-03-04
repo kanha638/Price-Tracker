@@ -27,7 +27,14 @@ function Copyright(props) {
   );
 }
 
-const theme = createTheme();
+const theme = createTheme({
+  palette: {
+    neutral: {
+      main: '#0C0B0B',
+      contrastText: '#fff',
+    },
+  },
+});
 
 export default function SignUp() {
   const handleSubmit = (event) => {
@@ -45,7 +52,7 @@ export default function SignUp() {
       <Container component="main" maxWidth="xs">
         <CssBaseline />
         <Box sx={{marginTop: 10,display: 'flex',flexDirection: 'column',alignItems: 'center',}}>
-          <Avatar sx={{ m: 1, bgcolor:'blue' }}>
+          <Avatar sx={{ m: 1, bgcolor:'#0C0B0B' }}>
             <LockOutlinedIcon />
           </Avatar>
           <Typography component="h1" variant="h5">
@@ -98,15 +105,16 @@ export default function SignUp() {
             <Button
               type="submit"
               fullWidth
+              color='neutral'
               variant="contained"
               sx={{ mt: 3, mb: 2 }}
             >
-              Sign In
+              Sign Up
             </Button>
             <Grid container>
               <Grid item>
                 <Link href="#" variant="body2">
-                  {"have an account? Sign Up"}
+                  {"have an account? Sign In"}
                 </Link>
               </Grid>
             </Grid>

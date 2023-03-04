@@ -27,7 +27,14 @@ function Copyright(props) {
   );
 }
 
-const theme = createTheme();
+const theme = createTheme({
+  palette: {
+    neutral: {
+      main: '#0C0B0B',
+      contrastText: '#fff',
+    },
+  },
+});
 
 export default function SignIn() {
   const handleSubmit = (event) => {
@@ -43,8 +50,8 @@ export default function SignIn() {
     <ThemeProvider theme={theme}>
       <Container component="main" maxWidth="xs">
         <CssBaseline />
-        <Box sx={{marginTop: 10,display: 'flex',flexDirection: 'column',alignItems: 'center',}}>
-          <Avatar sx={{ m: 1, bgcolor: 'secondary.main' }}>
+        <Box sx={{marginTop: 10,display: 'flex',flexDirection: 'column',alignItems: 'center'}}>
+          <Avatar sx={{ m: 1, bgcolor: '#0C0B0B' }}>
             <LockOutlinedIcon />
           </Avatar>
           <Typography component="h1" variant="h5">
@@ -79,10 +86,14 @@ export default function SignIn() {
               type="submit"
               fullWidth
               variant="contained"
+              color="neutral"
+              bgcolor="black"
+              
               sx={{ mt: 3, mb: 2 }}
             >
               Sign In
             </Button>
+            
             <Grid container>
               <Grid item xs>
                 <Link href="#" variant="body2">
