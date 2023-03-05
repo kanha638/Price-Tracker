@@ -17,7 +17,7 @@ const AllProducts=() => {
     <h3>All Products</h3>
     <SearchBar type={"text"} placeholder={"Search Product"}/>
     </div>
-    <Stack spacing={5}>
+    <Stack spacing={2}>
     {products.map(product => <ProductItem key={product.id} product={product}/>)}
     </Stack>
     </div>

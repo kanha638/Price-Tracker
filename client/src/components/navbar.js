@@ -11,7 +11,7 @@ const Navbar = () => {
     <div style={{borderRadius:"24px",padding:"25px 30px",display:"flex",height:"90vh",border:"1px solid black",position:"absolute",background: "#0C0B0B",color:"white",flexDirection:"column",justifyContent:"space-between",flexWrap:"wrap"}}>
 
    <div style={{flex:"1"}}>
-   <h1>Keemat Dekho</h1>
+   <h1>PT</h1>
    </div>
 
    <div style={{display:"flex" ,flexDirection:"column", flex:"2",justifyContent:"space-evenly",alignItems:"center"}}>

@@ -9,7 +9,7 @@ const obj=[
     },
     {
         "id":"2",
-         "name":"Apple Watch Series 6",
+         "name":"Apple Watch Series.",
          "website":"Flipkart",
          "currentPrice":"$800",
          "rating":"4.7",
