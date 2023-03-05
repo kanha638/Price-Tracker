@@ -7,6 +7,7 @@ import {
   signUp,
 } from "../controllers/auth.controller";
 import { verifyToken } from "../middleware/auth";
+import { rateLimiterAuth } from "../middleware/rateLimiters";
 
 const router = Router();
 
@@ -24,7 +25,7 @@ Body :
 }
 
 */
-router.post("/sign-up", signUp, setToken);
+router.post("/sign-up", rateLimiterAuth, signUp, setToken);
 
 /*
 
@@ -38,7 +39,7 @@ Body :
 }
 
 */
-router.post("/sign-in", signIn, setToken);
+router.post("/sign-in", rateLimiterAuth, signIn, setToken);
 
 /*
 
@@ -49,7 +50,7 @@ Type : GET
 URL : /api/auth/me
 
 */
-router.get("/me", verifyToken, Me);
+router.get("/me", rateLimiterAuth, verifyToken, Me);
 
 /*
 
@@ -59,5 +60,5 @@ Type : GET
 URL : /api/auth/sign-out
 
 */
-router.get("/sign-out", verifyToken, signOut);
+router.get("/sign-out", rateLimiterAuth, verifyToken, signOut);
 export default router;
