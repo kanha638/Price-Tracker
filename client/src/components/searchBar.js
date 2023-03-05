@@ -1,6 +1,6 @@
 import React from 'react'
 
-const searchBar=(props)=>{
+const SearchBar=(props)=>{
     const {type,placeholder}=props;
   return (
     <div>
@@ -9,4 +9,4 @@ const searchBar=(props)=>{
   )
 }
 
-export default searchBar
+export default SearchBar

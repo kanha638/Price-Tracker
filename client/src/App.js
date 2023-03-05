@@ -1,6 +1,6 @@
 import AllProducts from './components/allProducts';
 import Navbar from './components/navbar';
-
+import './styles/style.css';
 
 function App() {
   return (
