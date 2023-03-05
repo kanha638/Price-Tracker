@@ -1,0 +1,48 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+    provider        = "prisma-client-js"
+    previewFeatures = ["fullTextSearch", "fullTextIndex"]
+}
+
+datasource db {
+    provider = "postgresql"
+    url      = env("DATABASE_URL")
+}
+
+model Users {
+    id          String     @id @default(cuid())
+    name        String
+    email       String     @unique
+    mobileNum   String     @unique
+    password    String
+    disabled    Boolean    @default(false)
+    createdAt   DateTime
+    my_products Products[]
+}
+
+model Products {
+    id            Int          @id @default(autoincrement())
+    product_link  String       @unique
+    img_urn       String
+    mrp           Int
+    currecy_type  String
+    current_price Int
+    buy_now_link  String
+    rating        Int?
+    availabe      Int?
+    prices        PriceAlter[]
+    added_at      DateTime
+    website       String
+    Users         Users?       @relation(fields: [usersId], references: [id])
+    usersId       String?
+}
+
+model PriceAlter {
+    id         String    @id @default(cuid())
+    price      Int
+    date       DateTime
+    Products   Products? @relation(fields: [productsId], references: [id])
+    productsId Int?
+}
