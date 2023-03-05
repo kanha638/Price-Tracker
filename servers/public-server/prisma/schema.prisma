@@ -24,7 +24,7 @@ model Users {
 
 model Products {
     id            Int          @id @default(autoincrement())
-    product_link  String       @unique
+    product_link  String
     img_urn       String
     mrp           Int
     currecy_type  String
@@ -33,10 +33,9 @@ model Products {
     rating        Int?
     availabe      Int?
     prices        PriceAlter[]
-    added_at      DateTime
-    website       String
     Users         Users?       @relation(fields: [usersId], references: [id])
     usersId       String?
+    subscribers   String[]     @default([]) // This will store the subscribers emails
 }
 
 model PriceAlter {
