@@ -1,8 +1,12 @@
+import AllProducts from './components/allProducts';
+import Navbar from './components/navbar';
+
 
 function App() {
   return (
     <div className="App">
-     <h1>Price Tracker Loading.....</h1>
+    <Navbar/>
+     <AllProducts/>
     </div>
   );
 }
