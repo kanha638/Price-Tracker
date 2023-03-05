@@ -16,9 +16,13 @@ app.use(
   })
 );
 
+import authRoutes from "./routes/auth";
+
 app.use(morgan("dev"));
 app.use(express.json());
 app.use(cookieParser());
+
+app.use("/api/auth", authRoutes);
 
 app.get("/", (_, res) => res.send("Hello From Price Tracker Backend"));
 app.listen(PORT, async () => {
