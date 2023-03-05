@@ -42,9 +42,6 @@ export default function ResetPassword() {
   const handleSubmit = (event) => {
     event.preventDefault();
     const data = new FormData(event.currentTarget);
-    console.log({
-      password: data.get('password'),
-    });
   };
 
   const email={

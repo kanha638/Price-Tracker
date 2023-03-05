@@ -41,9 +41,6 @@ export default function EnterEmail() {
   const handleSubmit = (event) => {
     event.preventDefault();
     const data = new FormData(event.currentTarget);
-    console.log({
-      password: data.get('password'),
-    });
   };
 
   return (
