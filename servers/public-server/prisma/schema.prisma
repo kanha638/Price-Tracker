@@ -12,13 +12,14 @@ datasource db {
 }
 
 model Users {
-    id        String   @id @default(cuid())
-    name      String
-    email     String   @unique
-    mobileNum String   @unique
-    password  String
-    disabled  Boolean  @default(false)
-    createdAt DateTime
+    id          String     @id @default(cuid())
+    name        String
+    email       String     @unique
+    mobileNum   String     @unique
+    password    String
+    disabled    Boolean    @default(false)
+    createdAt   DateTime
+    my_products Products[]
 }
 
 model Products {
@@ -34,6 +35,8 @@ model Products {
     prices        PriceAlter[]
     added_at      DateTime
     website       String
+    Users         Users?       @relation(fields: [usersId], references: [id])
+    usersId       String?
 }
 
 model PriceAlter {
