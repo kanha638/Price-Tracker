@@ -1,8 +1,8 @@
 import React from "react";
 import { useState, useEffect } from "react";
 import { getFakeProducts } from "../fakeProducts";
-import SearchBar from "./searchBar";
-import ProductItem from "./productItem";
+import SearchBar from "./SearchBar";
+import ProductItem from "./ProductItem";
 import Stack from "@mui/material/Stack";
 
 const AllProducts = () => {

@@ -5,7 +5,11 @@ const SearchBar = (props) => {
   return (
     <div style={{ position: "relative" }}>
       <input
-        style={{ padding: "10px" }}
+        style={{
+          padding: "10px",
+          border: "solid 1px gray",
+          borderRadius: "5px",
+        }}
         type={type}
         placeholder={placeholder}
       ></input>

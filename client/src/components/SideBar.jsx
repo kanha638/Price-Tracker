@@ -5,7 +5,7 @@ import PersonIcon from "@mui/icons-material/Person";
 import SettingsIcon from "@mui/icons-material/Settings";
 import MessageIcon from "@mui/icons-material/Message";
 
-const Navbar = () => {
+const SideBar = () => {
   return (
     <div
       style={{
@@ -49,6 +49,7 @@ const Navbar = () => {
           flexDirection: "column",
           justifyContent: "center",
           alignItems: "center",
+          borderRadius: "14px",
         }}
       >
         <LogoutIcon />
@@ -57,4 +58,4 @@ const Navbar = () => {
   );
 };
 
-export default Navbar;
+export default SideBar;

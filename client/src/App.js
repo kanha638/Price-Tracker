@@ -1,11 +1,12 @@
-import AllProducts from './components/allProducts';
-import Navbar from './components/navbar';
-import './styles/style.css';
+import AllProducts from "./components/AllProducts";
+import SideBar from "./components/SideBar";
+import "./styles/style.css";
 
 function App() {
   return (
     <div className="App">
-     <AllProducts/>
+      <AllProducts />
+      {/* <SideBar /> */}
     </div>
   );
 }
