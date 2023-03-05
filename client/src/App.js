@@ -1,12 +1,20 @@
+import React from "react";
 import AllProducts from "./components/AllProducts";
+import IntroCard from "./components/IntroCard";
+import ProductCount from "./components/ProductCount";
 import SideBar from "./components/SideBar";
-import "./styles/style.css";
 
 function App() {
   return (
-    <div className="App">
-      <AllProducts />
-      {/* <SideBar /> */}
+    <div>
+      <SideBar />
+      <div style={{ marginLeft: "220px" }}>
+        <IntroCard />
+        <div style={{ marginTop: "10px" }}>
+          <ProductCount />
+        </div>
+        <AllProducts />
+      </div>
     </div>
   );
 }
