@@ -3,6 +3,7 @@ from bs4 import BeautifulSoup
 import requests
 
 
+
 def Amazon(url):
     xpaths = {
         'Title': '//*[@id="title"]',
@@ -60,6 +61,7 @@ def get_soup(url):
   page = requests.get(url, headers=headers)
   soup = BeautifulSoup(page.content, 'lxml')
   return soup
+
 
 def Flipkart(url):
     soup = get_soup(url=url)
