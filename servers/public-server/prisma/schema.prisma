@@ -24,7 +24,8 @@ model Users {
 
 model Products {
     id            Int          @id @default(autoincrement())
-    product_link  String
+    product_link  String       @unique
+    product_title String
     img_urn       String
     mrp           Int
     currecy_type  String
