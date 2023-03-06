@@ -1,5 +1,6 @@
 body {
   font-family: "Baloo Bhai 2", cursive;
+  scroll-behavior: smooth;
 }
 
 .check {
@@ -22,7 +23,6 @@ body {
 input[type="text"]:focus {
   -webkit-box-shadow: 0 0 0 white;
           box-shadow: 0 0 0 white;
-  outline: solid 1px black;
   border: none;
 }
 /*# sourceMappingURL=style.css.map */

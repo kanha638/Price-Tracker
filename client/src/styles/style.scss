@@ -1,5 +1,6 @@
 body {
   font-family: "Baloo Bhai 2", cursive;
+  scroll-behavior: smooth;
 }
 .check {
   width: 500;
@@ -15,9 +16,10 @@ body {
 
 input[type="text"]:focus {
   box-shadow: 0 0 0 rgb(255, 255, 255);
-  outline: solid 1px black;
+  // outline: solid 1px black;
   border: none;
 }
+
 // li{
 //   text-decoration:"none";
 // }

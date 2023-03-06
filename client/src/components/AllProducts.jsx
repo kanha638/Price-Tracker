@@ -16,7 +16,13 @@ const AllProducts = () => {
   return (
     <Container
       // maxWidth="sm"
-      style={{ width: "100%", margin: "0px", overflow: "scroll" }}
+      style={{
+        width: "100%",
+        margin: "0px",
+        overflow: "scroll",
+        focus: "within",
+        "scroll-behavior": "smooth",
+      }}
     >
       <div
         style={{

@@ -5,13 +5,19 @@ import { Container } from "@mui/system";
 import ProductCount from "./components/ProductCount";
 import SideBar from "./components/SideBar";
 import "./styles/style.css";
+import SignIn from "./components/SignIn";
+import SignUp from "./components/SignUp";
+import EnterEmail from "./components/EnterEmail";
 
 function App() {
   return (
     <div>
-      <SideBar />
-      <div style={{ marginLeft: "100px" }}>
-        <Container
+      <SignIn />
+      {/* <SignUp /> */}
+      {/* <EnterEmail /> */}
+      {/* <SideBar /> */}
+      {/* <div style={{ marginLeft: "100px" }}> */}
+      {/* <Container
           maxWidth="sm"
           style={{
             marginLeft: "0px",
@@ -29,9 +35,9 @@ function App() {
         >
           <IntroCard />
           <AllProducts />
-        </Container>
-        {/* <ProductCount /> */}
-      </div>
+        </Container> */}
+      {/* <ProductCount /> */}
+      {/* </div> */}
     </div>
   );
 }

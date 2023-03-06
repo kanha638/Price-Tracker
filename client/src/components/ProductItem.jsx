@@ -15,6 +15,7 @@ const ProductItem = (props) => {
         alignItems: "center",
         borderRadius: "14px",
         justifyContent: "space-between",
+        cursor: "pointer",
         flexWrap: "wrap",
       }}
     >
