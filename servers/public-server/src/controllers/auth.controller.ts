@@ -114,6 +114,7 @@ export const signIn = async (
       return res.status(404).json({ message: "Invalid credentials" });
     }
   } catch (error) {
+    console.log(error);
     return res.status(500).json({
       message: "Internal Server Error",
     });

@@ -1,7 +1,13 @@
 import { rateLimit } from "express-rate-limit";
 
 export const rateLimiterAuth = rateLimit({
-  windowMs: 5 * 60 * 1000, // 10 minute
-  max: 25, // Limit each IP to 100 requests per `window` (here, per 15 minutes)
+  windowMs: 5 * 60 * 1000, // 5 minutes
+  max: 25, // Limit each IP to 25 requests per `window` (here, per 5 minutes)
   message: "Too many attempts please try again after some time",
+});
+
+export const rateLimiterForAddProduct = rateLimit({
+  windowMs: 60 * 60 * 1000, // 60 minutes
+  max: 15, // Limit each IP to 100 requests per `window` (here, per 15 minutes)
+  message: "You can request only 15 products to add in 60 minutes of timeframe",
 });

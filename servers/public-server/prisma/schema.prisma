@@ -27,12 +27,15 @@ model Products {
     product_link  String       @unique
     product_title String
     img_urn       String
-    mrp           Int
-    currecy_type  String
-    current_price Int
-    buy_now_link  String
-    rating        Int?
-    availabe      Int?
+    mrp           Float?
+    currecy_type  String       @default("INR")
+    current_price Float
+    buy_now_link  String?
+    website       String?
+    rating        Float?
+    total_ratings Int?
+    availabe      String?
+    rating_count  Int?
     prices        PriceAlter[]
     Users         Users?       @relation(fields: [usersId], references: [id])
     usersId       String?
@@ -41,7 +44,7 @@ model Products {
 
 model PriceAlter {
     id         String    @id @default(cuid())
-    price      Int
+    price      Float
     date       DateTime
     Products   Products? @relation(fields: [productsId], references: [id])
     productsId Int?
