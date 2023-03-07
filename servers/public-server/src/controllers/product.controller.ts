@@ -62,6 +62,7 @@ export const addProduct = async (req: Request, res: Response) => {
                 rating_count: parseInt(result!.Rating_Count, 10),
                 rating: parseFloat(result!.Rating),
                 subscribers: res.locals.userData.email,
+                createdAt: new Date(),
               },
             });
             await prisma.priceAlter.create({
@@ -103,11 +104,16 @@ export const getAllProducts = async (req: Request, res: Response) => {
         product_title: true,
         current_price: true,
         mrp: true,
+        img_urn: true,
         availabe: true,
         rating: true,
         rating_count: true,
         currecy_type: true,
         usersId: true,
+        website: true,
+      },
+      orderBy: {
+        createdAt: "desc",
       },
     });
     return res.json(result);
@@ -232,6 +238,9 @@ export const getSubscribedProducts = async (req: Request, res: Response) => {
         currecy_type: true,
         usersId: true,
       },
+      orderBy: {
+        createdAt: "desc",
+      },
     });
     return res.json(result);
   } catch (error) {
@@ -258,6 +267,9 @@ export const getAddedProducts = async (req: Request, res: Response) => {
         rating_count: true,
         currecy_type: true,
         usersId: true,
+      },
+      orderBy: {
+        createdAt: "desc",
       },
     });
     return res.json(result);
