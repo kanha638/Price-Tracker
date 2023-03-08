@@ -16,6 +16,7 @@ model Users {
     name        String
     email       String     @unique
     mobileNum   String     @unique
+    profile_pic String?
     password    String
     disabled    Boolean    @default(false)
     createdAt   DateTime

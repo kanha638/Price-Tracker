@@ -19,6 +19,7 @@ app.use(
 import authRoutes from "./routes/auth";
 import productRoutes from "./routes/product";
 import userRoutes from "./routes/user";
+import fileRoutes from "./routes/files";
 app.use(morgan("dev"));
 app.use(express.json());
 app.use(cookieParser());
@@ -26,6 +27,7 @@ app.use(cookieParser());
 app.use("/api/auth", authRoutes);
 app.use("/api/product", productRoutes);
 app.use("/api/user", userRoutes);
+app.use("/api/file", fileRoutes);
 
 app.get("/", (_, res) => res.send("Hello From Price Tracker Backend"));
 app.listen(PORT, async () => {
