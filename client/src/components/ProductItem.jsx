@@ -1,6 +1,7 @@
 import React from "react";
 import Button from "@mui/material/Button";
 import Stack from "@mui/material/Stack";
+import StarHalfIcon from "@mui/icons-material/StarHalf";
 
 const ProductItem = (props) => {
   const { product } = props;
@@ -25,11 +26,22 @@ const ProductItem = (props) => {
         alt={name}
       />
       <div style={{ flex: "3" }}>
-        <h4 style={{ padding: "0", margin: "0" }}>{name}</h4>
+        <a style={{ color: "#0C0B0B" }} href="#">
+          <h4 style={{ padding: "0", margin: "0" }}>{name}</h4>
+        </a>
         <p style={{ padding: "0", margin: "0", color: "grey" }}>On {website}</p>
       </div>
-      <div style={{ flex: "1" }}>{currentPrice}</div>
-      <div style={{ flex: "1" }}>{rating}</div>
+      <div style={{ flex: "1" }}>{`${currentPrice}₹`}</div>
+      <div
+        style={{
+          flex: "1",
+          display: "flex",
+          alignItems: "center",
+          fontSize: "15px",
+        }}
+      >
+        {rating} <StarHalfIcon sx={{ fontSize: "15px" }} />
+      </div>
       <Button
         sx={{
           flex: "1",
