@@ -4,14 +4,22 @@ import LogoutIcon from "@mui/icons-material/Logout";
 import PersonIcon from "@mui/icons-material/Person";
 import SettingsIcon from "@mui/icons-material/Settings";
 import MessageIcon from "@mui/icons-material/Message";
+import { Box, Container } from "@mui/system";
+import { Link } from "react-router-dom";
 
 const SideBar = () => {
   return (
-    <div
-      style={{
+    <Box
+      sx={{
         borderRadius: "24px",
         padding: "25px 30px",
-        display: "flex",
+        display: {
+          xs: "none",
+          sm: "none",
+          md: "flex",
+          lg: "flex",
+          xl: "flex",
+        },
         height: "90vh",
         top: "10px",
         border: "1px solid black",
@@ -36,10 +44,18 @@ const SideBar = () => {
           alignItems: "center",
         }}
       >
-        <HomeIcon />
-        <MessageIcon />
-        <PersonIcon />
-        <SettingsIcon />
+        <Link to="/" style={{ color: `grey`, cursor: "pointer" }}>
+          <HomeIcon />
+        </Link>
+        <Link style={{ color: `grey`, cursor: "pointer" }}>
+          <MessageIcon />
+        </Link>
+        <Link to="/profile" style={{ color: `grey`, cursor: "pointer" }}>
+          <PersonIcon />
+        </Link>
+        <Link style={{ color: `grey`, cursor: "pointer" }}>
+          <SettingsIcon />
+        </Link>
       </div>
 
       <div
@@ -54,7 +70,7 @@ const SideBar = () => {
       >
         <LogoutIcon />
       </div>
-    </div>
+    </Box>
   );
 };
 

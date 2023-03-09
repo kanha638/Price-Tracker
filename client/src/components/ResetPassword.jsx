@@ -46,7 +46,6 @@ export default function ResetPassword() {
             Reset Password
           </Typography>
           <TextField
-            sx={{ border: 2, borderRadius: 10, height: "min-content" }}
             id="emailId"
             value={email.id}
             readOnly
