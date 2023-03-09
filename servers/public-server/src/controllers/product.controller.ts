@@ -59,7 +59,7 @@ export const addProduct = async (req: Request, res: Response) => {
                 current_price: parseFloat(result!.Price),
                 usersId: userID,
                 product_title: result!.Title,
-                rating_count: parseInt(result!.Rating_Count, 10),
+                rating_count: parseInt(result!.Rating_Count, 10) || 0,
                 rating: parseFloat(result!.Rating),
                 subscribers: res.locals.userData.email,
                 createdAt: new Date(),

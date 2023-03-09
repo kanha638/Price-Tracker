@@ -9,10 +9,33 @@ import { Box } from "@mui/material";
 
 const AllProducts = () => {
   const [products, setProducts] = useState([]);
+  const [data, setData] = useState([]);
+  const [value, setValue] = useState("");
+
+  const fetchData = async () => {
+    let result = await fetch("http://localhost:8005/api/product/all-products", {
+      method: "GET", // *GET, POST, PUT, DELETE, etc.
+      mode: "cors", // no-cors, *cors, same-origin
+      cache: "no-cache", // *default, no-cache, reload, force-cache, only-if-cached
+      credentials: "same-origin", // include, *same-origin, omit
+      headers: {
+        "Content-Type": "application/json",
+        // 'Content-Type': 'application/x-www-form-urlencoded',
+      },
+    });
+
+    result = await result.json();
+    console.log(result);
+    setData(result);
+  };
   useEffect(() => {
     const obj = getFakeProducts();
     setProducts(obj);
+    fetchData();
   }, [products]);
+  const changeHandler = (e) => {
+    setValue(e.target.value);
+  };
   return (
     <Container
       // maxWidth="sm"
@@ -32,13 +55,27 @@ const AllProducts = () => {
         }}
       >
         <h3>All Products</h3>
-        <SearchBar type={"text"} placeholder={"Search Product"} />
+        <SearchBar
+          type={"text"}
+          placeholder={"Search Product"}
+          value={value}
+          onChange={changeHandler}
+        />
       </div>
 
       <Stack spacing={2} sx={{ overflow: "scroll" }}>
-        {products.map((product) => (
+        {/* {products.map((product) => (
           <ProductItem key={product.id} product={product} />
-        ))}
+        ))} */}
+        {data.map((value, idx) => {
+          return <ProductItem key={idx} product={value} />;
+        })}
+        {data.map((value, idx) => {
+          return <ProductItem key={idx} product={value} />;
+        })}
+        {data.map((value, idx) => {
+          return <ProductItem key={idx} product={value} />;
+        })}
       </Stack>
     </Container>
   );
