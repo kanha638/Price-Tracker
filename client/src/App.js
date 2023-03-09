@@ -8,11 +8,13 @@ import "./styles/style.css";
 import SignIn from "./components/SignIn";
 import SignUp from "./components/SignUp";
 import EnterEmail from "./components/EnterEmail";
+import UserProfile from "./components/UserProfile";
 
 function App() {
   return (
     <div>
-      <SignIn />
+    <UserProfile/>
+      {/* <SignIn /> */}
       {/* <SignUp /> */}
       {/* <EnterEmail /> */}
       {/* <SideBar /> */}
@@ -33,9 +35,9 @@ function App() {
             padding: "0px 0px",
           }}
         >
-          <IntroCard />
-          <AllProducts />
-        </Container> */}
+          <IntroCard /> */}
+          {/* <AllProducts /> */}
+        {/* </Container> */}
       {/* <ProductCount /> */}
       {/* </div> */}
     </div>
