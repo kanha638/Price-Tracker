@@ -9,7 +9,7 @@ import SignIn from "./components/SignIn";
 import SignUp from "./components/SignUp";
 import EnterEmail from "./components/EnterEmail";
 import UserProfile from "./components/UserProfile";
-
+import UserProfile2 from "./components/UserProfile2";
 import Home from "./pages/Home";
 import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
 import ResetPassword from "./components/ResetPassword";

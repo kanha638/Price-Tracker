@@ -109,10 +109,10 @@ function UserProfile2() {
 
     <div className="col-span-2">
 
-    <div className='border-b-2 p-5 relative'>
+   {/* <div className='border-b-2 p-5 relative'>
     <SearchIcon className="absolute left-0 top-6 text-slate-400 " />
-    <input type="text" placeholder="Search..." className='text-md rounded ml-3 p-1 w-1/2 '/>
-    </div>
+  <input type="text" placeholder="Search..." className='text-md rounded ml-3 p-1 w-1/2 '/>
+    </div>*/}
 
     <h1 className='text-2xl m-6'>My Products</h1>
     <div className='flex justify-end gap-2'>
@@ -130,8 +130,8 @@ function UserProfile2() {
     <button className='w-24 border-2 bg-blue-600 text-white p-2 rounded-xl'>Add Item</button>
     </div>
    
-    <div className='container  m-5'>
-    <div className='grid grid-cols-3 gap-2  '>
+    <div className='container m-5 h-96 overflow-scroll'>
+    <div className='grid grid-cols-3 gap-4 bg-secondary p-3'>
     {products.map((product) => (
       <ProductCard key={product.id} product={product} />
     ))}

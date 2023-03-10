@@ -14,18 +14,18 @@ const Home = () => {
     <div>
       
      <SideBar/>
-     <UserProfile2 /> 
+    
      
 
       {/* <SignIn /> */}
       {/* <SignUp /> */}
       {/* <EnterEmail /> */}
       {/* <SideBar /> */}
-     {/* <Routes>
+      <Routes>
         <Route path="" element={<Catalog />} />
-        <Route path="profile" element={<UserProfile />}></Route>
+        <Route path="profile" element={<UserProfile2 />}></Route>
         <Route path="*" element={<Error />}></Route>
-  </Routes>*/}
+  </Routes>
     </div>
   );
 };
