@@ -5,8 +5,6 @@ import Avatar from "@mui/material/Avatar";
 import Button from "@mui/material/Button";
 import CssBaseline from "@mui/material/CssBaseline";
 import TextField from "@mui/material/TextField";
-import FormControlLabel from "@mui/material/FormControlLabel";
-import Checkbox from "@mui/material/Checkbox";
 import Link from "@mui/material/Link";
 import Grid from "@mui/material/Grid";
 import Box from "@mui/material/Box";
@@ -16,34 +14,39 @@ import Container from "@mui/material/Container";
 import { ThemeProvider } from "@mui/material/styles";
 import Copyright from "./Copyright";
 import { theme } from "../utils/themes";
-import axios from 'axios';
-import {useDispatch} from 'react-redux';
-import {AuthStart} from '../slices/userSlice';
+import axios from "axios";
+import { useDispatch } from "react-redux";
+import { AuthStart } from "../slices/userSlice";
 import { signUp } from "../middleware/auth";
 
 export default function SignUp() {
+  const [formValue, setFormValue] = useState({
+    name: "",
+    email: "",
+    mobileNum: "",
+    password: "",
+    confirmPassword: "",
+  });
 
-  const [formValue,setFormValue]=useState({
-    name:"",
-    email:"",
-    mobileNum:"",
-    password:"",
-    confirmPassword:""
-  })
-   
-  const navigate=useNavigate();
-  const dispatch=useDispatch();
+  const navigate = useNavigate();
+  const dispatch = useDispatch();
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    await signUp({
-      name:formValue?.name,email:formValue?.email,mobileNum:formValue?.mobileNum,password: formValue?.password
-    },dispatch,navigate)
+    await signUp(
+      {
+        name: formValue?.name,
+        email: formValue?.email,
+        mobileNum: formValue?.mobileNum,
+        password: formValue?.password,
+      },
+      dispatch,
+      navigate
+    );
   };
-  const changeHandler=(e)=>{
-    setFormValue({...formValue, [e.target.name]:e.target.value});
-   
-  }
+  const changeHandler = (e) => {
+    setFormValue({ ...formValue, [e.target.name]: e.target.value });
+  };
   return (
     <ThemeProvider theme={theme}>
       <Container component="main" maxWidth="xs">
@@ -80,7 +83,7 @@ export default function SignUp() {
               autoComplete="name"
               autoFocus
             />
-           
+
             <TextField
               margin="normal"
               required
@@ -93,7 +96,7 @@ export default function SignUp() {
               onChange={changeHandler}
               autoFocus
             />
-           
+
             <TextField
               margin="normal"
               required
@@ -102,7 +105,7 @@ export default function SignUp() {
               label="Mobile Number"
               name="mobileNum"
               value={formValue.mobileNum}
-              error={formValue.mobileNum.length!==10 ? true : false}
+              error={formValue.mobileNum.length !== 10 ? true : false}
               onChange={changeHandler}
               autoComplete="name"
               autoFocus
@@ -126,11 +129,16 @@ export default function SignUp() {
               name="confirmPassword"
               label="confirm Password"
               value={formValue.confirmPassword}
-              error={formValue.confirmPassword.length>0 && (formValue.confirmPassword!==formValue.password) ? true : false}
+              error={
+                formValue.confirmPassword.length > 0 &&
+                formValue.confirmPassword !== formValue.password
+                  ? true
+                  : false
+              }
               onChange={changeHandler}
               type="password"
             />
-           
+
             <Button
               type="submit"
               fullWidth
@@ -142,7 +150,7 @@ export default function SignUp() {
             </Button>
             <Grid container>
               <Grid item>
-                <Link href="#" variant="body2">
+                <Link href="/sign-in" variant="body2">
                   {"have an account? Sign In"}
                 </Link>
               </Grid>

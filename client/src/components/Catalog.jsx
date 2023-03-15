@@ -2,13 +2,14 @@ import { Box, Container } from "@mui/system";
 import React from "react";
 import AllProducts from "./AllProducts";
 import IntroCard from "./IntroCard";
-import {useSelector} from "react-redux"
+import { useSelector } from "react-redux";
 import { selectUser, UserState } from "../slices/userSlice";
 import ProductCount from "./ProductCount";
+import ProductAddCatalog from "./ProductAddCatalog";
 
 const Catalog = () => {
-  const user = useSelector(selectUser)
-  const userState = useSelector(UserState)
+  const user = useSelector(selectUser);
+  const userState = useSelector(UserState);
 
   return (
     <Box
@@ -20,15 +21,14 @@ const Catalog = () => {
           sm: "0px",
           xs: "0px",
         },
-        display :"flex",
-        flexWrap :"wrap"
+        display: "flex",
       }}
     >
       <Container
         maxWidth="md"
         style={{
           marginLeft: "0px",
-          flex:"2",
+          flex: "2",
           // padding: "0",
           marginTop: "10px",
           height: "95vh",
@@ -44,25 +44,26 @@ const Catalog = () => {
         <IntroCard />
         <AllProducts />
       </Container>
-    <Container
-      maxWidth="xs"
-      style={{
-        marginLeft: "0px",
-        // padding: "0",
-        flex:"1",
-        marginTop: "10px",
-        height: "95vh",
-        // border: "solid 2px black",
-        display: "flex",
-        flexDirection: "column",
-        // paddingRight: "0px",
-        justifyContent: "space-between",
-        gap: "10px",
-        padding: "0px 0px",
-      }}
-    >
-       <ProductCount /> 
-    </Container>
+      <Container
+        maxWidth="xs"
+        style={{
+          marginLeft: "0px",
+          // padding: "0",
+          flex: "1",
+          marginTop: "10px",
+          // border: "solid 2px black",
+          display: "flex",
+          flexDirection: "column",
+          // paddingRight: "0px",
+          justifyContent: "flex-start",
+          gap: "10px",
+          // border: "solid 2px black",
+          padding: "0px 0px",
+        }}
+      >
+        <ProductCount />
+        <ProductAddCatalog />
+      </Container>
     </Box>
   );
 };
