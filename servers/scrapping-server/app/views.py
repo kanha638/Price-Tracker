@@ -44,10 +44,10 @@ def get_product_details_for_register():
     if request.method == 'POST':
         body = request.get_json() # Parsing the value into json format
         value = None
-        if body['website'] == 'amazon':
-            value = Amazon(body['url']) # This function will reutrn the detauls of the product url from Amazons
-        elif body['website'] == 'flipkart':
-            value = Flipkart(body['url']) # This function will return the details of the website url from flipkart
+        # if body['website'] == 'amazon':
+        #     value = Amazon(body['url']) # This function will reutrn the detauls of the product url from Amazons
+        if body['website'] == 'flipkart':
+            value = Flipkart.scrape_product(body['url']) # This function will return the details of the website url from flipkart
         else :
             # As currently we only support 2 websites Flipkart and Amazon
             error_message = {
