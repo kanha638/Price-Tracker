@@ -7,13 +7,15 @@ const ProductCount = (props) => {
     <Container
       sx={{
         padding: "20px",
-        width : "100%",
+        width: "100%",
         backgroundColor: "#F5F5F7",
         borderRadius: "14px",
       }}
     >
       <Box sx={{ display: "flex", justifyContent: "space-between" }}>
-        <Box sx={{ width: "30%", p: 2, textAlign: "center" }}>
+        <Box
+          sx={{ width: "30%", p: 2, textAlign: "center", fontSize: "1.9rem" }}
+        >
           <h1>11</h1>
         </Box>
         <Box
@@ -21,6 +23,7 @@ const ProductCount = (props) => {
             width: "70%",
             display: "flex",
             alignItems: "center",
+            fontSize: "1.9rem",
             display: "flex",
             justifyContent: "space-between",
           }}

@@ -15,26 +15,30 @@ import { ThemeProvider } from "@mui/material/styles";
 import Copyright from "./Copyright";
 import { theme } from "../utils/themes";
 import { useState } from "react";
-import {  signIn} from "../middleware/auth";
-import {useDispatch} from 'react-redux'
+import { signIn } from "../middleware/auth";
+import { useDispatch } from "react-redux";
 import { useNavigate } from "react-router-dom";
 
 export default function SignIn() {
-  const [formValue,setFormValue]=useState({
-    email:"",
-    password:""
-  })
-  const dispatch = useDispatch()
-  const navigate = useNavigate()
+  const [formValue, setFormValue] = useState({
+    email: "",
+    password: "",
+  });
+  const dispatch = useDispatch();
+  const navigate = useNavigate();
 
   const handleSubmit = async (event) => {
-    event.preventDefault(); 
-    await signIn({credential: formValue?.email,password:formValue?.password},dispatch,navigate)
+    event.preventDefault();
+    await signIn(
+      { credential: formValue?.email, password: formValue?.password },
+      dispatch,
+      navigate
+    );
   };
 
-  const changeHandler = (e)=>{
-    setFormValue({...formValue,[e.target.name]:e.target.value})
-  }
+  const changeHandler = (e) => {
+    setFormValue({ ...formValue, [e.target.name]: e.target.value });
+  };
   return (
     <ThemeProvider theme={theme}>
       <Container component="main" maxWidth="xs">
@@ -81,10 +85,6 @@ export default function SignIn() {
               autoComplete="current-password"
               onChange={changeHandler}
             />
-            <FormControlLabel
-              control={<Checkbox value="remember" color="primary" />}
-              label="Remember me"
-            />
             <Button
               type="submit"
               fullWidth
@@ -103,7 +103,7 @@ export default function SignIn() {
                 </Link>
               </Grid>
               <Grid item>
-                <Link href="#" variant="body2">
+                <Link to="/sign-up" variant="body2">
                   {"Don't have an account? Sign Up"}
                 </Link>
               </Grid>

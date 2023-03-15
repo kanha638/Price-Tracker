@@ -6,13 +6,20 @@ import ProductItem from "./ProductItem";
 import Stack from "@mui/material/Stack";
 import { Container } from "@mui/system";
 import { Box } from "@mui/material";
+import { useDispatch, useSelector } from "react-redux";
+import { UserState } from "../slices/userSlice";
+import { fetchAllProducts } from "../middleware/product";
 
 const AllProducts = () => {
   const [products, setProducts] = useState([]);
+  const dispatch = useDispatch();
+  const userState = useSelector(UserState);
+  const getAllProducts = async () => {
+    await fetchAllProducts(dispatch);
+  };
   useEffect(() => {
-    const obj = getFakeProducts();
-    setProducts(obj);
-  }, [products]);
+    getAllProducts();
+  }, []);
   return (
     <Container
       // maxWidth="sm"
@@ -29,7 +36,7 @@ const AllProducts = () => {
           display: "flex",
           justifyContent: "space-between",
           alignItems: "center",
-          marginBottom:"10px"
+          marginBottom: "10px",
         }}
       >
         <h3>All Products</h3>
@@ -37,8 +44,8 @@ const AllProducts = () => {
       </div>
 
       <Stack spacing={2} sx={{ overflow: "scroll" }}>
-        {products.map((product) => (
-          <ProductItem key={product.id} product={product} />
+        {userState?.allProducts.map((product, idx) => (
+          <ProductItem key={idx} product={product} />
         ))}
       </Stack>
     </Container>
