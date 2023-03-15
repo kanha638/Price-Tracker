@@ -31,7 +31,6 @@ export const addProduct = async (req: Request, res: Response) => {
         message: "Product is already present in the database",
       });
     }
-
     API.post(
       `/product/register/`,
       {
@@ -42,6 +41,7 @@ export const addProduct = async (req: Request, res: Response) => {
     )
       .then(async (response: any) => {
         try {
+          let addedProduct;
           let result: ProductFetch = response.data;
           if (
             result.Title &&
@@ -65,6 +65,7 @@ export const addProduct = async (req: Request, res: Response) => {
                 createdAt: new Date(),
               },
             });
+            addedProduct = product;
             await prisma.priceAlter.create({
               data: {
                 productsId: product?.id,
@@ -77,13 +78,16 @@ export const addProduct = async (req: Request, res: Response) => {
               message: "Some Error on scrapping server / Unable to scrap",
             });
           }
-          return res.json({ message: "Product added successfully" });
+          return res.json(addedProduct);
         } catch (error) {
           console.log(error);
           return res.status(500).json({ message: "Internal server error" });
         }
       })
-      .catch(console.error);
+      .catch((error: AxiosResponse) => {
+        console.log(error);
+        return res.status(500).json({ message: "Internal server error" });
+      });
     // return res.status(500).json({
     //   message: "Something went wrong",
     // });
