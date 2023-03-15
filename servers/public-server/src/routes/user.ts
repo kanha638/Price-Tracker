@@ -1,17 +1,7 @@
 import { Router } from "express";
-
-import {
-  addProduct,
-  getAddedProducts,
-  getAllProducts,
-  getProductDatabyID,
-  getSubscribedProducts,
-  subscribeProduct,
-  unSubscribeProduct,
-} from "../controllers/product.controller";
-import { getUserDetailsFromID } from "../controllers/user.controller";
+import { getUserDetailsFromID, updateUserDetails } from "../controllers/user.controller";
 import { verifyToken } from "../middleware/auth";
-import { rateLimiterForUserDetails } from "../middleware/rateLimiters";
+import { rateLimiterForUserDetails,rateLimiterUserUpdate } from "../middleware/rateLimiters";
 import { uploadProfilePicture } from "../controllers/user.controller";
 import { uploadProfilePic } from "../middleware/uploader";
 
@@ -31,5 +21,5 @@ router.post(
   uploadProfilePic.single("file"),
   uploadProfilePicture
 );
-
+router.put("/:userID",rateLimiterUserUpdate,verifyToken,updateUserDetails);
 export default router;
