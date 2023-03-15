@@ -29,6 +29,7 @@ const AllProducts = () => {
           display: "flex",
           justifyContent: "space-between",
           alignItems: "center",
+          marginBottom:"10px"
         }}
       >
         <h3>All Products</h3>
