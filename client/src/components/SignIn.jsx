@@ -14,13 +14,27 @@ import Container from "@mui/material/Container";
 import { ThemeProvider } from "@mui/material/styles";
 import Copyright from "./Copyright";
 import { theme } from "../utils/themes";
+import { useState } from "react";
+import {  signIn} from "../middleware/auth";
+import {useDispatch} from 'react-redux'
+import { useNavigate } from "react-router-dom";
 
 export default function SignIn() {
-  const handleSubmit = (event) => {
-    event.preventDefault();
-    const data = new FormData(event.currentTarget);
+  const [formValue,setFormValue]=useState({
+    email:"",
+    password:""
+  })
+  const dispatch = useDispatch()
+  const navigate = useNavigate()
+
+  const handleSubmit = async (event) => {
+    event.preventDefault(); 
+    await signIn({credential: formValue?.email,password:formValue?.password},dispatch,navigate)
   };
 
+  const changeHandler = (e)=>{
+    setFormValue({...formValue,[e.target.name]:e.target.value})
+  }
   return (
     <ThemeProvider theme={theme}>
       <Container component="main" maxWidth="xs">
@@ -54,6 +68,7 @@ export default function SignIn() {
               name="email"
               autoComplete="email"
               autoFocus
+              onChange={changeHandler}
             />
             <TextField
               margin="normal"
@@ -64,6 +79,7 @@ export default function SignIn() {
               type="password"
               id="password"
               autoComplete="current-password"
+              onChange={changeHandler}
             />
             <FormControlLabel
               control={<Checkbox value="remember" color="primary" />}

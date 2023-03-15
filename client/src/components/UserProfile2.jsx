@@ -9,13 +9,26 @@ import Man from "../images/man.jpg";
 import {Avatar} from "@mui/material";
 import EditIcon from "@mui/icons-material/Edit";
 
+import {useSelector} from "react-redux"
+import { selectUser, UserState } from '../slices/userSlice';
+import { useNavigate } from 'react-router-dom';
+
 function UserProfile2() {
+
+  const userState = useSelector(UserState)
+  const navigate = useNavigate()
 
   const [products, setProducts] = useState([]);
   useEffect(() => {
     const obj = getFakeProducts();
     setProducts(obj);
+    if(!userState?.isLoggedIn){
+      navigate('/sign-in')
+    }
+    
   }, [products]);
+
+  const user=useSelector(selectUser)
 
   return (
     <div className="grid grid-cols-3 mx-40 my-10">
@@ -56,7 +69,7 @@ function UserProfile2() {
         flexDirection="row"
         justifyContent="space-between"
       >
-        <Typography variant="subtitle1">User Name</Typography>
+        <Typography variant="subtitle1">{user?.name}</Typography>
         <EditIcon />
       </Typography>
     </Box>
@@ -76,7 +89,7 @@ function UserProfile2() {
         justifyContent="space-between"
       >
         <Typography variant="subtitle1">
-          {"User123@gmail.com"}
+          {user?.email}
         </Typography>
         <EditIcon />
       </Typography>
@@ -97,7 +110,7 @@ function UserProfile2() {
         justifyContent="space-between"
       >
         <Typography variant="subtitle1">
-          +91 834593XXXX
+          +91 {user?.mobileNum}
         </Typography>
         <EditIcon />
       </Typography>

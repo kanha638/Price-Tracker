@@ -7,7 +7,7 @@ const ProductCount = (props) => {
     <Container
       sx={{
         padding: "20px",
-        maxWidth: "208px",
+        width : "100%",
         backgroundColor: "#F5F5F7",
         borderRadius: "14px",
       }}
