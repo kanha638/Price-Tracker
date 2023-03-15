@@ -14,13 +14,12 @@ interface ProductFetch {
   Rating: string;
   Price: string;
   Rating_Count: string;
+  MRP: string;
 }
-
 export const addProduct = async (req: Request, res: Response) => {
   try {
     const { website, product_url } = req.body;
     const userID = res.locals.userData.id;
-
     const prevProduct = await prisma.products.findUnique({
       where: {
         product_link: product_url,
@@ -39,6 +38,7 @@ export const addProduct = async (req: Request, res: Response) => {
       },
       { withCredentials: true }
     )
+
       .then(async (response: any) => {
         try {
           let addedProduct;
@@ -48,7 +48,8 @@ export const addProduct = async (req: Request, res: Response) => {
             result.Price &&
             result.Availability &&
             result.Rating &&
-            result.Image_Link
+            result.Image_Link &&
+            result.MRP
           ) {
             const product = await prisma.products.create({
               data: {
@@ -61,6 +62,7 @@ export const addProduct = async (req: Request, res: Response) => {
                 product_title: result!.Title,
                 rating_count: parseInt(result!.Rating_Count, 10),
                 rating: parseFloat(result!.Rating),
+                mrp: parseFloat(result.MRP),
                 subscribers: res.locals.userData.email,
                 createdAt: new Date(),
               },
