@@ -40,7 +40,10 @@ const ProductCard = ({product}) => {
           marginTop:"10px",
           width:"100%",
           color:"white",
-          maxHeight:"40px"
+          maxHeight:"40px",
+          '&:hover': {
+              color: "black",
+          },
         }}
         variant="outlined"
         href="#outlined-buttons"

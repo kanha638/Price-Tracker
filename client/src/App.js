@@ -7,6 +7,8 @@ import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
 import ResetPassword from "./components/ResetPassword";
 import { Me } from "./middleware/auth";
 import {useDispatch} from "react-redux"
+import { ThemeProvider } from "@emotion/react";
+import {globalTheme} from "../src/utils/themes"
 
 
 function App() {
@@ -19,7 +21,9 @@ function App() {
   },[])
   return (
    
+    
     <div>
+    <ThemeProvider globalTheme={globalTheme}>
       <Router>
         <Routes>
           <Route path="/reset-password" element={<ResetPassword />} />
@@ -28,7 +32,9 @@ function App() {
           <Route path="/*" element={<Home />} />
         </Routes>
       </Router>
+      </ThemeProvider>
     </div>
+    
    
     
   );
