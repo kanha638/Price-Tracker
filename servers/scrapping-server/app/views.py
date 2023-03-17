@@ -2,6 +2,7 @@ from app import app
 from app.scraper import Amazon,Flipkart
 from flask import request , jsonify ,abort
 import time
+import asyncio
 
 
 # @app.before_request
@@ -16,7 +17,7 @@ def index():
 
 
 @app.route("/product/register/", methods=['POST'] ) 
-def get_product_details_for_register():
+async def get_product_details_for_register():
 
     '''
         This route is for getting the product details by the scrapper for the public server 
@@ -35,6 +36,8 @@ def get_product_details_for_register():
         {
             'Title': title,
             'Price': price,
+            'Currency': currency,
+            'MRP': mrp,
             'Availability': availability,
             'Rating': rating,
             'Rating_Count': rating_count,
@@ -44,14 +47,21 @@ def get_product_details_for_register():
     if request.method == 'POST':
         body = request.get_json() # Parsing the value into json format
         value = None
-        # if body['website'] == 'amazon':
-        #     value = Amazon(body['url']) # This function will reutrn the detauls of the product url from Amazons
-        if body['website'] == 'flipkart':
-            value = Flipkart.scrape_product(body['url']) # This function will return the details of the website url from flipkart
+
+        website = body['url'].strip().split('/')[2].split('.')[1]
+
+        if website == 'amazon':
+            amazon = Amazon()
+            # get the product details from Amazon
+            value = await amazon.scrape(url=body['url']) 
+        elif website == 'flipkart':
+            flipkart = Flipkart()
+            # get the product details from Flipkart
+            value = flipkart.scrape(url=body['url']) 
         else :
             # As currently we only support 2 websites Flipkart and Amazon
             error_message = {
-                "message":"Entered Website is not supported now !."
+                "message":"Entered website is not supported now! Please check back later."
             }
             return jsonify(error_message) , 409
         return jsonify(value)
