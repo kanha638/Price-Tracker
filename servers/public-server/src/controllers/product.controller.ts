@@ -43,11 +43,11 @@ export const addProduct = async (req: Request, res: Response) => {
         try {
           let addedProduct;
           let result: ProductFetch = response.data;
+          console.log(result)
           if (
             result.Title &&
             result.Price &&
             result.Availability &&
-            result.Rating &&
             result.Image_Link &&
             result.MRP
           ) {
@@ -60,8 +60,8 @@ export const addProduct = async (req: Request, res: Response) => {
                 current_price: parseFloat(result!.Price),
                 usersId: userID,
                 product_title: result!.Title,
-                rating_count: parseInt(result!.Rating_Count, 10),
-                rating: parseFloat(result!.Rating),
+                rating_count: parseInt(result!.Rating_Count, 10) || 0,
+                rating: parseFloat(result!.Rating) || 0,
                 mrp: parseFloat(result.MRP),
                 subscribers: res.locals.userData.email,
                 createdAt: new Date(),
