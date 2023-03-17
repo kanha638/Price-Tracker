@@ -4,7 +4,7 @@ import Button from "@mui/material/Button";
 const ProductCard = ({product}) => {
   return (
     <div className=''>
-    <div className='h-60 w-60 bg-white border-2 p-2 rounded-2xl flex justify-between flex-col'>
+    <div className='mx-auto sm:h-60 sm:w-60 bg-white border-2 p-2 rounded-2xl sm:flex sm:justify-between sm:flex-col'>
      <nav className='flex justify-between mt-4 items-center'>
      <img
         className='h-12 w-12 bg-slate-800 border-2 rounded-full' 
