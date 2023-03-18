@@ -5,61 +5,59 @@ import jwt from "jsonwebtoken";
 import cookie from "cookie";
 const prisma = new PrismaClient();
 
-
-export const updateUserDetails = async (req:Request,res:Response)=>{
-  try{
+export const updateUserDetails = async (req: Request, res: Response) => {
+  try {
     const { userID } = req.params;
-    const {name , email, currentPassword,mobileNum} = req.body;
-  if (userID === res.locals.userData.id) {
+    const { name, email, currentPassword, mobileNum } = req.body;
+    if (userID === res.locals.userData.id) {
+      const getUser = await prisma.users.findUnique({
+        where: {
+          id: userID,
+        },
+        select: {
+          id: true,
+          password: true,
+        },
+      });
+      if (!getUser) return res.status(404).json({ message: "User not found" });
 
-    const getUser = await prisma.users.findUnique({
-      where: {
-        id: userID,
-      },
-      select: {
-        id: true,
-        password:true,
-      },
-    });
-    if(!getUser)
-    return res.status(404).json({ message: "User not found" });
-
-    const validPassword = await brcypt.compare(currentPassword,getUser.password);
-    if (!validPassword) return res.status(400).send('Invalid Password.');   
-    await prisma.users.update({
-      where: {
-        id: userID,
-      },
-      data:{
-        name : name || undefined,
-        email : email || undefined,
-        mobileNum: mobileNum|| undefined
-      },
-    });
-    const updatedUserData = await prisma.users.findUnique({
-      where: {
-        id: userID,
-      },
-      select: {
-        id: true,
-        profile_pic: true,
-        name: true,
-        email: true,
-        createdAt: true,
-        mobileNum: true,
-        disabled: true,
-      },
-    });
-    return res.json(updatedUserData);
-  }
-  return res.status(401).json({ message: "Unauthenticated" });
-  }
-  catch(error){
-    console.log(error)
+      const validPassword = await brcypt.compare(
+        currentPassword,
+        getUser.password
+      );
+      if (!validPassword) return res.status(400).send("Invalid Password.");
+      await prisma.users.update({
+        where: {
+          id: userID,
+        },
+        data: {
+          name: name || undefined,
+          email: email || undefined,
+          mobileNum: mobileNum || undefined,
+        },
+      });
+      const updatedUserData = await prisma.users.findUnique({
+        where: {
+          id: userID,
+        },
+        select: {
+          id: true,
+          profile_pic: true,
+          name: true,
+          email: true,
+          createdAt: true,
+          mobileNum: true,
+          disabled: true,
+        },
+      });
+      return res.json(updatedUserData);
+    }
+    return res.status(401).json({ message: "Unauthenticated" });
+  } catch (error) {
+    console.log(error);
     return res.status(500).json({ message: "Internal Server Error" });
   }
-
-}
+};
 
 export const getUserDetailsFromID = async (req: Request, res: Response) => {
   try {
@@ -107,11 +105,6 @@ export const uploadProfilePicture = async (req: Request, res: Response) => {
         select: {
           id: true,
           profile_pic: true,
-          name: true,
-          email: true,
-          createdAt: true,
-          mobileNum: true,
-          disabled: true,
         },
       });
       return res.json(updatedUserData);
