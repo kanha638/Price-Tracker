@@ -1,9 +1,11 @@
-import React from "react";
+import React, { useState } from "react";
 import Button from "@mui/material/Button";
 import Stack from "@mui/material/Stack";
 import StarHalfIcon from "@mui/icons-material/StarHalf";
 import Box from "@mui/material/Box";
 import Modal from "@mui/material/Modal";
+import LineChart from "../Analytics-Components/LineChart";
+import { chartDummyData } from "../common/data";
 
 const ProductItem = (props) => {
   const { product } = props;
@@ -26,12 +28,47 @@ const ProductItem = (props) => {
     border: "none",
     boxShadow: 24,
     p: 4,
+    borderRadius: 3,
+  };
+  const styleChart = {
+    position: "absolute",
+    top: "50%",
+    left: "50%",
+    transform: "translate(-50%, -50%)",
+    width: {
+      xl: 700,
+      lg: 700,
+      md: 500,
+      sm: 500,
+      xs: 400,
+    },
+    minHeight: 450,
+    height: {
+      xl: 650,
+      lg: 590,
+      md: 520,
+      sm: 430,
+      xs: 430,
+    },
+    display: "flex",
+    flexDirection: "column",
+    justifyContent: "center",
+    alignItems: "center",
+    gap: "30px",
+    bgcolor: "background.paper",
+    border: "none",
+    boxShadow: 24,
+    p: 4,
+    borderRadius: 3,
     // borderRadius: "10px",
   };
 
-  const [imageOpen, setImageOpen] = React.useState(false);
+  const [imageOpen, setImageOpen] = useState(false);
+  const [chartOpen, setChartOpen] = useState(false);
   const handleImageOpen = () => setImageOpen(true);
   const handleImageClose = () => setImageOpen(false);
+  const handleChartOpen = () => setChartOpen(true);
+  const handleChartClose = () => setChartOpen(false);
 
   return (
     <Stack
@@ -90,7 +127,7 @@ const ProductItem = (props) => {
           borderRadius: "8px",
         }}
         variant="outlined"
-        href="#outlined-buttons"
+        onClick={() => handleChartOpen()}
       >
         View
       </Button>
@@ -103,6 +140,37 @@ const ProductItem = (props) => {
       >
         <Box sx={style}>
           <img src={product?.img_urn}></img>
+        </Box>
+      </Modal>
+      <Modal
+        open={chartOpen}
+        onClose={handleChartClose}
+        // aria-labelledby="modal-modal-title"
+        // aria-describedby="modal-modal-description"
+      >
+        <Box sx={styleChart}>
+          <LineChart data={chartDummyData} />
+          <Box
+            sx={{
+              backgroundColor: "#F5F5F7",
+              padding: 2,
+            }}
+          >
+            <a style={{ color: "#0C0B0B" }} href="#">
+              <a
+                href={product?.product_link}
+                style={{
+                  padding: "0",
+                  margin: "0",
+                  textDecoration: "underline",
+                  fontWeight: "bolder",
+                }}
+              >
+                {product?.product_title}
+              </a>
+            </a>
+            <p>Current Price : {product?.current_price} INR</p>
+          </Box>
         </Box>
       </Modal>
     </Stack>
