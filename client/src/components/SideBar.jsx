@@ -7,21 +7,25 @@ import MessageIcon from "@mui/icons-material/Message";
 import { Box, Container } from "@mui/system";
 import { Link, useNavigate } from "react-router-dom";
 import { signOut } from "../middleware/auth";
-import {useDispatch,useSelector} from 'react-redux';
-import { UserState } from "../slices/userSlice";
+import { useDispatch, useSelector } from "react-redux";
+import Man from "../images/man.jpg";
+import { selectUser, UserState } from "../slices/userSlice";
+import { Avatar } from "@mui/material";
+import { getProfilePicImageURL } from "../utils/utilities";
 
 const SideBar = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const userState = useSelector(UserState);
-  const signOutHandler = async ()=>{
-    await signOut(dispatch,navigate)
-  }
+  const user = useSelector(selectUser);
+  const signOutHandler = async () => {
+    await signOut(dispatch, navigate);
+  };
   return (
     <Box
       sx={{
         borderRadius: "20px",
-        marginLeft:"5px",
+        marginLeft: "5px",
         padding: "25px 30px",
         display: {
           xs: "none",
@@ -41,7 +45,7 @@ const SideBar = () => {
         flexWrap: "wrap",
       }}
     >
-      <div style={{ flex: "1",fontSize:"30px" }}>
+      <div style={{ flex: "1", fontSize: "30px" }}>
         <h1>PT</h1>
       </div>
 
@@ -57,13 +61,32 @@ const SideBar = () => {
         <Link to="/" style={{ color: `grey`, cursor: "pointer" }}>
           <HomeIcon />
         </Link>
-        <Link style={{ color: `grey`, cursor: "pointer" ,display:`${userState?.isLoggedIn ? "" : "none" }`}}>
+        <Link
+          style={{
+            color: `grey`,
+            cursor: "pointer",
+            display: `${userState?.isLoggedIn ? "" : "none"}`,
+          }}
+        >
           <MessageIcon />
         </Link>
-        <Link to="/profile" style={{ color: `grey`, cursor: "pointer",display:`${userState?.isLoggedIn ? "" : "none" }` }}>
+        <Link
+          to="/profile"
+          style={{
+            color: `grey`,
+            cursor: "pointer",
+            display: `${userState?.isLoggedIn ? "" : "none"}`,
+          }}
+        >
           <PersonIcon />
         </Link>
-        <Link style={{ color: `grey`, cursor: "pointer" ,display:`${userState?.isLoggedIn ? "" : "none" }`}}>
+        <Link
+          style={{
+            color: `grey`,
+            cursor: "pointer",
+            display: `${userState?.isLoggedIn ? "" : "none"}`,
+          }}
+        >
           <SettingsIcon />
         </Link>
       </div>
@@ -74,16 +97,31 @@ const SideBar = () => {
           display: "flex",
           flexDirection: "column",
           justifyContent: "center",
+          gap: "50px",
           alignItems: "center",
           borderRadius: "14px",
         }}
-       
       >
-        <LogoutIcon 
-        onClick = {()=>{
-          signOutHandler()
-        }}  
-        sx={{ cursor : "pointer" ,display:`${userState?.isLoggedIn ? "" : "none" }` }}/>
+        <Link to="/profile">
+          <Avatar
+            src={
+              user?.profile_pic ? getProfilePicImageURL(user?.profile_pic) : Man
+            }
+            sx={{
+              border: "solid 1px white",
+              cursor: "pointer",
+            }}
+          />
+        </Link>
+        <LogoutIcon
+          onClick={() => {
+            signOutHandler();
+          }}
+          sx={{
+            cursor: "pointer",
+            display: `${userState?.isLoggedIn ? "" : "none"}`,
+          }}
+        />
       </div>
     </Box>
   );

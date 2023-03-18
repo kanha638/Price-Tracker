@@ -1,6 +1,4 @@
 import {
-  AddProductError,
-  AddProductStart,
   AuthError,
   AuthStart,
   AuthSuccess,
@@ -12,15 +10,16 @@ import {
   SignOutSuccess,
 } from "../slices/userSlice";
 import axios from "axios";
+import { serverURL } from "../utils/utilities";
+
+const API = axios.create({ baseURL: serverURL });
 
 export const signUp = async (data, dispatch, navigate) => {
   dispatch(AuthStart());
   try {
-    const response = await axios.post(
-      "http://localhost:8005/api/auth/sign-up",
-      data,
-      { withCredentials: true }
-    );
+    const response = await API.post("/api/auth/sign-up", data, {
+      withCredentials: true,
+    });
     dispatch(AuthSuccess(response.data));
     navigate("/");
   } catch (error) {
@@ -31,11 +30,9 @@ export const signUp = async (data, dispatch, navigate) => {
 export const signIn = async (data, dispatch, navigate) => {
   dispatch(AuthStart());
   try {
-    const response = await axios.post(
-      "http://localhost:8005/api/auth/sign-in",
-      data,
-      { withCredentials: true }
-    );
+    const response = await API.post("/api/auth/sign-in", data, {
+      withCredentials: true,
+    });
     dispatch(AuthSuccess(response.data));
     navigate("/");
   } catch (error) {
@@ -47,10 +44,9 @@ export const signIn = async (data, dispatch, navigate) => {
 export const signOut = async (dispatch, navigate) => {
   dispatch(SignOutStart());
   try {
-    const response = await axios.get(
-      "http://localhost:8005/api/auth/sign-out",
-      { withCredentials: true }
-    );
+    const response = await API.get("/api/auth/sign-out", {
+      withCredentials: true,
+    });
     dispatch(SignOutSuccess());
     navigate("/sign-in");
   } catch (error) {
@@ -62,7 +58,7 @@ export const signOut = async (dispatch, navigate) => {
 export const Me = async (dispatch) => {
   dispatch(MeStart());
   try {
-    const response = await axios.get("http://localhost:8005/api/auth/me", {
+    const response = await API.get("/api/auth/me", {
       withCredentials: true,
     });
     dispatch(MeSuccess(response.data));

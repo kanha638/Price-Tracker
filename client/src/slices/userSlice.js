@@ -88,9 +88,12 @@ const userSlice = createSlice({
       state.isErrors = true;
       state.isPending = false;
     },
+    profilePicUploadSuccess: (state, action) => {
+      state.isErrors = false;
+      state.userInfo.profile_pic = action.payload;
+    },
   },
 });
-
 export const {
   AuthStart,
   AuthSuccess,
@@ -107,6 +110,7 @@ export const {
   fetchAllProductsError,
   fetchAllProductsStart,
   fetchAllProductsSuccess,
+  profilePicUploadSuccess,
 } = userSlice.actions;
 export const selectUser = (state) => state.user.userInfo;
 export const UserState = (state) => state.user;
