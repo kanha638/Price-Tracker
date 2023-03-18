@@ -2,9 +2,37 @@ import React from "react";
 import Button from "@mui/material/Button";
 import Stack from "@mui/material/Stack";
 import StarHalfIcon from "@mui/icons-material/StarHalf";
+import Box from "@mui/material/Box";
+import Modal from "@mui/material/Modal";
 
 const ProductItem = (props) => {
   const { product } = props;
+  const style = {
+    position: "absolute",
+    top: "50%",
+    left: "50%",
+    transform: "translate(-50%, -50%)",
+    width: {
+      xl: 700,
+      lg: 700,
+      md: 500,
+      sm: 500,
+      xs: 400,
+    },
+    display: "flex",
+    justifyContent: "center",
+    alignItems: "center",
+    bgcolor: "background.paper",
+    border: "none",
+    boxShadow: 24,
+    p: 4,
+    // borderRadius: "10px",
+  };
+
+  const [imageOpen, setImageOpen] = React.useState(false);
+  const handleImageOpen = () => setImageOpen(true);
+  const handleImageClose = () => setImageOpen(false);
+
   return (
     <Stack
       direction="row"
@@ -23,6 +51,7 @@ const ProductItem = (props) => {
         style={{ height: "64px", width: "64px", flex: "1" }}
         src={product?.img_urn}
         alt={product?.product_title}
+        onClick={() => handleImageOpen()}
       />
       <div style={{ flex: "3" }}>
         <a style={{ color: "#0C0B0B" }} href="#">
@@ -65,6 +94,17 @@ const ProductItem = (props) => {
       >
         View
       </Button>
+
+      <Modal
+        open={imageOpen}
+        onClose={handleImageClose}
+        // aria-labelledby="modal-modal-title"
+        // aria-describedby="modal-modal-description"
+      >
+        <Box sx={style}>
+          <img src={product?.img_urn}></img>
+        </Box>
+      </Modal>
     </Stack>
   );
 };
