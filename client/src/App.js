@@ -6,37 +6,32 @@ import Home from "./pages/Home";
 import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
 import ResetPassword from "./components/ResetPassword";
 import { Me } from "./middleware/auth";
-import {useDispatch} from "react-redux"
+import { useDispatch } from "react-redux";
 import { ThemeProvider } from "@emotion/react";
-import {globalTheme} from "../src/utils/themes"
-
+import { globalTheme } from "../src/utils/themes";
 
 function App() {
-  const dispatch = useDispatch()
-  const CallMeRoute = async ()=>{
-    await Me(dispatch)
-  }
-  useEffect(()=>{
-    CallMeRoute()
-  },[])
+  const dispatch = useDispatch();
+  const CallMeRoute = async () => {
+    await Me(dispatch);
+  };
+  useEffect(() => {
+    CallMeRoute();
+  }, []);
+
   return (
-   
-    
     <div>
-    <ThemeProvider globalTheme={globalTheme}>
-      <Router>
-        <Routes>
-          <Route path="/reset-password" element={<ResetPassword />} />
-          <Route path="/sign-in" element={<SignIn />} />
-          <Route path="/sign-up" element={<SignUp />} />
-          <Route path="/*" element={<Home />} />
-        </Routes>
-      </Router>
+      <ThemeProvider theme={globalTheme}>
+        <Router>
+          <Routes>
+            <Route path="/reset-password" element={<ResetPassword />} />
+            <Route path="/sign-in" element={<SignIn />} />
+            <Route path="/sign-up" element={<SignUp />} />
+            <Route path="/*" element={<Home />} />
+          </Routes>
+        </Router>
       </ThemeProvider>
     </div>
-    
-   
-    
   );
 }
 

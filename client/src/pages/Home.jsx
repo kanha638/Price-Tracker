@@ -10,23 +10,26 @@ import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
 import Catalog from "../components/Catalog";
 import Error from "../components/Error";
 import { UserState } from "../slices/userSlice";
-import {useSelector} from "react-redux"
+import { useSelector } from "react-redux";
 import SignIn from "../components/SignIn";
 
 const Home = () => {
-  const userState = useSelector(UserState)
+  const userState = useSelector(UserState);
   return (
     <div>
-     <SideBar/>
-    
+      <SideBar />
+
       <Routes>
         <Route path="" element={<Catalog />} />
-        <Route path="profile" element={ <UserProfile2 />} ></Route>
+        <Route
+          path="profile"
+          element={
+            userState?.isLoggedIn === true ? <UserProfile2 /> : <SignIn />
+          }
+        ></Route>
         <Route path="*" element={<Error />}></Route>
       </Routes>
-     
     </div>
-    
   );
 };
 
