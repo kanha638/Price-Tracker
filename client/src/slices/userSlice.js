@@ -1,10 +1,15 @@
 import { createSlice } from "@reduxjs/toolkit";
+import {
+  clearLcoalCache,
+  getItemFromLocalCache,
+  setItemInLocalCache,
+} from "../cache/localStorage";
 
 const userSlice = createSlice({
   name: "user",
   initialState: {
-    userInfo: null,
-    isLoggedIn: false,
+    userInfo: getItemFromLocalCache("userInfo"),
+    isLoggedIn: getItemFromLocalCache("isLoggedIn") === null ? false : true,
     isPending: false,
     isErrors: false,
     errorMessage: {
@@ -20,6 +25,8 @@ const userSlice = createSlice({
       state.isPending = false;
       state.userInfo = action.payload;
       state.isLoggedIn = true;
+      setItemInLocalCache("userInfo", action.payload);
+      setItemInLocalCache("isLoggedIn", true);
     },
     AuthError: (state, action) => {
       state.isErrors = true;
@@ -35,6 +42,7 @@ const userSlice = createSlice({
       state.isPending = false;
       state.userInfo = null;
       state.isLoggedIn = false;
+      clearLcoalCache();
     },
     SignOutError: (state) => {
       state.isErrors = true;
@@ -48,10 +56,13 @@ const userSlice = createSlice({
       state.isLoggedIn = true;
       state.isErrors = false;
       state.userInfo = action.payload;
+      setItemInLocalCache("userInfo", action.payload);
+      setItemInLocalCache("isLoggedIn", true);
     },
     MeError: (state, action) => {
       state.userInfo = null;
       state.isLoggedIn = false;
+      clearLcoalCache();
     },
     AddProductStart: (state) => {
       state.isPending = true;
