@@ -134,6 +134,7 @@ export const Me = async (req: Request, res: Response) => {
         createdAt: true,
         id: true,
         mobileNum: true,
+        profile_pic: true,
       },
     });
     return res.json(user);
