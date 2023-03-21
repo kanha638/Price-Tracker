@@ -1,2 +1,8 @@
 /env
 /app/testing.py
+/__pycache__
+/app/__pycache__
+/app/product/__pycache__
+/app/main/__pycache__
+/models/__pycache__
+/app/creds.py
