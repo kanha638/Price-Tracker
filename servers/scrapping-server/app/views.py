@@ -1,6 +1,6 @@
 from app import app
 from app.scraper import Amazon,Flipkart
-from flask import request , jsonify ,abort
+from flask import request, jsonify, abort
 import time
 import asyncio
 
@@ -10,6 +10,7 @@ import asyncio
 #     print(request.url)
 #     if request.host_url != "http://127.0.0.1:5000/" or request.host_url != "http://127.0.0.1:8005/":
 #         abort(401)
+
     
 @app.route('/')
 def index():

@@ -1,2 +1,5 @@
 /env
 /app/testing.py
+/app/creds.py
+/app/__pycache__
+__pycache__
