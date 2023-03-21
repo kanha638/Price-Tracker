@@ -14,9 +14,9 @@ import Container from "@mui/material/Container";
 import { ThemeProvider } from "@mui/material/styles";
 import Copyright from "./Copyright";
 import { theme } from "../utils/themes";
-import axios from "axios";
+
 import { useDispatch } from "react-redux";
-import { AuthStart } from "../slices/userSlice";
+
 import { signUp } from "../middleware/auth";
 
 export default function SignUp() {

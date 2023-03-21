@@ -20,7 +20,7 @@ import { theme } from "../utils/themes";
 export default function ResetPassword() {
   const handleSubmit = (event) => {
     event.preventDefault();
-    const data = new FormData(event.currentTarget);
+    // const data = new FormData(event.currentTarget);
   };
 
   const email = {

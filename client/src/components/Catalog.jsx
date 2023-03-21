@@ -2,14 +2,14 @@ import { Box, Container } from "@mui/system";
 import React from "react";
 import AllProducts from "./AllProducts";
 import IntroCard from "./IntroCard";
-import { useSelector } from "react-redux";
-import { selectUser, UserState } from "../slices/userSlice";
+// import { useSelector } from "react-redux";
+// import { selectUser, UserState } from "../slices/userSlice";
 import ProductCount from "./ProductCount";
 import ProductAddCatalog from "./ProductAddCatalog";
 
 const Catalog = () => {
-  const user = useSelector(selectUser);
-  const userState = useSelector(UserState);
+  // const user = useSelector(selectUser);
+  // const userState = useSelector(UserState);
 
   return (
     <Box

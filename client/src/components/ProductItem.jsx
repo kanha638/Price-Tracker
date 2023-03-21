@@ -92,7 +92,7 @@ const ProductItem = (props) => {
       />
       <div style={{ flex: "3" }}>
         <a style={{ color: "#0C0B0B" }} href="#">
-          <a
+          <a target="_blank"
             href={product?.product_link}
             style={{
               padding: "0",
@@ -139,7 +139,7 @@ const ProductItem = (props) => {
         // aria-describedby="modal-modal-description"
       >
         <Box sx={style}>
-          <img src={product?.img_urn}></img>
+          <img src={product?.img_urn} alt="Not Found"></img>
         </Box>
       </Modal>
       <Modal

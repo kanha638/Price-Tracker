@@ -1,5 +1,4 @@
-import {configureStore,getDefaultMiddleware} from "@reduxjs/toolkit";
-import { auth } from "../middleware/auth";
+import {configureStore} from "@reduxjs/toolkit";
 import usersReducer from '../slices/userSlice';
 
 export default configureStore({
