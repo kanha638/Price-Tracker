@@ -1,7 +1,8 @@
+from flask import jsonify
 import requests
 from bs4 import BeautifulSoup
 from playwright.async_api import async_playwright
-from globals import currencies
+from app.product.globals import currencies
 
 
 class Flipkart:
@@ -12,21 +13,23 @@ class Flipkart:
 
     async def get_soup(self, url):
         '''
-            Fetches the url data and returns soup object.
-            params: url whose data to be fetched
-            Returns: Soup of page requested
+        Fetches the url data and returns soup object.
+
+        params: url whose data to be fetched
+
+        Returns: Soup of page requested
         '''
         page = requests.get(url, headers=self.headers)
-        soup = BeautifulSoup(page.content, 'lxml')
+        soup = BeautifulSoup(page.content, 'html.parser')
         return soup
 
-    async def scrape(self, url):
+    async def scrape_product(self, url: str) -> dict:
         '''
-        Function to scrape product title, price, price currency, MRP, availability, rating, rating count and image link from flipkart's website.
+        Function to scrape product details from flipkart's website.
 
         params: url of the product to be scraped
 
-        Returns : 
+        Returns :
         {
             'Title': title,
             'Price': price,
@@ -111,7 +114,7 @@ class Flipkart:
 
         return product
 
-    async def scrape_price(self, url):
+    async def scrape_price(self, url: str) -> float:
         '''
             Scrapes the price of product.
 
@@ -130,7 +133,7 @@ class Flipkart:
 
 
 class Amazon:
-    def __init__(self, pincode: str = '303108'):
+    def __init__(self, pincode: str = '303108') -> None:
         self.pincode = pincode
 
     async def get_soup(self, url):
@@ -171,13 +174,13 @@ class Amazon:
 
             return soup
 
-    async def scrape(self, url):
+    async def scrape_product(self, url) -> dict:
         '''
-        Function to scrape product title, price, price currency, MRP, availability, rating, rating count and image link from amazon's website.
+        Function to scrape product details from amazon's website.
 
         params: url of the product to be scraped
 
-        Returns : 
+        Returns :
         {
             'Title': title,
             'Price': price,
@@ -264,7 +267,7 @@ class Amazon:
 
         return product
 
-    async def scrape_price(self, url):
+    async def scrape_price(self, url) -> float:
         '''
         Scrapes the price of product.
         params: url of product whose price to be tracked
@@ -277,3 +280,65 @@ class Amazon:
                 '₹', '').replace('$', '').strip())
 
         return price
+
+
+class Scraper:
+    def __init__(self) -> None:
+        # create scraper objects for Flipkart and Amazon
+        self.flipkart = Flipkart()
+        self.amazon = Amazon()
+
+        # map product scraper functions
+        self.scraper_product_dict = {
+            'flipkart': self.flipkart.scrape_product,
+            'amazon': self.amazon.scrape_product
+        }
+
+        # map price scraper functions
+        self.scraper_price_dict = {
+            'flipkart': self.flipkart.scrape_price,
+            'amazon': self.amazon.scrape_price
+        }
+
+    async def scrape_product(self, url: str) -> dict:
+        '''
+        Function to scrape product details for the given url.
+
+        params: url of the product to be scraped
+
+        Returns :
+        {
+            'Title': title,
+            'Price': price,
+            'Currency': currency,
+            'MRP': mrp,
+            'Availability': availability,
+            'Rating': rating,
+            'Rating_Count': rating_count,
+            'Image_Link': img_link,
+        }
+        '''
+
+        website = url.strip().split('/')[2].split('.')[1]
+        try:
+            scraper_function = self.scraper_product_dict.get(website)
+        except:
+            error_message = {
+                "message": "Entered website is not supported now! Please check back later."
+            }
+            return jsonify(error_message)
+
+        return await scraper_function(url)
+
+    async def scrape_price(self, url: str) -> float:
+        '''
+        Scrapes the price of product.
+
+        params: url of product whose price to be tracked
+
+        Returns: Price of the product at that particular time.
+        '''
+
+        website = url.strip().split('/')[2].split('.')[1]
+        scraper_function = self.scraper_price_dict.get(website)
+        return await scraper_function(url)
