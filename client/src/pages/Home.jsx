@@ -1,12 +1,10 @@
-import { Container } from "@mui/system";
+
 import React from "react";
-import AllProducts from "../components/AllProducts";
-import IntroCard from "../components/IntroCard";
+
 import SideBar from "../components/SideBar";
-import SignUp from "../components/SignUp";
-import UserProfile from "../components/UserProfile";
+
 import UserProfile2 from "../components/UserProfile2";
-import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
+import {Route, Routes } from "react-router-dom";
 import Catalog from "../components/Catalog";
 import Error from "../components/Error";
 import { UserState } from "../slices/userSlice";

@@ -4,7 +4,7 @@ import LogoutIcon from "@mui/icons-material/Logout";
 import PersonIcon from "@mui/icons-material/Person";
 import SettingsIcon from "@mui/icons-material/Settings";
 import MessageIcon from "@mui/icons-material/Message";
-import { Box, Container } from "@mui/system";
+import { Box } from "@mui/system";
 import { Link, useNavigate } from "react-router-dom";
 import { signOut } from "../middleware/auth";
 import { useDispatch, useSelector } from "react-redux";
@@ -37,7 +37,7 @@ const SideBar = () => {
         height: "95vh",
         top: "10px",
         border: "1px solid black",
-        position: "absolute",
+        position: "fixed",
         background: "#0C0B0B",
         color: "white",
         flexDirection: "column",

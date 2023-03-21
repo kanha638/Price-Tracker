@@ -11,7 +11,7 @@ const IntroCard = () => {
         sx={{
           marginLeft: "0px",
           marginRight: "0px",
-          width: "100%",
+          width: "75%",
           backgroundColor: "#F5F5F7",
           borderRadius: "14px",
           // border: "solid 2px black",

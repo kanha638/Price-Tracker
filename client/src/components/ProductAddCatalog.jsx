@@ -1,5 +1,5 @@
-import React, { useState, useEffect } from "react";
-import { Container, height, textAlign } from "@mui/system";
+import React, { useState} from "react";
+import { Container } from "@mui/system";
 import Box from "@mui/material/Box";
 import Modal from "@mui/material/Modal";
 import { Button, TextField } from "@mui/material";
@@ -7,7 +7,6 @@ import { useTheme } from "@mui/material/styles";
 import OutlinedInput from "@mui/material/OutlinedInput";
 import InputLabel from "@mui/material/InputLabel";
 import MenuItem from "@mui/material/MenuItem";
-import FormControl from "@mui/material/FormControl";
 import Select from "@mui/material/Select";
 import { supportedWebsites } from "../common/data";
 import { AddProduct } from "../middleware/product";

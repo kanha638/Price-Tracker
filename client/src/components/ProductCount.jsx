@@ -1,5 +1,5 @@
 import React from "react";
-import { Container, height, textAlign } from "@mui/system";
+import { Container} from "@mui/system";
 import Box from "@mui/material/Box";
 
 const ProductCount = (props) => {
@@ -24,7 +24,6 @@ const ProductCount = (props) => {
             display: "flex",
             alignItems: "center",
             fontSize: "1.9rem",
-            display: "flex",
             justifyContent: "space-between",
           }}
         >

@@ -1,6 +1,5 @@
 import React from "react";
-import SearchIcon from "@mui/icons-material/Search";
-import Typography from "@mui/material/Typography";
+
 import { getFakeProducts } from "../fakeProducts";
 import { useState, useEffect } from "react";
 import ProductCard from "./ProductCard";
@@ -9,17 +8,17 @@ import Man from "../images/man.jpg";
 import { Avatar, Button } from "@mui/material";
 import TextField from "@mui/material/TextField";
 import { useDispatch, useSelector } from "react-redux";
-import { selectUser, UserState } from "../slices/userSlice";
-import { useNavigate } from "react-router-dom";
+import { selectUser } from "../slices/userSlice";
+
 import Tabs from "@mui/material/Tabs";
 import Tab from "@mui/material/Tab";
-import { createTheme, ThemeProvider } from "@mui/material/styles";
+
 import { getProfilePicImageURL } from "../utils/utilities";
 import { uploadProfilePicture } from "../middleware/user";
 
 function UserProfile2() {
-  const userState = useSelector(UserState);
-  const navigate = useNavigate();
+
+
   const user = useSelector(selectUser);
   const dispatch = useDispatch();
   const [userData, setUserData] = useState({
