@@ -1,0 +1,64 @@
+{
+	"info": {
+		"_postman_id": "9f2e3cac-2b87-4f83-8c3e-d128b55c7b8f",
+		"name": "User",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "19552521",
+		"_collection_link": "https://planetary-star-55364.postman.co/workspace/price-tracker~f60ea787-db8a-4da6-9c95-cbf457d0418b/collection/19552521-9f2e3cac-2b87-4f83-8c3e-d128b55c7b8f?action=share&creator=19552521&source=collection_link"
+	},
+	"item": [
+		{
+			"name": "Get user from id",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:8005/api/user/cleylzdw30000r1nqmvw5nacg",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8005",
+					"path": [
+						"api",
+						"user",
+						"cleylzdw30000r1nqmvw5nacg"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Upload Profile Picture",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "formdata",
+					"formdata": [
+						{
+							"key": "file",
+							"type": "file",
+							"src": "/Users/tiwarikanha26/Desktop/331231675_155503590635155_4215226977256614721_n.jpg"
+						}
+					]
+				},
+				"url": {
+					"raw": "http://localhost:8005/api/user/upload/cleylzdw30000r1nqmvw5nacg",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8005",
+					"path": [
+						"api",
+						"user",
+						"upload",
+						"cleylzdw30000r1nqmvw5nacg"
+					]
+				}
+			},
+			"response": []
+		}
+	]
+}
