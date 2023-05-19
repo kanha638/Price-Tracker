@@ -1,0 +1,33 @@
+{
+	"info": {
+		"_postman_id": "b1635e47-d2de-4612-ba49-33b355f0a8dd",
+		"name": "files",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "19552521",
+		"_collection_link": "https://planetary-star-55364.postman.co/workspace/price-tracker~f60ea787-db8a-4da6-9c95-cbf457d0418b/collection/19552521-b1635e47-d2de-4612-ba49-33b355f0a8dd?action=share&creator=19552521&source=collection_link"
+	},
+	"item": [
+		{
+			"name": "Get Profile picture",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:8005/api/file/img/9rjMBgTymH8shAF.png",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8005",
+					"path": [
+						"api",
+						"file",
+						"img",
+						"9rjMBgTymH8shAF.png"
+					]
+				}
+			},
+			"response": []
+		}
+	]
+}

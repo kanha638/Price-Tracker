@@ -1,0 +1,151 @@
+{
+	"info": {
+		"_postman_id": "b9bcd4aa-71f5-4b6a-9cda-e6bfbc489d3a",
+		"name": "Product",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "19552521",
+		"_collection_link": "https://planetary-star-55364.postman.co/workspace/price-tracker~f60ea787-db8a-4da6-9c95-cbf457d0418b/collection/19552521-b9bcd4aa-71f5-4b6a-9cda-e6bfbc489d3a?action=share&creator=19552521&source=collection_link"
+	},
+	"item": [
+		{
+			"name": "Product-add-flipkart",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"website\":\"flipkart\",\n    \"product_url\":\"https://www.flipkart.com/manforce-condom-chocolate-flavoured-1-set-10s/p/itmb5693a1c11691?pid=CDMGFCXRQMNH7ZFH&lid=LSTCDMGFCXRQMNH7ZFHVQVD6B&marketplace=FLIPKART&q=condom&store=g9b%2Falu%2Ftdd&srno=s_1_4&otracker=search&otracker1=search&fm=Search&iid=f3adeb1b-38f0-4d04-99ca-a50a24f021a3.CDMGFCXRQMNH7ZFH.SEARCH&ppt=sp&ppn=sp&qH=89e5e7292f993cc8\"\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:8005/api/product/add-product",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8005",
+					"path": [
+						"api",
+						"product",
+						"add-product"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Get All Products",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:8005/api/product/all-products",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8005",
+					"path": [
+						"api",
+						"product",
+						"all-products"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Subscribed products",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:8005/api/product/subscribed/my",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8005",
+					"path": [
+						"api",
+						"product",
+						"subscribed",
+						"my"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Subscribe some product",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:8005/api/product/subscribe/",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8005",
+					"path": [
+						"api",
+						"product",
+						"subscribe",
+						""
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "unsubscribe some product ",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:8005/api/product/unsubscribe/1",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8005",
+					"path": [
+						"api",
+						"product",
+						"unsubscribe",
+						"1"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Getting Product Added  by some user ",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:8005/api/product/product-added/my",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8005",
+					"path": [
+						"api",
+						"product",
+						"product-added",
+						"my"
+					]
+				},
+				"description": "ALl the products which he has added into the database"
+			},
+			"response": []
+		}
+	]
+}
