@@ -1,0 +1,11 @@
+version: "3"
+services:
+  notification-app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    ports:
+      - 4200:4200
+    volumes:
+      - "./node_modules:/app/node_modules"
+    command: ["npm", "run", "dev"]
