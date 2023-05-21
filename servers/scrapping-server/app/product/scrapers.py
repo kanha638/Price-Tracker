@@ -1,5 +1,6 @@
 from flask import jsonify
 import requests
+import json
 from bs4 import BeautifulSoup
 from playwright.async_api import async_playwright
 from app.product.globals import currencies
@@ -38,6 +39,7 @@ class Flipkart:
             'Availability': availability,
             'Rating': rating,
             'Rating_Count': rating_count,
+            'Category': category,
             'Image_Link': img_link,
         }
         '''
@@ -67,6 +69,13 @@ class Flipkart:
         else:
             availability = 'Out of Stock'
 
+        categories = soup.find_all('a', {'class': '_2whKao'})
+        if categories:
+            category = categories[1].text.strip() if len(
+                categories) > 1 else categories[0].text.strip()
+        else:
+            categories = "Not Found"
+
         rating_not_available_block = soup.find('span', {'class': '_2dMYsv'})
         if rating_not_available_block:
             rating = float(0)
@@ -84,7 +93,8 @@ class Flipkart:
                     rating_count = float(rating_count.span.text.replace(
                         'Ratings', '').replace(',', '').strip().split(' ', 1)[0])
                 else:
-                    rating_count = float(rating_count.text.split()[0])
+                    rating_count = float(rating_count.text.replace(
+                        'Ratings', '').replace(',', '').strip().split()[0])
             else:
                 rating_count = float(0)
 
@@ -109,6 +119,7 @@ class Flipkart:
             'Availability': availability,
             'Rating': rating,
             'Rating_Count': rating_count,
+            'Category': category,
             'Image_Link': img_link,
         }
 
@@ -147,21 +158,24 @@ class Amazon:
         '''
         async with async_playwright() as p:
             browser = await p.chromium.launch()
-            page = await browser.new_page()
+            context = await browser.new_context(
+                user_agent="Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/96.0.4664.93 Safari/537.36")
+
+            page = await context.new_page()
 
             # Wait for page to goto url
             await page.goto(url, timeout=2000000)
 
-            if self.pincode:
-                await page.click('#nav-global-location-popover-link')
-                await page.wait_for_selector('#GLUXZipUpdateInput')
-                await page.type('#GLUXZipUpdateInput', self.pincode)
-                # Waits for the next navigation. Using Python context manager
-                # prevents a race condition between clicking and waiting for a navigation.
-                async with page.expect_navigation():
-                    await page.click('#GLUXZipUpdate > span > input')
-                    # Reload the page after clicking apply button for pincode
-                    await page.reload()
+            # if self.pincode:
+            #     await page.click('#nav-global-location-popover-link')
+            #     await page.wait_for_selector('#GLUXZipUpdateInput')
+            #     await page.type('#GLUXZipUpdateInput', self.pincode)
+            #     # Waits for the next navigation. Using Python context manager
+            #     # prevents a race condition between clicking and waiting for a navigation.
+            #     async with page.expect_navigation():
+            #         await page.click('#GLUXZipUpdate > span > input')
+            #         # Reload the page after clicking apply button for pincode
+            #         await page.reload()
 
             # Get the HTML content of the page
             html = await page.content()
@@ -189,6 +203,7 @@ class Amazon:
             'Availability': availability,
             'Rating': rating,
             'Rating_Count': rating_count,
+            'Category': category,
             'Image_Link': img_link,
         }
         '''
@@ -207,6 +222,7 @@ class Amazon:
         mrp_block = page.find(
             class_='a-size-small a-color-secondary aok-align-center basisPrice')
         mrp = None
+
         # ToDo : handle if MRP is not available
         if mrp_block:
             mrp = mrp_block.find('span', {'class': 'a-price a-text-price'}).find(
@@ -214,6 +230,8 @@ class Amazon:
             if mrp:
                 mrp = float(mrp.text.replace(',', '').replace(
                     '₹', '').replace('€', '').replace('$', '').strip())
+        else:
+            mrp = price
 
         currency = page.find('span', {'class': 'a-price-symbol'})
         if currency:
@@ -231,6 +249,15 @@ class Amazon:
                 availability = 'Out of Stock'
         else:
             availability = 'Out of Stock'
+
+        categories_div = page.find(
+            'div', {'id': 'wayfinding-breadcrumbs_feature_div'})
+        if categories_div:
+            categories = categories_div.find(
+                'ul', {'class': 'a-unordered-list a-horizontal a-size-small'})
+            category = categories.find_all('li')[2].find('a').text.strip()
+        else:
+            category = 'Not Found'
 
         rating_block = page.find('div', {'id': 'averageCustomerReviews'})
         if rating_block:
@@ -262,6 +289,7 @@ class Amazon:
             'Availability': availability,
             'Rating': rating,
             'Rating_Count': rating_count,
+            'Category': category,
             'Image_Link': img_link,
         }
 
@@ -282,22 +310,200 @@ class Amazon:
         return price
 
 
+class Myntra:
+    def __init__(self) -> None:
+        pass
+
+    async def get_soup(self, url):
+        '''
+            Fetches the url data from amazon and returns soup object.
+
+            params: Myntra url whose data to be fetched
+
+            Returns: Soup object of page requested
+        '''
+
+        async with async_playwright() as p:
+            browser = await p.chromium.launch()
+            context = await browser.new_context(
+                user_agent="Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/96.0.4664.93 Safari/537.36")
+            page = await context.new_page()
+
+            # Wait for page to goto url
+            await page.goto(url, timeout=2000000)
+            # Get the HTML content of the page
+            html = await page.content()
+
+            # Parse the HTML content with BeautifulSoup
+            soup = BeautifulSoup(html, 'html.parser')
+
+            # Close the browser
+            await browser.close()
+
+            return soup
+
+    async def scrape_product(self, url) -> dict:
+        '''
+        Function to scrape product details from amazon's website.
+
+        params: url of the product to be scraped
+
+        Returns :
+        {
+            'Title': title,
+            'Price': price,
+            'Currency': currency,
+            'MRP': mrp,
+            'Availability': availability,
+            'Rating': rating,
+            'Rating_Count': rating_count,
+            'Category': category,
+            'Image_Link': img_link,
+        }
+        '''
+
+        page = await self.get_soup(url=url)
+
+        # select the div containing all categories
+        categories = page.find('div', {'class': 'breadcrumbs-container'})
+        if categories is not None:
+            category = categories.find_all('a', {'class': 'breadcrumbs-link'})[2].text if len(
+                categories) > 2 else categories.find_all('a', {'class': 'breadcrumbs-link'})[1].text
+        else:
+            category = 'Not Found'
+
+        # select the span containing MRP
+        mrp = page.find('span', {'class': 'pdp-mrp'})
+        currency = 'INR'
+        if mrp is not None:
+            mrp = mrp.find('s')
+            mrp = float(mrp.text.replace('MRP', '').replace(',', '').replace(
+                '₹', '').replace('€', '').replace('$', '').strip())
+            print(f'MRP : {mrp}')
+
+        # select the image rating div
+        rating_block = page.find('div', {'class': 'index-overallRating'})
+        rating = float(0)
+        rating_count = float(0)
+        if rating_block is not None:
+            # extract product rating and rating count
+            rating = rating_block.find('div')
+            rating = float(rating.text.replace(
+                ',', '').strip().split(' ')[0])
+
+            rating_count = rating_block.find(
+                'div', {'class': 'index-ratingsCount'}).text.replace('Ratings', '').replace('Rating', '').strip()
+
+            mul = 1
+            if rating_count[-1] == 'k':
+                rating_count = rating_count[:-1]
+                mul = 1000
+            rating_count = float(rating_count) * mul
+
+        script_tags = page.find_all('script', type='application/ld+json')
+        # Search for the script tag with "@type": "Product"
+        desired_script_tag = None
+        for script_tag in script_tags:
+            json_data = json.loads(script_tag.string)
+            if json_data.get('@type') == 'Product':
+                desired_script_tag = script_tag
+                break
+
+        if desired_script_tag is not None:
+            # Extract the contents within the script tag
+            data = json.loads(desired_script_tag.string)
+            title = data.get('name')
+            img_link = data.get('image')
+            price = float(data.get('offers', {}).get('price'))
+            currency = data.get('offers', {}).get('priceCurrency')
+            availability = data.get('offers', {}).get('availability')
+        else:
+            title = page.find('h1', {'class': 'pdp-title'}).text.strip()
+            name = page.find('h1', {'class': 'pdp-name'}).text.strip()
+            title += name
+            price = page.find('span', {'class': 'pdp-price'}).find('strong')
+            if price:
+                if price.text.__contains__('€'):
+                    currency = 'EURO'
+                elif price.text.__contains__('$'):
+                    currency = 'USD'
+
+                price = float(price.text.replace(',', '').replace(
+                    '₹', '').replace('€', '').replace('$', '').strip())
+
+            img_div = page.find(
+                'div', {'class': 'image-grid-image'}).get('style')
+            img_link = img_div.replace(
+                'background-image: url("', '').replace('");', '')
+
+            availability = 'None'
+
+        if mrp is None:
+            mrp = price
+
+        product = {
+            'Title': title,
+            'Price': price,
+            'MRP': mrp,
+            'Currency': currency,
+            'Availability': availability,
+            'Rating': rating,
+            'Rating_Count': rating_count,
+            'Category': category,
+            'Image_Link': img_link,
+        }
+
+        return product
+
+    async def scrape_price(self, url) -> float:
+        '''
+        Scrapes the price of product.
+        params: url of product whose price to be tracked
+        Returns: Price of the product at that particular time.
+        '''
+        page = await self.get_soup(url=url)
+        script_tags = page.find_all('script', type='application/ld+json')
+        # Search for the script tag with "@type": "Product"
+        desired_script_tag = None
+        for script_tag in script_tags:
+            json_data = json.loads(script_tag.string)
+            if json_data.get('@type') == 'Product':
+                desired_script_tag = script_tag
+                break
+
+        price = float(0)
+        if desired_script_tag is not None:
+            # Extract the contents within the script tag
+            data = json.loads(desired_script_tag.string)
+            price = float(data.get('offers', {}).get('price'))
+        else:
+            price = page.find('span', {'class': 'pdp-price'}).find('strong')
+            if price:
+                price = float(price.text.replace(',', '').replace(
+                    '₹', '').replace('€', '').replace('$', '').strip())
+
+        return price
+
+
 class Scraper:
     def __init__(self) -> None:
         # create scraper objects for Flipkart and Amazon
         self.flipkart = Flipkart()
         self.amazon = Amazon()
+        self.myntra = Myntra()
 
         # map product scraper functions
         self.scraper_product_dict = {
             'flipkart': self.flipkart.scrape_product,
-            'amazon': self.amazon.scrape_product
+            'amazon': self.amazon.scrape_product,
+            'myntra': self.myntra.scrape_product
         }
 
         # map price scraper functions
         self.scraper_price_dict = {
             'flipkart': self.flipkart.scrape_price,
-            'amazon': self.amazon.scrape_price
+            'amazon': self.amazon.scrape_price,
+            'myntra': self.myntra.scrape_price
         }
 
     async def scrape_product(self, url: str) -> dict:
