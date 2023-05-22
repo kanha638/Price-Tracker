@@ -151,3 +151,39 @@ export const signOut = async (req: Request, res: Response) => {
     res.status(500).json({ message: "Internal Server Error" });
   }
 };
+export const ForgotPasssword = async (req: Request, res: Response) => {
+  try {
+    const { email } = req.body;
+    if (!email) {
+      return res.status(400).json({ message: "Please provide an email" });
+    }
+
+    const user = await prisma.users.findUnique({
+      where: {
+        email: email,
+      },
+    });
+
+    if (user) {
+      const recoveryToken = jwt.sign(
+        {
+          id: user!.id,
+          email: user!.email,
+        },
+        process.env.JWT_SECRET!,
+        {
+          expiresIn: "15m",
+        }
+      );
+      return res.json({
+        message: "A recovery email has been sent to your email.",
+      });
+    } else {
+      return res
+        .status(404)
+        .json({ message: "User with this email does not exist." });
+    }
+  } catch (error) {
+    return res.status(500).json({ message: "Internal Server Error" });
+  }
+};

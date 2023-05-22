@@ -3,8 +3,7 @@
 		"_postman_id": "9aa77b4a-6782-4e6e-a63d-fd91cbd70705",
 		"name": "Auth",
 		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
-		"_exporter_id": "19552521",
-		"_collection_link": "https://planetary-star-55364.postman.co/workspace/price-tracker~f60ea787-db8a-4da6-9c95-cbf457d0418b/collection/19552521-9aa77b4a-6782-4e6e-a63d-fd91cbd70705?action=share&creator=19552521&source=collection_link"
+		"_exporter_id": "19552521"
 	},
 	"item": [
 		{
@@ -104,6 +103,36 @@
 						"api",
 						"auth",
 						"sign-in"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Forgot Password",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"email\":\"tiwarikanha26@gmail.com\"\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:8005/api/auth/forgot-pass",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8005",
+					"path": [
+						"api",
+						"auth",
+						"forgot-pass"
 					]
 				}
 			},

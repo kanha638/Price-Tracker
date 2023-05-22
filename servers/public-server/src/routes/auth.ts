@@ -1,5 +1,6 @@
 import { Router } from "express";
 import {
+  ForgotPasssword,
   Me,
   setToken,
   signIn,
@@ -7,7 +8,10 @@ import {
   signUp,
 } from "../controllers/auth.controller";
 import { verifyToken } from "../middleware/auth";
-import { rateLimiterAuth } from "../middleware/rateLimiters";
+import {
+  rateLimiterAuth,
+  rateLimiterForForgotPassword,
+} from "../middleware/rateLimiters";
 
 const router = Router();
 
@@ -61,4 +65,19 @@ URL : /api/auth/sign-out
 
 */
 router.get("/sign-out", rateLimiterAuth, verifyToken, signOut);
+
+/*
+
+This Route is for Forgot password for the a user.
+
+Type : POST
+URL : /api/auth/forgot-pass
+Body : {
+  email : "" // Will ask email from user
+}
+
+*/
+
+router.post("/forgot-pass", rateLimiterForForgotPassword, ForgotPasssword);
+
 export default router;
