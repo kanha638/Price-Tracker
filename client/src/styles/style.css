@@ -13,8 +13,8 @@ body {
   display: -ms-flexbox;
   display: flex;
   -webkit-box-pack: justify;
-      -ms-flex-pack: justify;
-          justify-content: space-between;
+  -ms-flex-pack: justify;
+  justify-content: space-between;
   width: 600;
   border: 1px solid black;
   background: #f5f5f7;
@@ -22,7 +22,6 @@ body {
 
 input[type="text"]:focus {
   -webkit-box-shadow: 0 0 0 white;
-          box-shadow: 0 0 0 white;
+  box-shadow: 0 0 0 white;
   border: none;
 }
-/*# sourceMappingURL=style.css.map */
