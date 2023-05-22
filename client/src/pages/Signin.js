@@ -24,12 +24,13 @@ const Signin = () => {
         padding: "0px",
       }}
     >
+      <p></p>
       <form>
         <Box
           display="flex"
           flexDirection={"column"}
           alignItems={"center"}
-          justifyContent={"center"}
+          justifyContent={"space-between"}
           marign="auto"
           // marginTop={5}
           padding={2}
@@ -41,7 +42,6 @@ const Signin = () => {
             minWidth: "300px",
             maxWidth: "550px",
             width: "90%",
-            height: "620px",
             position: "absolute",
             top: "45%",
             left: "50%",
@@ -49,11 +49,30 @@ const Signin = () => {
             boxShadow: "0px 4px 20px rgba(0, 0, 0, 0.08)",
           }}
         >
-          <img
-            alt="logo"
-            src={logo_pt}
-            style={{ height: "120px", width: "120px", borderRadius: "50%" }}
-          />
+          <div
+            style={{
+              width: "90%",
+            }}
+          >
+            <Link to="/" className="link-redirect" style={{ color: "black" }}>
+              <i
+                class="fa-solid fa-arrow-left"
+                style={{ fontSize: "25px" }}
+              ></i>
+            </Link>
+          </div>
+          <Link to="/">
+            <img
+              alt="logo"
+              src={logo_pt}
+              style={{
+                height: "120px",
+                width: "120px",
+                borderRadius: "50%",
+                cursor: "pointer",
+              }}
+            />
+          </Link>
           <Typography
             variant="h4"
             style={{ fontSize: "40px", marginTop: "20px" }}

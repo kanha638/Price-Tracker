@@ -44,19 +44,38 @@ const SignUp = () => {
             minWidth: "300px",
             maxWidth: "550px",
             width: "90%",
-            height: "750px",
             position: "absolute",
             top: "45%",
             left: "50%",
             transform: "translate(-50%, -50%)",
             boxShadow: "0px 4px 20px rgba(0, 0, 0, 0.08)",
+            paddingBottom: "50px",
           }}
         >
-          <img
-            alt="logo"
-            src={logo_pt}
-            style={{ height: "120px", width: "120px", borderRadius: "50%" }}
-          />
+          <div
+            style={{
+              width: "90%",
+            }}
+          >
+            <Link to="/" className="link-redirect" style={{ color: "black" }}>
+              <i
+                class="fa-solid fa-arrow-left"
+                style={{ fontSize: "25px" }}
+              ></i>
+            </Link>
+          </div>
+          <Link to="/">
+            <img
+              alt="logo"
+              src={logo_pt}
+              style={{
+                height: "120px",
+                width: "120px",
+                borderRadius: "50%",
+                cursor: "pointer",
+              }}
+            />
+          </Link>
 
           <Typography
             variant="h4"

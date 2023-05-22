@@ -68,6 +68,16 @@ button {
 .boxShadow {
   box-shadow: rgb(43 52 69 / 10%) 0px 4px 16px;
 }
+/*-----Sign-in/Sign-up------*/
+.link-redirect {
+  font-size: 17px;
+  text-decoration: underline;
+  color: blue;
+}
+
+.link-redirect:hover {
+  color: rgb(105, 26, 105);
+}
 
 /*---------category----------*/
 .contentWidth {

@@ -91,7 +91,7 @@ const Navbar = () => {
                     </Link>
                   </li>
                   <li>
-                    <Link to="/contact">Profile</Link>
+                    <Link to="/profile">Profile</Link>
                   </li>
                 </>
               ) : (

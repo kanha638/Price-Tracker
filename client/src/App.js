@@ -5,6 +5,9 @@ import { useDispatch } from "react-redux";
 import Header from "./components/header/Header";
 import "./styles/style.css";
 import Footer from "./components/footer/Footer";
+import Signin from "./pages/Signin";
+import SignUp from "./pages/Signup";
+import Home from "./pages/Home";
 function App() {
   const dispatch = useDispatch();
   const CallMeRoute = async () => {
@@ -17,11 +20,11 @@ function App() {
   return (
     <>
       <Router>
-        <Header />
+        {/* <Header /> */}
         <Routes>
-          <Route path="/" element={<>Hello Kt</>} />
-          <Route path="/sign-in" element={<h1>Login page</h1>} />
-          <Route path="/sign-up" element={<h1>Sign up page</h1>} />
+          <Route path="/*" element={<Home />} />
+          <Route path="/sign-in" element={<Signin />} />
+          <Route path="/sign-up" element={<SignUp />} />
         </Routes>
         <Footer />
       </Router>
