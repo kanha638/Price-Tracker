@@ -20,6 +20,7 @@ const Signin = () => {
       style={{
         backgroundColor: "#f8f4f3",
         minHeight: "100vh",
+        position: "relative",
         margin: "0px",
         padding: "0px",
       }}

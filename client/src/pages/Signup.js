@@ -22,9 +22,11 @@ const SignUp = () => {
     <div
       style={{
         backgroundColor: "#f8f4f3",
-        minHeight: "100vh",
+        minHeight: "120vh",
+        position: "relative",
         margin: "0px",
         padding: "0px",
+        paddingBottom: "100px",
       }}
     >
       <form>
@@ -34,7 +36,7 @@ const SignUp = () => {
           alignItems={"center"}
           justifyContent={"center"}
           marign="auto"
-          // marginTop={5}
+          marginTop={5}
           padding={2}
           borderRadius={2}
           sx={{
