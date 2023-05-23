@@ -6,15 +6,45 @@ import Grid from "@mui/material/Grid";
 import { Button } from "@mui/material";
 import { Box } from "@mui/material";
 import logo_pt from "../assets/images/favicon.jpeg";
+import { useDispatch, useSelector } from "react-redux";
+import { UserState } from "../slices/userSlice";
+import { signIn } from "../middleware/auth";
 const Signin = () => {
   const [details, setDetails] = useState({
-    name: "",
-    email: "",
+    credential: "",
     password: "",
   });
+  const [errors, setErrors] = useState({
+    credential: false,
+    password: false,
+  });
+
+  const userState = useSelector(UserState);
+  const dispatch = useDispatch();
+  const navigate = useNavigate();
   function changeHandler(e) {
-    setDetails({ ...details, [e.target.id]: [e.target.value] });
+    console.log(e.target.name);
+    if (e.target.name === "credential") {
+      setErrors({ ...errors, credential: false });
+    }
+    if (e.target.name === "password") {
+      setErrors({ ...errors, password: false });
+    }
+
+    setDetails({ ...details, [e.target.name]: e.target.value });
+    console.log(details);
   }
+
+  const submitHandler = async (e) => {
+    e.preventDefault();
+    if (details.credential === "" && details.password === "") {
+      setErrors({ credential: true, password: true });
+      return;
+    }
+    if (details.credential === "") setErrors({ ...errors, credential: true });
+    if (details.password === "") setErrors({ ...errors, password: true });
+    await signIn(details, dispatch, navigate);
+  };
   return (
     <div
       style={{
@@ -26,7 +56,7 @@ const Signin = () => {
       }}
     >
       <p></p>
-      <form>
+      <form onSubmit={submitHandler}>
         <Box
           display="flex"
           flexDirection={"column"}
@@ -87,9 +117,14 @@ const Signin = () => {
             variant={"outlined"}
             margin="normal"
             placeholder="Email / mobile-number"
-            type={"email"}
+            type={"text"}
             autoComplete="email"
+            name="credential"
+            onChange={changeHandler}
+            value={details.credential}
             sx={{ width: "90%" }}
+            error={errors.credential}
+            helperText={errors.credential && "Please enter you email/mobile."}
           />
           <TextField
             // id="outlined-password-input"
@@ -97,9 +132,20 @@ const Signin = () => {
             placeholder="Password"
             type={"password"}
             margin="normal"
+            name="password"
+            value={details.password}
+            onChange={changeHandler}
             sx={{ width: "90%" }}
+            error={errors.password}
+            helperText={errors.password && "Please enter you password."}
           />
           <div style={{ width: "90%" }}>
+            {userState?.isErrors === true && (
+              <p style={{ marginTop: "30px", color: "red" }}>
+                {userState?.errorMessage?.authForms}
+              </p>
+            )}
+
             <Button
               sx={{
                 marginTop: 3,
@@ -113,6 +159,7 @@ const Signin = () => {
                 fontSize: "20px",
               }}
               variant="contained"
+              type="submit"
             >
               Login
             </Button>

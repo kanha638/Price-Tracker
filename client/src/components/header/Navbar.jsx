@@ -1,11 +1,12 @@
 import React, { useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { useTheme } from "@mui/material/styles";
 import Select from "@mui/material/Select";
 import MenuItem from "@mui/material/MenuItem";
 import OutlinedInput from "@mui/material/OutlinedInput";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { UserState } from "../../slices/userSlice";
+import { signOut } from "../../middleware/auth";
 
 const ITEM_HEIGHT = 48;
 const ITEM_PADDING_TOP = 8;
@@ -36,6 +37,12 @@ const Navbar = () => {
   const [personName, setPersonName] = useState([]);
 
   const userState = useSelector(UserState);
+  const navigate = useNavigate();
+  const dispatch = useDispatch();
+
+  const logoutHandler = async () => {
+    await signOut(dispatch, navigate);
+  };
 
   return (
     <>
@@ -90,8 +97,8 @@ const Navbar = () => {
                       Notifications & alert
                     </Link>
                   </li>
-                  <li>
-                    <Link to="/profile">Profile</Link>
+                  <li style={{ cursor: "pointer" }} onClick={logoutHandler}>
+                    Logout
                   </li>
                 </>
               ) : (
