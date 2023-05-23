@@ -53,6 +53,11 @@ export const signUp = async (
 ) => {
   try {
     const { name, email, password, mobileNum } = req.body;
+    if (password.length < 7) {
+      return res
+        .status(401)
+        .json({ message: "Password length should be more than 6" });
+    }
     /*
         Will Check if Any User Already Exists with these credintials
     */
