@@ -14,7 +14,9 @@ const Search = () => {
       <section className="search">
         <div className="container c_flex">
           <div className="logo width">
-            <img src={logo} alt="" style={{ width: 50, height: 50 }} />
+            <Link to="/">
+              <img src={logo} alt="" style={{ width: 50, height: 50 }} />
+            </Link>
           </div>
 
           <div className="search-box f_flex">
