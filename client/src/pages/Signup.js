@@ -1,11 +1,14 @@
 import React from "react";
 import { TextField, Typography } from "@mui/material";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import Grid from "@mui/material/Grid";
 import { Button } from "@mui/material";
 import { Box } from "@mui/material";
 import { useState } from "react";
 import logo_pt from "../assets/images/favicon.jpeg";
+import { signUp } from "../middleware/auth";
+import { useDispatch, useSelector } from "react-redux";
+import { UserState } from "../slices/userSlice";
 
 const SignUp = () => {
   const [details, setDetails] = useState({
@@ -15,9 +18,80 @@ const SignUp = () => {
     password: "",
     confirmPassword: "",
   });
+  const userState = useSelector(UserState);
+
+  const [errors, setErrors] = useState({
+    name: false,
+    email: false,
+    mobileNum: false,
+    password: false,
+    confirmPassword: false,
+  });
+
+  const dispatch = useDispatch();
+  const navigate = useNavigate();
   function changeHandler(e) {
-    setDetails({ ...details, [e.target.id]: [e.target.value] });
+    switch (e.target.name) {
+      case "name":
+        setErrors({ ...errors, name: false });
+        break;
+      case "email":
+        setErrors({ ...errors, email: false });
+        break;
+      case "mobileNum":
+        setErrors({ ...errors, mobileNum: false });
+        break;
+      case "password":
+        setErrors({ ...errors, password: false });
+        break;
+      case "confirmPassword":
+        setErrors({ ...errors, confirmPassword: false });
+        break;
+      default:
+        break;
+    }
+    setDetails({ ...details, [e.target.name]: e.target.value });
   }
+
+  const submitHandler = async (e) => {
+    e.preventDefault();
+    console.log(details);
+
+    let { name, email, password, confirmPassword, mobileNum } = {
+      name: false,
+      email: false,
+      password: false,
+      confirmPassword: false,
+      mobileNum: false,
+    };
+    if (details.name === "") name = true;
+    if (details.email === "") email = true;
+    if (details.confirmPassword === "") confirmPassword = true;
+    if (details.mobileNum === "") mobileNum = true;
+    if (details.password === "") password = true;
+
+    setErrors({
+      name: name,
+      email: email,
+      mobileNum: mobileNum,
+      password: password,
+      confirmPassword: confirmPassword,
+    });
+
+    console.log(errors);
+
+    if (
+      details.name &&
+      details.email &&
+      details.confirmPassword &&
+      details.mobileNum &&
+      details.password
+    ) {
+      await signUp(details, dispatch, navigate);
+    } else {
+      return;
+    }
+  };
   return (
     <div
       style={{
@@ -29,7 +103,7 @@ const SignUp = () => {
         paddingBottom: "100px",
       }}
     >
-      <form>
+      <form onSubmit={submitHandler}>
         <Box
           display="flex"
           flexDirection={"column"}
@@ -91,24 +165,27 @@ const SignUp = () => {
             margin="normal"
             id="name"
             placeholder="Your name"
-            name="name"
             type={"text"}
+            name="name"
             value={details.name}
             onChange={changeHandler}
             autoComplete="name"
+            helperText={errors.name && "Name is required."}
+            error={errors.name}
             autoFocus
             sx={{ width: "90%" }}
           />
 
           <TextField
             margin="normal"
-            required
             fullWidth
             id="email"
-            value={details.email}
             placeholder="Email"
-            name="email"
             autoComplete="email"
+            name="email"
+            value={details.email}
+            error={errors.email}
+            helperText={errors.email && "Email is required."}
             onChange={changeHandler}
             autoFocus
             sx={{ width: "90%" }}
@@ -116,14 +193,15 @@ const SignUp = () => {
 
           <TextField
             margin="normal"
-            required
+            // required
             fullWidth
             id="mobileNum"
             placeholder="Mobile number"
-            name="mobileNum"
             type={"text"}
+            name="mobileNum"
             value={details.mobileNum}
-            // error={details.mobileNum.length !== 10 ? true : false}
+            error={errors.mobileNum}
+            helperText={errors.mobileNum && "Mobile number is required."}
             onChange={changeHandler}
             autoComplete="mobileNum"
             sx={{ width: "90%" }}
@@ -132,10 +210,12 @@ const SignUp = () => {
           <TextField
             margin="normal"
             id="password"
-            name="password"
             placeholder="Password"
             type="password"
+            name="password"
             value={details.password}
+            error={errors.password}
+            helperText={errors.password && "Password is required."}
             onChange={changeHandler}
             autoComplete="password"
             sx={{ width: "90%" }}
@@ -143,20 +223,26 @@ const SignUp = () => {
 
           <TextField
             margin="normal"
-            name="confirmPassword"
             placeholder="Confirm password"
+            name="confirmPassword"
             value={details.confirmPassword}
-            error={
-              details.confirmPassword.length > 0 &&
-              details.confirmPassword !== details.password
-                ? true
-                : false
-            }
             onChange={changeHandler}
             type="password"
+            error={errors.confirmPassword}
+            helperText={
+              (details.confirmPassword.length > 0 &&
+                details.confirmPassword !== details.password &&
+                "This does not match with password.") ||
+              (errors.confirmPassword && "Please confirm the password")
+            }
             sx={{ width: "90%" }}
           />
           <div style={{ width: "90%" }}>
+            {userState?.isErrors === true && (
+              <p style={{ marginTop: "30px", color: "red" }}>
+                {userState?.errorMessage?.authForms}
+              </p>
+            )}
             <Button
               sx={{
                 marginTop: 3,
@@ -170,6 +256,7 @@ const SignUp = () => {
                 fontSize: "20px",
               }}
               variant="contained"
+              type="submit"
             >
               SignUp
             </Button>
