@@ -27,13 +27,19 @@ export const signUp = async (data, dispatch, navigate) => {
     console.log(error);
   }
 };
-export const signIn = async (data, dispatch, navigate) => {
+export const signIn = async (
+  data,
+  dispatch,
+  navigate,
+  handleClose = () => {}
+) => {
   dispatch(AuthStart());
   try {
     const response = await API.post("/api/auth/sign-in", data, {
       withCredentials: true,
     });
     dispatch(AuthSuccess(response.data));
+    handleClose();
     navigate("/");
   } catch (error) {
     dispatch(AuthError(error.response));

@@ -66,15 +66,21 @@ const userSlice = createSlice({
     },
     AddProductStart: (state) => {
       state.isPending = true;
+      state.addproductSuccess = false;
+      state.addproductError = false;
+      state.addproductErrorMessage = "";
     },
     AddProductSuccess: (state, action) => {
       state.isErrors = false;
       state.isPending = false;
       state.allProducts.unshift(action.payload);
+      state.addproductSuccess = true;
     },
     AddProductError: (state, action) => {
       state.isErrors = true;
       state.isPending = false;
+      state.addproductError = true;
+      state.addproductErrorMessage = action.payload.data.message;
     },
     fetchAllProductsStart: (state) => {
       state.isPending = true;
@@ -92,6 +98,11 @@ const userSlice = createSlice({
       state.isErrors = false;
       state.userInfo.profile_pic = action.payload;
     },
+    removeAddProductStatus: (state) => {
+      state.addproductError = false;
+      state.addproductSuccess = false;
+      state.addproductErrorMessage = "";
+    },
   },
 });
 export const {
@@ -106,6 +117,7 @@ export const {
   MeError,
   AddProductError,
   AddProductStart,
+  removeAddProductStatus,
   AddProductSuccess,
   fetchAllProductsError,
   fetchAllProductsStart,
