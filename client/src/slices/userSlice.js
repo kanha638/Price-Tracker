@@ -62,6 +62,7 @@ const userSlice = createSlice({
     MeError: (state, action) => {
       state.userInfo = null;
       state.isLoggedIn = false;
+      state.isPending = false;
       clearLcoalCache();
     },
     AddProductStart: (state) => {
