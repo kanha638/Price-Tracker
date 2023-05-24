@@ -8,6 +8,10 @@ from app.product.globals import currencies
 
 class Flipkart:
     def __init__(self) -> None:
+        """
+        This is a constructor function that initializes a dictionary with a user-agent header for web
+        scraping purposes.
+        """
         self.headers = {
             'user-agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/102.0.0.0 Safari/537.36',
         }
@@ -25,24 +29,17 @@ class Flipkart:
         return soup
 
     async def scrape_product(self, url: str) -> dict:
-        '''
-        Function to scrape product details from flipkart's website.
+        """
+        This is a Python function that scrapes product details from Flipkart's website and returns them
+        in a dictionary format.
 
-        params: url of the product to be scraped
-
-        Returns :
-        {
-            'Title': title,
-            'Price': price,
-            'MRP': mrp,
-            'Currency': currency,
-            'Availability': availability,
-            'Rating': rating,
-            'Rating_Count': rating_count,
-            'Category': category,
-            'Image_Link': img_link,
-        }
-        '''
+        :param url: The URL of the product page on Flipkart's website that needs to be scraped for
+        product details
+        :type url: str
+        :return: The function `scrape_product` returns a dictionary containing the scraped details of a
+        product from Flipkart's website. The dictionary contains the following keys: 'Title', 'Price',
+        'MRP', 'Currency', 'Availability', 'Rating', 'Rating_Count', 'Category', and 'Image_Link'.
+        """
 
         soup = await self.get_soup(url=url)
 
@@ -126,13 +123,14 @@ class Flipkart:
         return product
 
     async def scrape_price(self, url: str) -> float:
-        '''
-            Scrapes the price of product.
+        """
+        This function scrapes the price of a product from a given Flipkart URL and returns it as a float.
 
-            params: url of flipkart product whose price to be tracked.
-
-            Returns: Price of the product at that particular time.
-        '''
+        :param url: The URL of the Flipkart product whose price needs to be tracked
+        :type url: str
+        :return: the price of a product scraped from a given URL. The price is returned as a float
+        value.
+        """
 
         soup = await self.get_soup(url=url)
         price = soup.find(class_='_30jeq3 _16Jk6d')
@@ -148,14 +146,14 @@ class Amazon:
         self.pincode = pincode
 
     async def get_soup(self, url):
-        '''
-            Fetches the url data from amazon and returns soup object.
-            It uses playwright for setting up the pincode
+        """
+        This function fetches the HTML content of a given Amazon URL using Playwright and returns a
+        BeautifulSoup object.
 
-            params: amazon url whose data to be fetched
-
-            Returns: Soup object of page requested
-        '''
+        :param url: The URL of the Amazon page from which data needs to be fetched
+        :return: a BeautifulSoup object, which is a parsed representation of the HTML content of a
+        webpage fetched from the provided URL.
+        """
         async with async_playwright() as p:
             browser = await p.chromium.launch()
             context = await browser.new_context(
@@ -189,24 +187,16 @@ class Amazon:
             return soup
 
     async def scrape_product(self, url) -> dict:
-        '''
-        Function to scrape product details from amazon's website.
+        """
+        The function scrapes product details from Amazon's website and returns a dictionary containing
+        information such as title, price, availability, rating, and category.
 
-        params: url of the product to be scraped
-
-        Returns :
-        {
-            'Title': title,
-            'Price': price,
-            'Currency': currency,
-            'MRP': mrp,
-            'Availability': availability,
-            'Rating': rating,
-            'Rating_Count': rating_count,
-            'Category': category,
-            'Image_Link': img_link,
-        }
-        '''
+        :param url: The URL of the product page on Amazon's website that needs to be scraped for product
+        details
+        :return: The function `scrape_product` returns a dictionary containing the scraped details of a
+        product from Amazon's website. The dictionary contains the following keys: 'Title', 'Price',
+        'MRP', 'Currency', 'Availability', 'Rating', 'Rating_Count', 'Category', and 'Image_Link'.
+        """
 
         page = await self.get_soup(url=url)
 
@@ -343,24 +333,17 @@ class Myntra:
             return soup
 
     async def scrape_product(self, url) -> dict:
-        '''
-        Function to scrape product details from amazon's website.
+        """
+        This is a Python function that scrapes product details from Amazon's website and returns a
+        dictionary containing information such as title, price, currency, availability, rating, and
+        image link.
 
-        params: url of the product to be scraped
-
-        Returns :
-        {
-            'Title': title,
-            'Price': price,
-            'Currency': currency,
-            'MRP': mrp,
-            'Availability': availability,
-            'Rating': rating,
-            'Rating_Count': rating_count,
-            'Category': category,
-            'Image_Link': img_link,
-        }
-        '''
+        :param url: The URL of the product page on Amazon's website that needs to be scraped for product
+        details
+        :return: The function `scrape_product` returns a dictionary containing the scraped details of a
+        product from Amazon's website. The dictionary has keys such as 'Title', 'Price', 'Currency',
+        'MRP', 'Availability', 'Rating', 'Rating_Count', 'Category', and 'Image_Link'.
+        """
 
         page = await self.get_soup(url=url)
 
@@ -487,6 +470,10 @@ class Myntra:
 
 class Scraper:
     def __init__(self) -> None:
+        """
+        This function initializes scraper objects for Flipkart, Amazon, and Myntra and maps their
+        respective product and price scraper functions.
+        """
         # create scraper objects for Flipkart and Amazon
         self.flipkart = Flipkart()
         self.amazon = Amazon()
@@ -507,24 +494,16 @@ class Scraper:
         }
 
     async def scrape_product(self, url: str) -> dict:
-        '''
-        Function to scrape product details for the given url.
+        """
+        This is an asynchronous function that scrapes a product from a given URL using a scraper function
+        based on the website domain.
 
-        params: url of the product to be scraped
-
-        Returns :
-        {
-            'Title': title,
-            'Price': price,
-            'Currency': currency,
-            'MRP': mrp,
-            'Availability': availability,
-            'Rating': rating,
-            'Rating_Count': rating_count,
-            'Image_Link': img_link,
-        }
-        '''
-
+        :param url: A string representing the URL of the product page to be scraped
+        :type url: str
+        :return: The function `scrape_product` returns the result of calling the appropriate scraper
+        function for the given website URL. If the website is not supported, it returns a JSON error
+        message.
+        """
         website = url.strip().split('/')[2].split('.')[1]
         try:
             scraper_function = self.scraper_product_dict.get(website)
@@ -533,18 +512,18 @@ class Scraper:
                 "message": "Entered website is not supported now! Please check back later."
             }
             return jsonify(error_message)
-
         return await scraper_function(url)
 
     async def scrape_price(self, url: str) -> float:
-        '''
-        Scrapes the price of product.
+        """
+        This function scrapes the price of a product from a given URL using a scraper function based on the
+        website domain.
 
-        params: url of product whose price to be tracked
-
-        Returns: Price of the product at that particular time.
-        '''
-
+        :param url: A string representing the URL of a product page on an e-commerce website
+        :type url: str
+        :return: The function `scrape_price` returns a float value, which is the price scraped from the
+        given URL.
+        """
         website = url.strip().split('/')[2].split('.')[1]
         scraper_function = self.scraper_price_dict.get(website)
         return await scraper_function(url)
