@@ -241,12 +241,17 @@ export const HeaderBox = ({ img }) => {
                 width: "90%",
               }}
             >
-              <Link to="/" className="link-redirect" style={{ color: "black" }}>
+              <span
+                to="/"
+                className="link-redirect"
+                style={{ color: "black", cursor: "pointer" }}
+                onClick={handleClose}
+              >
                 <i
                   class="fa-solid fa-arrow-left"
                   style={{ fontSize: "25px" }}
                 ></i>
-              </Link>
+              </span>
             </div>
             <Link to="/">
               <img
