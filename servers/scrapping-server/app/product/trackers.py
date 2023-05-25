@@ -60,29 +60,22 @@ class Tracker:
         # Scrape the new price and update in db if new price is not equal to old price
         batch_size = 8
         cursor = self.conn.cursor()
-        # for i in range(0, len(urls)):
+
         i = 0
         while i < len(urls):
-            # urls_batch = []
-            # j = i
-            # while len(urls_batch) < 5 and j < len(urls):
-            #     website = url.strip().split('/')[2].split('.')[1]
-            #     if website == 'flipkart':
-            #         urls_batch.append(urls[j])
-
-            #     j += 1
-
             urls_batch = urls[i: i + batch_size]
             # print(urls_batch)
             new_prices = await self.scrape_all_urls(urls=urls_batch)
             for j in range(i, i + len(urls_batch)):
-                if new_prices[j - i] != old_prices[j]:
+                if new_prices[j - i] is not None and new_prices[j - i] != old_prices[j]:
                     formatted_time = datetime.now().strftime('%Y-%m-%d %H:%M:%S')
 
                     try:
                         cursor.execute(
                             'INSERT INTO "PriceAlter" ("id", "price", "date", "productsId") VALUES (%s, %s, %s, %s)', (str(uuid.uuid4()), str(new_prices[j - i]), str(formatted_time), str(ids[j]),))
-                    except:
+                    except Exception as e:
+                        print(
+                            f'Error occured while inserting data to PriceAlter. {e}')
                         # handle the error
                         pass
 
@@ -90,7 +83,9 @@ class Tracker:
                         cursor.execute(
                             'UPDATE "Products" SET current_price = %s WHERE id = %s',
                             (str(new_prices[j - i]), str(ids[j]),))
-                    except:
+                    except Exception as e:
+                        print(
+                            f'Error occured while updating Products. {e}')
                         # handle the error
                         pass
 
