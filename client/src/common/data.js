@@ -36,3 +36,49 @@ export const chartDummyData = [
     ],
   },
 ];
+
+export const Categories = [
+  {
+    icon: "fa-solid fa-person-snowboarding",
+    name: "Sports",
+    value: "sports",
+  },
+  {
+    icon: "fa-solid fa-notes-medical",
+    name: "Healthcare",
+    value: "healthcare",
+  },
+  {
+    icon: "fa-solid fa-dumbbell",
+    name: "Gym",
+    value: "gym",
+  },
+  {
+    icon: "fa-solid fa-mobile",
+    name: "Electronics",
+    value: "electronics",
+  },
+  {
+    icon: "fa-solid fa-sink",
+    name: "Kitchen",
+    value: "kitchen",
+  },
+  {
+    icon: "fa-solid fa-cart-shopping",
+    name: "Groceries",
+    value: "groceries",
+  },
+];
+
+export const designVar = {
+  colors: {
+    iconBackgroundColor: "orange",
+    iconTextColor: "#eb6710",
+  },
+};
+
+/*
+dark ornge -> #b94e07
+Normal Orange -> #eb6710
+Pink -> #e94560
+*/

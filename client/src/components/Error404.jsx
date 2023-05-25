@@ -2,14 +2,14 @@ import React from "react";
 import { Box, Button, Container, Typography } from "@mui/material";
 import Grid from "@mui/material/Grid";
 
-export default function Error() {
+export default function Error404() {
   return (
     <Box
       sx={{
         display: "flex",
         justifyContent: "center",
         alignItems: "center",
-        minHeight: "100vh",
+        height: "500px",
       }}
     >
       <Container maxWidth="md">
@@ -23,7 +23,10 @@ export default function Error() {
               variant="contained"
               sx={{ backgroundColor: "#0C0B0B", color: "#FFF" }}
             >
-              Back Home
+              <i
+                class="fa-solid fa-arrow-left"
+                style={{ fontSize: "25px" }}
+              ></i>{" "}
             </Button>
           </Grid>
           <Grid xs={6}>

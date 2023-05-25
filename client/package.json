@@ -8,6 +8,7 @@
     "@fontsource/roboto": "^4.5.8",
     "@mui/icons-material": "^5.11.11",
     "@mui/material": "^5.11.11",
+    "@mui/styled-engine-sc": "^5.12.0",
     "@nivo/core": "^0.80.0",
     "@nivo/line": "^0.80.0",
     "@reduxjs/toolkit": "^1.9.3",
@@ -22,6 +23,9 @@
     "react-redux": "^8.0.5",
     "react-router-dom": "^6.8.2",
     "react-scripts": "5.0.1",
+    "react-slick": "^0.29.0",
+    "slick-carousel": "^1.8.1",
+    "styled-components": "^6.0.0-rc.1",
     "web-vitals": "^2.1.4"
   },
   "scripts": {
