@@ -4,6 +4,8 @@ import Error404 from "../components/Error404";
 import Header from "../components/header/Header";
 
 import LandingPage from "../components/LandingPage/LandingPage";
+import MyProducts from "../components/myproducts/MyProducts";
+import SubscribedProducts from "../components/subscribedProducts/SubscribedProducts";
 
 const Home = () => {
   return (
@@ -11,8 +13,8 @@ const Home = () => {
       <Header />
       <Routes>
         <Route path="/" element={<LandingPage />} />
-        <Route path="subscribed/my" element={<>Subscribed products</>} />
-        <Route path="products/my" element={<>My Products</>} />
+        <Route path="subscribed/my" element={<SubscribedProducts />} />
+        <Route path="products/my" element={<MyProducts />} />
         <Route
           path="settings/notification"
           element={<>Notification setting page</>}

@@ -5,6 +5,7 @@ import { useSelector } from "react-redux";
 import { selectUser, UserState } from "../../slices/userSlice";
 import { getProfilePicImageURL } from "../../utils/utilities";
 import { Button } from "@mui/material";
+import { designVar } from "../../common/data";
 
 const Search = () => {
   // fixed Header
@@ -62,12 +63,19 @@ const Search = () => {
                 <div className="notification">
                   <Link to="/notification">
                     <i className="fa fa-bell icon-circle"></i>
-                    <span>2</span>
+                    <span
+                      style={{
+                        backgroundColor: designVar.colors.iconBackgroundColor,
+                      }}
+                    >
+                      2
+                    </span>
                   </Link>
                 </div>
               </>
             ) : (
               <>
+                xs
                 <a
                   href="https://github.com/kanha638/Price-Tracker"
                   target="_blank"
