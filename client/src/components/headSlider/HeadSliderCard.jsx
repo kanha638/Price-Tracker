@@ -55,7 +55,7 @@ const HeadSliderCard = () => {
   useEffect(() => {
     const interval = setInterval(() => {
       setCurrentIndex((prevIndex) => (prevIndex + 1) % dataArray.length);
-    }, 2000);
+    }, 4000);
 
     return () => clearInterval(interval);
   }, []);
