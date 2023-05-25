@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import Slider from "react-slick";
 import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
+import { designVar } from "../../common/data";
 
 const SampleNextArrow = (props) => {
   const { onClick } = props;
@@ -24,9 +25,9 @@ const SamplePrevArrow = (props) => {
   );
 };
 const CorouselCard = ({ productItems, number_of_slides = 4 }) => {
-  const [count, setCount] = useState(0);
-  const increment = () => {
-    setCount(count + 1);
+  const [liked, setLiked] = useState(false);
+  const change = () => {
+    setLiked((val) => !val);
   };
   const settings = {
     dots: true,
@@ -85,7 +86,14 @@ const CorouselCard = ({ productItems, number_of_slides = 4 }) => {
                   className="img"
                   style={{ display: "flex", justifyContent: "center" }}
                 >
-                  <span className="discount">{productItems.discount}% Off</span>
+                  <span
+                    className="discount"
+                    style={{
+                      backgroundColor: designVar.colors.iconBackgroundColor,
+                    }}
+                  >
+                    {productItems.discount}% Off
+                  </span>
                   <img
                     style={{
                       maxWidth: "250px",
@@ -96,9 +104,12 @@ const CorouselCard = ({ productItems, number_of_slides = 4 }) => {
                     alt=""
                     loading="lazy"
                   />
-                  <div className="product-like">
-                    <label>{count}</label> <br />
-                    <i className="fa-regular fa-heart" onClick={increment}></i>
+                  <div className="product-like" style={{ cursor: "pointer" }}>
+                    <i
+                      className={`fa-${liked ? "solid" : "regular"} fa-heart`}
+                      style={{ color: `${liked && "red"}` }}
+                      onClick={change}
+                    ></i>
                   </div>
                 </div>
                 <div className="product-details">
@@ -110,10 +121,18 @@ const CorouselCard = ({ productItems, number_of_slides = 4 }) => {
                     <i className="fa fa-star"></i>
                     <i className="fa fa-star"></i>
                   </div>
-                  <div className="price">
+                  <div
+                    className="price"
+                    style={{ color: designVar.colors.iconTextColor }}
+                  >
                     <h4>${productItems.price}.00 </h4>
 
-                    <p style={{ cursor: "pointer" }}>Track</p>
+                    <p
+                      style={{ cursor: "pointer" }}
+                      style={{ color: designVar.colors.iconTextColor }}
+                    >
+                      Track
+                    </p>
                   </div>
                 </div>
               </div>
