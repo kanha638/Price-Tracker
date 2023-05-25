@@ -75,7 +75,6 @@ const Search = () => {
               </>
             ) : (
               <>
-                xs
                 <a
                   href="https://github.com/kanha638/Price-Tracker"
                   target="_blank"
