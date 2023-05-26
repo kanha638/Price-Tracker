@@ -57,6 +57,7 @@ const Search = () => {
                     alt="profile"
                     style={{
                       height: 48,
+                      cursor: "pointer",
                       width: 48,
                       borderRadius: "50%",
                     }}
