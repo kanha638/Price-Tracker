@@ -1,9 +1,11 @@
+import asyncio
 from flask import jsonify
 import requests
 import json
 from bs4 import BeautifulSoup
 from playwright.async_api import async_playwright
 from app.product.globals import currencies
+import re
 
 
 class Flipkart:
@@ -399,65 +401,97 @@ class Myntra:
         if page is None:
             return None
 
-        # select the div containing all categories
-        categories = page.find('div', {'class': 'breadcrumbs-container'})
-        if categories is not None:
-            category = categories.find_all('a', {'class': 'breadcrumbs-link'})[2].text if len(
-                categories) > 2 else categories.find_all('a', {'class': 'breadcrumbs-link'})[1].text
-        else:
-            category = 'Not Found'
+        try:
+            # select the div containing all categories
+            categories = page.find('div', {'class': 'breadcrumbs-container'})
+            if categories is not None:
+                category = categories.find_all('a', {'class': 'breadcrumbs-link'})[2].text if len(
+                    categories) > 2 else categories.find_all('a', {'class': 'breadcrumbs-link'})[1].text
+            else:
+                category = 'Not Found'
+        except Exception as e:
+            print(f'Error while scraping category. {e}')
 
-        # select the span containing MRP
-        mrp = page.find('span', {'class': 'pdp-mrp'})
-        currency = 'INR'
-        if mrp is not None:
-            mrp = mrp.find('s')
-            mrp = float(mrp.text.replace('MRP', '').replace(',', '').replace(
-                '₹', '').replace('€', '').replace('$', '').strip())
-            print(f'MRP : {mrp}')
+        try:
+            # select the span containing MRP
+            mrp = page.find('span', {'class': 'pdp-mrp'})
+            currency = 'INR'
+            if mrp is not None:
+                mrp = mrp.find('s')
+                mrp = float(mrp.text.replace('MRP', '').replace(',', '').replace(
+                    '₹', '').replace('€', '').replace('$', '').strip())
+        except Exception as e:
+            print(f'Error while scraping MRP. {e}')
 
-        # select the image rating div
-        rating_block = page.find('div', {'class': 'index-overallRating'})
-        rating = float(0)
-        rating_count = float(0)
-        if rating_block is not None:
-            # extract product rating and rating count
-            rating = rating_block.find('div')
-            rating = float(rating.text.replace(
-                ',', '').strip().split(' ')[0])
+        try:
+            # select the image rating div
+            rating_block = page.find('div', {'class': 'index-overallRating'})
+            rating = float(0)
+            rating_count = float(0)
+            if rating_block is not None:
+                # extract product rating and rating count
+                rating = rating_block.find('div')
+                rating = float(rating.text.replace(
+                    ',', '').strip().split(' ')[0])
 
-            rating_count = rating_block.find(
-                'div', {'class': 'index-ratingsCount'}).text.replace('Ratings', '').replace('Rating', '').strip()
+                rating_count = rating_block.find(
+                    'div', {'class': 'index-ratingsCount'}).text.replace('Ratings', '').replace('Rating', '').strip()
 
-            mul = 1
-            if rating_count[-1] == 'k':
-                rating_count = rating_count[:-1]
-                mul = 1000
-            rating_count = float(rating_count) * mul
+                mul = 1
+                if rating_count[-1] == 'k':
+                    rating_count = rating_count[:-1]
+                    mul = 1000
+                rating_count = float(rating_count) * mul
+        except Exception as e:
+            print(f'Error while scraping rating {e}')
 
-        script_tags = page.find_all('script', type='application/ld+json')
-        # Search for the script tag with "@type": "Product"
-        desired_script_tag = None
-        for script_tag in script_tags:
-            json_data = json.loads(script_tag.string)
-            if json_data.get('@type') == 'Product':
-                desired_script_tag = script_tag
-                break
+        try:
+            script_tags = page.find_all(
+                'script', type='application/ld+json')
+            # Search for the script tag with "@type": "Product"
+            desired_script_tag = None
+            for script_tag in script_tags:
+                try:
+                    # Remove invalid control characters from the script tag's content
+                    cleaned_content = re.sub(
+                        r'[\x00-\x1F\x7F-\x9F]', '', script_tag.string)
+                    json_data = json.loads(cleaned_content)
 
-        if desired_script_tag is not None:
+                    if json_data.get('@type') == 'Product':
+                        desired_script_tag = script_tag
+                        break
+                except Exception as e:
+                    print(
+                        f'Error while find type of script tag. {e}')
+        except Exception as e:
+            print(f'Error while scraping scripting tags. {e}')
+
+        try:
             # Extract the contents within the script tag
-            data = json.loads(desired_script_tag.string)
+            try:
+                # Remove invalid control characters from the script tag's content
+                cleaned_content = re.sub(
+                    r'[\x00-\x1F\x7F-\x9F]', '', desired_script_tag.string)
+
+                data = json.loads(cleaned_content)
+            except Exception as e:
+                print(f'Error while loading data from desired script tag. {e}')
+
             title = data.get('name')
             img_link = data.get('image')
             price = float(data.get('offers', {}).get('price'))
             currency = data.get('offers', {}).get('priceCurrency')
             availability = data.get('offers', {}).get('availability')
-        else:
+        except Exception as e:
+            print(f'Error while scraping using scripting tags. {e}')
+
+            # Extract data using html tags
             title = page.find('h1', {'class': 'pdp-title'}).text.strip()
             name = page.find('h1', {'class': 'pdp-name'}).text.strip()
             title += name
-            price = page.find('span', {'class': 'pdp-price'}).find('strong')
-            if price:
+            price = page.find(
+                'span', {'class': 'pdp-price'}).find('strong')
+            if price is not None:
                 if price.text.__contains__('€'):
                     currency = 'EURO'
                 elif price.text.__contains__('$'):
@@ -500,25 +534,35 @@ class Myntra:
         if page is None:
             return None
 
-        script_tags = page.find_all('script', type='application/ld+json')
-        # Search for the script tag with "@type": "Product"
-        desired_script_tag = None
-        for script_tag in script_tags:
-            json_data = json.loads(script_tag.string)
-            if json_data.get('@type') == 'Product':
-                desired_script_tag = script_tag
-                break
+        try:
+            script_tags = page.find_all('script', type='application/ld+json')
+            # Search for the script tag with "@type": "Product"
+            desired_script_tag = None
+            for script_tag in script_tags:
+                try:
+                    json_data = json.loads(script_tag.string)
+                    if json_data.get('@type') == 'Product':
+                        desired_script_tag = script_tag
+                        break
+                except Exception as e:
+                    print(f'Error while find type of script tag. {e}')
+        except Exception as e:
+            print(f'Error while scraping scripting tags. {e}')
 
         price = float(0)
-        if desired_script_tag is not None:
-            # Extract the contents within the script tag
-            data = json.loads(desired_script_tag.string)
-            price = float(data.get('offers', {}).get('price'))
-        else:
-            price = page.find('span', {'class': 'pdp-price'}).find('strong')
-            if price:
-                price = float(price.text.replace(',', '').replace(
-                    '₹', '').replace('€', '').replace('$', '').strip())
+        try:
+            if desired_script_tag is not None:
+                # Extract the contents within the script tag
+                data = json.loads(desired_script_tag.string)
+                price = float(data.get('offers', {}).get('price'))
+            else:
+                price = page.find(
+                    'span', {'class': 'pdp-price'}).find('strong')
+                if price:
+                    price = float(price.text.replace(',', '').replace(
+                        '₹', '').replace('€', '').replace('$', '').strip())
+        except Exception as e:
+            print(f'Error while scraping price. {e}')
 
         return price
 
@@ -559,6 +603,7 @@ class Scraper:
         function for the given website URL. If the website is not supported, it returns a JSON error
         message.
         """
+
         website = url.strip().split('/')[2].split('.')[1]
         try:
             scraper_function = self.scraper_product_dict.get(website)

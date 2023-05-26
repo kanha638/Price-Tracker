@@ -15,7 +15,7 @@ def add_product():
     rating, rating count, and image link. If the request method is not POST, the function returns the
     string 'Invalid request.'
     """
-    
+
     if request.method == 'POST':
         error_message, status = {}, 200
         product_details = None
@@ -28,12 +28,13 @@ def add_product():
             }
             status = 404
             return jsonify(error_message), status
-        
+
         try:
             scraper = Scraper()
-            product_details = asyncio.run(scraper.scrape_product(url=product_url))
+            product_details = asyncio.run(
+                scraper.scrape_product(url=product_url))
         except Exception as e:
-            print(f'Error {e}')
+            print(f'Error:: {e}')
             error_message = {
                 "message": "Unable to scrape product due to some internal error on scraping server."
             }
@@ -46,4 +47,5 @@ def add_product():
             status = 500
 
         return jsonify(product_details) if product_details is not None else jsonify(error_message), status
+
     return 'Invalid request.'
