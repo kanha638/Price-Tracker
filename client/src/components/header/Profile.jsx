@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { Button, Modal, TextField, Box, Typography, Grid } from "@mui/material";
+import { Button, TextField, Box, Typography, Grid } from "@mui/material";
 import { useDispatch, useSelector } from "react-redux";
 import { selectUser } from "../../slices/userSlice";
 import { getProfilePicImageURL } from "../../utils/utilities";
@@ -20,6 +20,13 @@ export const Profile = ({ handleClose }) => {
   const uploadPicture = async () => {
     await uploadProfilePicture(file, dispatch, setFile, user?.id);
   };
+
+  const [details, setDetails] = useState({
+    name: user.name,
+    email: user.email,
+    mobileNum: user.mobileNum,
+    password: "",
+  });
 
   return (
     <form>
@@ -88,7 +95,6 @@ export const Profile = ({ handleClose }) => {
                   height: "8rem",
                   width: "8rem",
                   borderRadius: "50%",
-                  border: "2px solid black",
                   boxSizing: "border-box",
                 }}
               />
@@ -102,6 +108,7 @@ export const Profile = ({ handleClose }) => {
                   alignItems: "center",
                   border: "solid 2px black",
                   borderRadius: "50%",
+                  "object-fit": "contain",
                 }}
               >
                 <i
