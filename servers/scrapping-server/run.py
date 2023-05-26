@@ -5,7 +5,7 @@ import asyncio
 
 
 app = create_app()
-tracker = Tracker()
+tracker = Tracker() 
 
 
 def call_tracker():

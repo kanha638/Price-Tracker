@@ -1,13 +1,19 @@
+import asyncio
 from flask import jsonify
 import requests
 import json
 from bs4 import BeautifulSoup
 from playwright.async_api import async_playwright
 from app.product.globals import currencies
+import re
 
 
 class Flipkart:
     def __init__(self) -> None:
+        """
+        This is a constructor function that initializes a dictionary with a user-agent header for web
+        scraping purposes.
+        """
         self.headers = {
             'user-agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/102.0.0.0 Safari/537.36',
         }
@@ -18,33 +24,33 @@ class Flipkart:
 
         params: url whose data to be fetched
 
-        Returns: Soup of page requested
+        Returns: None is some error happens else Soup of page requested
         '''
-        page = requests.get(url, headers=self.headers)
-        soup = BeautifulSoup(page.content, 'html.parser')
+        try:
+            page = requests.get(url, headers=self.headers)
+            soup = BeautifulSoup(page.content, 'html.parser')
+        except Exception as e:
+            print(f'Error while creating soup. {e}')
+            return None
+
         return soup
 
     async def scrape_product(self, url: str) -> dict:
-        '''
-        Function to scrape product details from flipkart's website.
+        """
+        This is a Python function that scrapes product details from Flipkart's website and returns them
+        in a dictionary format.
 
-        params: url of the product to be scraped
-
-        Returns :
-        {
-            'Title': title,
-            'Price': price,
-            'MRP': mrp,
-            'Currency': currency,
-            'Availability': availability,
-            'Rating': rating,
-            'Rating_Count': rating_count,
-            'Category': category,
-            'Image_Link': img_link,
-        }
-        '''
+        :param url: The URL of the product page on Flipkart's website that needs to be scraped for
+        product details
+        :type url: str
+        :return: None if some error occurs else The function `scrape_product` returns a dictionary containing the scraped details of a
+        product from Flipkart's website. The dictionary contains the following keys: 'Title', 'Price',
+        'MRP', 'Currency', 'Availability', 'Rating', 'Rating_Count', 'Category', and 'Image_Link'.
+        """
 
         soup = await self.get_soup(url=url)
+        if soup is None:
+            return None
 
         title = soup.find(class_='B_NuCI')
         if title:
@@ -52,16 +58,18 @@ class Flipkart:
 
         price = soup.find(class_='_30jeq3 _16Jk6d')
         currency = 'INR'
-        if price:
+        if price is not None:
             price = price.text.strip()
             price = float(price.replace(',', '').replace(
                 '₹', '').replace('€', '').replace('$', '').strip())
 
         # ToDo : handle if MRP is not available
         mrp = soup.find(class_='_3I9_wc _2p6lqe')
-        if mrp:
+        if mrp is not None:
             mrp = float(mrp.text.replace(',', '').replace(
                 '₹', '').replace('€', '').replace('$', '').strip())
+        else:
+            mrp = price
 
         availability = soup.find(class_='_1dVbu9')
         if availability is None:
@@ -126,15 +134,18 @@ class Flipkart:
         return product
 
     async def scrape_price(self, url: str) -> float:
-        '''
-            Scrapes the price of product.
+        """
+        This function scrapes the price of a product from a given Flipkart URL and returns it as a float.
 
-            params: url of flipkart product whose price to be tracked.
-
-            Returns: Price of the product at that particular time.
-        '''
+        :param url: The URL of the Flipkart product whose price needs to be tracked
+        :type url: str
+        :return: None if some error occurs else the price of a product scraped from a given URL. The price is returned as a float
+        value.
+        """
 
         soup = await self.get_soup(url=url)
+        if soup is None:
+            return None
         price = soup.find(class_='_30jeq3 _16Jk6d')
         if price is not None:
             price = float(price.text.replace(',', '').replace(
@@ -148,101 +159,115 @@ class Amazon:
         self.pincode = pincode
 
     async def get_soup(self, url):
-        '''
-            Fetches the url data from amazon and returns soup object.
-            It uses playwright for setting up the pincode
+        """
+        This function fetches the HTML content of a given Amazon URL using Playwright and returns None if some errors occurs else a
+        BeautifulSoup object. 
 
-            params: amazon url whose data to be fetched
-
-            Returns: Soup object of page requested
-        '''
+        :param url: The URL of the Amazon page from which data needs to be fetched
+        :return: None if some errors occurs else a BeautifulSoup object, which is a parsed representation of the HTML content of a
+        webpage fetched from the provided URL. 
+        """
         async with async_playwright() as p:
-            browser = await p.chromium.launch()
-            context = await browser.new_context(
-                user_agent="Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/96.0.4664.93 Safari/537.36")
+            try:
+                browser = await p.chromium.launch()
+                context = await browser.new_context(
+                    user_agent="Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/96.0.4664.93 Safari/537.36")
+                page = await context.new_page()
+            except Exception as e:
+                print(f'Unable to open the browser! {e}')
+                return None
 
-            page = await context.new_page()
+            try:
+                # Wait for page to goto url
+                await page.goto(url, timeout=2000000)
+            except Exception as e:
+                print(f'Unable to load page. {e}')
+                return None
 
-            # Wait for page to goto url
-            await page.goto(url, timeout=2000000)
+            try:
+                if self.pincode:
+                    await page.click('#nav-global-location-popover-link')
+                    await page.wait_for_selector('#GLUXZipUpdateInput')
+                    await page.type('#GLUXZipUpdateInput', self.pincode)
+                    # Waits for the next navigation. Using Python context manager
+                    # prevents a race condition between clicking and waiting for a navigation.
+                    async with page.expect_navigation():
+                        await page.click('#GLUXZipUpdate > span > input')
+                        # Reload the page after clicking apply button for pincode
+                        await page.reload()
+            except Exception as e:
+                print(f'Unable to set pincode in amazon! {e}')
 
-            # if self.pincode:
-            #     await page.click('#nav-global-location-popover-link')
-            #     await page.wait_for_selector('#GLUXZipUpdateInput')
-            #     await page.type('#GLUXZipUpdateInput', self.pincode)
-            #     # Waits for the next navigation. Using Python context manager
-            #     # prevents a race condition between clicking and waiting for a navigation.
-            #     async with page.expect_navigation():
-            #         await page.click('#GLUXZipUpdate > span > input')
-            #         # Reload the page after clicking apply button for pincode
-            #         await page.reload()
-
-            # Get the HTML content of the page
-            html = await page.content()
+            try:
+                # Get the HTML content of the page
+                html = await page.content()
+            except Exception as e:
+                print(f'Amazon page not responding! {e}')
+                return None
 
             # Parse the HTML content with BeautifulSoup
             soup = BeautifulSoup(html, 'html.parser')
 
-            # Close the browser
-            await browser.close()
+            try:
+                # Close the browser
+                await browser.close()
+            except Exception as e:
+                print(
+                    f'Unable to close browser while scraping amazon url. {e}')
 
             return soup
 
     async def scrape_product(self, url) -> dict:
-        '''
-        Function to scrape product details from amazon's website.
+        """
+        The function scrapes product details from Amazon's website and returns a dictionary containing
+        information such as title, price, availability, rating, and category.
 
-        params: url of the product to be scraped
-
-        Returns :
-        {
-            'Title': title,
-            'Price': price,
-            'Currency': currency,
-            'MRP': mrp,
-            'Availability': availability,
-            'Rating': rating,
-            'Rating_Count': rating_count,
-            'Category': category,
-            'Image_Link': img_link,
-        }
-        '''
+        :param url: The URL of the product page on Amazon's website that needs to be scraped for product
+        details
+        :return: The function `scrape_product` returns a dictionary containing the scraped details of a
+        product from Amazon's website. The dictionary contains the following keys: 'Title', 'Price',
+        'MRP', 'Currency', 'Availability', 'Rating', 'Rating_Count', 'Category', and 'Image_Link'.
+        """
 
         page = await self.get_soup(url=url)
+        if page is None:
+            return None
 
         title = page.find('span', {'id': 'productTitle'})
-        if title:
+        if title is not None:
             title = title.text.strip()
 
         price = page.find(class_='a-price-whole')
-        if price:
+        if price is not None:
             price = float(price.text.replace(',', '').replace(
                 '₹', '').replace('€', '').replace('$', '').strip())
 
         mrp_block = page.find(
             class_='a-size-small a-color-secondary aok-align-center basisPrice')
-        mrp = None
 
-        # ToDo : handle if MRP is not available
-        if mrp_block:
+        mrp = None
+        if mrp_block is not None:
             mrp = mrp_block.find('span', {'class': 'a-price a-text-price'}).find(
                 'span', {'class': 'a-offscreen'})
-            if mrp:
+            if mrp is not None:
                 mrp = float(mrp.text.replace(',', '').replace(
                     '₹', '').replace('€', '').replace('$', '').strip())
+            else:
+                mrp = price
         else:
             mrp = price
 
         currency = page.find('span', {'class': 'a-price-symbol'})
-        if currency:
+        if currency is not None:
             currency = currency.text.strip()
             currency = currencies[currency]
         else:
+            # use default currency
             currency = 'INR'
 
         avalability_block = page.find('div', {'id': 'availability'})
         availability = None
-        if avalability_block:
+        if avalability_block is not None:
             if avalability_block.find('span', {'class': 'a-color-success'}):
                 availability = 'In Stock'
             else:
@@ -252,7 +277,7 @@ class Amazon:
 
         categories_div = page.find(
             'div', {'id': 'wayfinding-breadcrumbs_feature_div'})
-        if categories_div:
+        if categories_div is not None:
             categories = categories_div.find(
                 'ul', {'class': 'a-unordered-list a-horizontal a-size-small'})
             category = categories.find_all('li')[2].find('a').text.strip()
@@ -260,7 +285,7 @@ class Amazon:
             category = 'Not Found'
 
         rating_block = page.find('div', {'id': 'averageCustomerReviews'})
-        if rating_block:
+        if rating_block is not None:
             rating = rating_block.find('span', {'class': 'a-icon-alt'})
             if rating:
                 rating = float(rating.text.replace(
@@ -269,17 +294,17 @@ class Amazon:
             rating = float(0)
 
         rating_count = page.find('span', {'id': 'acrCustomerReviewText'})
-        if rating_count:
+        if rating_count is not None:
             rating_count = float(rating_count.text.replace(
                 ',', '').strip().split(' ')[0])
         else:
             rating_count = float(0)
 
         img_link = page.find('img', {'id': 'landingImage'})
-        if img_link:
+        if img_link is not None:
             img_link = img_link.attrs['src']
         else:
-            img_link = ''
+            img_link = None
 
         product = {
             'Title': title,
@@ -302,8 +327,11 @@ class Amazon:
         Returns: Price of the product at that particular time.
         '''
         page = await self.get_soup(url=url)
+        if page is None:
+            return None
+
         price = page.find(class_='a-price-whole')
-        if price:
+        if price is not None:
             price = float(price.text.replace(',', '').replace(
                 '₹', '').replace('$', '').strip())
 
@@ -317,112 +345,153 @@ class Myntra:
     async def get_soup(self, url):
         '''
             Fetches the url data from amazon and returns soup object.
-
             params: Myntra url whose data to be fetched
-
-            Returns: Soup object of page requested
+            Returns: None if some error occurs else Soup object of page requested
         '''
 
         async with async_playwright() as p:
-            browser = await p.chromium.launch()
-            context = await browser.new_context(
-                user_agent="Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/96.0.4664.93 Safari/537.36")
-            page = await context.new_page()
+            try:
+                browser = await p.chromium.launch()
+                context = await browser.new_context(
+                    user_agent="Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/96.0.4664.93 Safari/537.36")
+                page = await context.new_page()
+            except Exception as e:
+                print(f'Unable to open the browser! {e}')
+                return None
 
-            # Wait for page to goto url
-            await page.goto(url, timeout=2000000)
-            # Get the HTML content of the page
-            html = await page.content()
+            try:
+                # Wait for page to goto url
+                await page.goto(url, timeout=2000000)
+            except Exception as e:
+                print(f'Unable to load page. {e}')
+                return None
 
-            # Parse the HTML content with BeautifulSoup
-            soup = BeautifulSoup(html, 'html.parser')
+            try:
+                # Get the HTML content of the page
+                html = await page.content()
+                # Parse the HTML content with BeautifulSoup
+                soup = BeautifulSoup(html, 'html.parser')
+            except Exception as e:
+                print(
+                    f'Got error while creating soup of page content html {e}')
+                return None
 
-            # Close the browser
-            await browser.close()
+            try:
+                # Close the browser
+                await browser.close()
+            except Exception as e:
+                print(f'Error while closing the browser {e}')
 
             return soup
 
     async def scrape_product(self, url) -> dict:
-        '''
-        Function to scrape product details from amazon's website.
+        """
+        This is a Python function that scrapes product details from Amazon's website and returns a
+        dictionary containing information such as title, price, currency, availability, rating, and
+        image link.
 
-        params: url of the product to be scraped
-
-        Returns :
-        {
-            'Title': title,
-            'Price': price,
-            'Currency': currency,
-            'MRP': mrp,
-            'Availability': availability,
-            'Rating': rating,
-            'Rating_Count': rating_count,
-            'Category': category,
-            'Image_Link': img_link,
-        }
-        '''
+        :param url: The URL of the product page on Amazon's website that needs to be scraped for product
+        details
+        :return: None if some error occurs else The function `scrape_product` returns a dictionary containing the scraped details of a
+        product from Amazon's website. The dictionary has keys such as 'Title', 'Price', 'Currency',
+        'MRP', 'Availability', 'Rating', 'Rating_Count', 'Category', and 'Image_Link'.
+        """
 
         page = await self.get_soup(url=url)
+        if page is None:
+            return None
 
-        # select the div containing all categories
-        categories = page.find('div', {'class': 'breadcrumbs-container'})
-        if categories is not None:
-            category = categories.find_all('a', {'class': 'breadcrumbs-link'})[2].text if len(
-                categories) > 2 else categories.find_all('a', {'class': 'breadcrumbs-link'})[1].text
-        else:
-            category = 'Not Found'
+        try:
+            # select the div containing all categories
+            categories = page.find('div', {'class': 'breadcrumbs-container'})
+            if categories is not None:
+                category = categories.find_all('a', {'class': 'breadcrumbs-link'})[2].text if len(
+                    categories) > 2 else categories.find_all('a', {'class': 'breadcrumbs-link'})[1].text
+            else:
+                category = 'Not Found'
+        except Exception as e:
+            print(f'Error while scraping category. {e}')
 
-        # select the span containing MRP
-        mrp = page.find('span', {'class': 'pdp-mrp'})
-        currency = 'INR'
-        if mrp is not None:
-            mrp = mrp.find('s')
-            mrp = float(mrp.text.replace('MRP', '').replace(',', '').replace(
-                '₹', '').replace('€', '').replace('$', '').strip())
-            print(f'MRP : {mrp}')
+        try:
+            # select the span containing MRP
+            mrp = page.find('span', {'class': 'pdp-mrp'})
+            currency = 'INR'
+            if mrp is not None:
+                mrp = mrp.find('s')
+                mrp = float(mrp.text.replace('MRP', '').replace(',', '').replace(
+                    '₹', '').replace('€', '').replace('$', '').strip())
+        except Exception as e:
+            print(f'Error while scraping MRP. {e}')
 
-        # select the image rating div
-        rating_block = page.find('div', {'class': 'index-overallRating'})
-        rating = float(0)
-        rating_count = float(0)
-        if rating_block is not None:
-            # extract product rating and rating count
-            rating = rating_block.find('div')
-            rating = float(rating.text.replace(
-                ',', '').strip().split(' ')[0])
+        try:
+            # select the image rating div
+            rating_block = page.find('div', {'class': 'index-overallRating'})
+            rating = float(0)
+            rating_count = float(0)
+            if rating_block is not None:
+                # extract product rating and rating count
+                rating = rating_block.find('div')
+                rating = float(rating.text.replace(
+                    ',', '').strip().split(' ')[0])
 
-            rating_count = rating_block.find(
-                'div', {'class': 'index-ratingsCount'}).text.replace('Ratings', '').replace('Rating', '').strip()
+                rating_count = rating_block.find(
+                    'div', {'class': 'index-ratingsCount'}).text.replace('Ratings', '').replace('Rating', '').strip()
 
-            mul = 1
-            if rating_count[-1] == 'k':
-                rating_count = rating_count[:-1]
-                mul = 1000
-            rating_count = float(rating_count) * mul
+                mul = 1
+                if rating_count[-1] == 'k':
+                    rating_count = rating_count[:-1]
+                    mul = 1000
+                rating_count = float(rating_count) * mul
+        except Exception as e:
+            print(f'Error while scraping rating {e}')
 
-        script_tags = page.find_all('script', type='application/ld+json')
-        # Search for the script tag with "@type": "Product"
-        desired_script_tag = None
-        for script_tag in script_tags:
-            json_data = json.loads(script_tag.string)
-            if json_data.get('@type') == 'Product':
-                desired_script_tag = script_tag
-                break
+        try:
+            script_tags = page.find_all(
+                'script', type='application/ld+json')
+            # Search for the script tag with "@type": "Product"
+            desired_script_tag = None
+            for script_tag in script_tags:
+                try:
+                    # Remove invalid control characters from the script tag's content
+                    cleaned_content = re.sub(
+                        r'[\x00-\x1F\x7F-\x9F]', '', script_tag.string)
+                    json_data = json.loads(cleaned_content)
 
-        if desired_script_tag is not None:
+                    if json_data.get('@type') == 'Product':
+                        desired_script_tag = script_tag
+                        break
+                except Exception as e:
+                    print(
+                        f'Error while find type of script tag. {e}')
+        except Exception as e:
+            print(f'Error while scraping scripting tags. {e}')
+
+        try:
             # Extract the contents within the script tag
-            data = json.loads(desired_script_tag.string)
+            try:
+                # Remove invalid control characters from the script tag's content
+                cleaned_content = re.sub(
+                    r'[\x00-\x1F\x7F-\x9F]', '', desired_script_tag.string)
+
+                data = json.loads(cleaned_content)
+            except Exception as e:
+                print(f'Error while loading data from desired script tag. {e}')
+
             title = data.get('name')
             img_link = data.get('image')
             price = float(data.get('offers', {}).get('price'))
             currency = data.get('offers', {}).get('priceCurrency')
             availability = data.get('offers', {}).get('availability')
-        else:
+        except Exception as e:
+            print(f'Error while scraping using scripting tags. {e}')
+
+            # Extract data using html tags
             title = page.find('h1', {'class': 'pdp-title'}).text.strip()
             name = page.find('h1', {'class': 'pdp-name'}).text.strip()
             title += name
-            price = page.find('span', {'class': 'pdp-price'}).find('strong')
-            if price:
+            price = page.find(
+                'span', {'class': 'pdp-price'}).find('strong')
+            if price is not None:
                 if price.text.__contains__('€'):
                     currency = 'EURO'
                 elif price.text.__contains__('$'):
@@ -462,31 +531,48 @@ class Myntra:
         Returns: Price of the product at that particular time.
         '''
         page = await self.get_soup(url=url)
-        script_tags = page.find_all('script', type='application/ld+json')
-        # Search for the script tag with "@type": "Product"
-        desired_script_tag = None
-        for script_tag in script_tags:
-            json_data = json.loads(script_tag.string)
-            if json_data.get('@type') == 'Product':
-                desired_script_tag = script_tag
-                break
+        if page is None:
+            return None
+
+        try:
+            script_tags = page.find_all('script', type='application/ld+json')
+            # Search for the script tag with "@type": "Product"
+            desired_script_tag = None
+            for script_tag in script_tags:
+                try:
+                    json_data = json.loads(script_tag.string)
+                    if json_data.get('@type') == 'Product':
+                        desired_script_tag = script_tag
+                        break
+                except Exception as e:
+                    print(f'Error while find type of script tag. {e}')
+        except Exception as e:
+            print(f'Error while scraping scripting tags. {e}')
 
         price = float(0)
-        if desired_script_tag is not None:
-            # Extract the contents within the script tag
-            data = json.loads(desired_script_tag.string)
-            price = float(data.get('offers', {}).get('price'))
-        else:
-            price = page.find('span', {'class': 'pdp-price'}).find('strong')
-            if price:
-                price = float(price.text.replace(',', '').replace(
-                    '₹', '').replace('€', '').replace('$', '').strip())
+        try:
+            if desired_script_tag is not None:
+                # Extract the contents within the script tag
+                data = json.loads(desired_script_tag.string)
+                price = float(data.get('offers', {}).get('price'))
+            else:
+                price = page.find(
+                    'span', {'class': 'pdp-price'}).find('strong')
+                if price:
+                    price = float(price.text.replace(',', '').replace(
+                        '₹', '').replace('€', '').replace('$', '').strip())
+        except Exception as e:
+            print(f'Error while scraping price. {e}')
 
         return price
 
 
 class Scraper:
     def __init__(self) -> None:
+        """
+        This function initializes scraper objects for Flipkart, Amazon, and Myntra and maps their
+        respective product and price scraper functions.
+        """
         # create scraper objects for Flipkart and Amazon
         self.flipkart = Flipkart()
         self.amazon = Amazon()
@@ -507,23 +593,16 @@ class Scraper:
         }
 
     async def scrape_product(self, url: str) -> dict:
-        '''
-        Function to scrape product details for the given url.
+        """
+        This is an asynchronous function that scrapes a product from a given URL using a scraper function
+        based on the website domain.
 
-        params: url of the product to be scraped
-
-        Returns :
-        {
-            'Title': title,
-            'Price': price,
-            'Currency': currency,
-            'MRP': mrp,
-            'Availability': availability,
-            'Rating': rating,
-            'Rating_Count': rating_count,
-            'Image_Link': img_link,
-        }
-        '''
+        :param url: A string representing the URL of the product page to be scraped
+        :type url: str
+        :return: The function `scrape_product` returns the result of calling the appropriate scraper
+        function for the given website URL. If the website is not supported, it returns a JSON error
+        message.
+        """
 
         website = url.strip().split('/')[2].split('.')[1]
         try:
@@ -537,14 +616,22 @@ class Scraper:
         return await scraper_function(url)
 
     async def scrape_price(self, url: str) -> float:
-        '''
-        Scrapes the price of product.
+        """
+        This function scrapes the price of a product from a given URL using a scraper function based on the
+        website domain.
 
-        params: url of product whose price to be tracked
-
-        Returns: Price of the product at that particular time.
-        '''
-
+        :param url: A string representing the URL of a product page on an e-commerce website
+        :type url: str
+        :return: The function `scrape_price` returns a float value, which is the price scraped from the
+        given URL.
+        """
         website = url.strip().split('/')[2].split('.')[1]
-        scraper_function = self.scraper_price_dict.get(website)
+        try:
+            scraper_function = self.scraper_product_dict.get(website)
+        except:
+            error_message = {
+                "message": "Entered website is not supported now! Please check back later."
+            }
+            return jsonify(error_message)
+
         return await scraper_function(url)
