@@ -257,3 +257,12 @@ button {
   grid-template-columns: repeat(4, 1fr);
   grid-gap: 10px;
 }
+
+
+/*----Displaying full name on hover in components carousel-----*/
+.productNameOnHover{
+  height: 50px;
+  display: block;
+  text-overflow: ellipsis;
+  overflow: hidden;
+}
