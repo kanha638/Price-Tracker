@@ -5,7 +5,7 @@ import asyncio
 
 
 app = create_app()
-tracker = Tracker()
+tracker = Tracker() 
 
 
 def call_tracker():
@@ -15,13 +15,13 @@ def call_tracker():
 # scheduler to call price_tracker after a certain time interval
 scheduler = BackgroundScheduler()
 scheduler.add_job(call_tracker, 'interval',
-                  minutes=200, misfire_grace_time=1)
+                  hours=2, misfire_grace_time=1)
 scheduler.start()
 
 
 if __name__ == "__main__":
     try:
-        app.run(debug=False, port=8080)
+        app.run(debug=False)
     except (KeyboardInterrupt, SystemExit):
         tracker.free_resources()
         scheduler.shutdown()
