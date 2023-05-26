@@ -3,6 +3,7 @@ import Slider from "react-slick";
 import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
 import { designVar } from "../../common/data";
+import './../../styles/style.css';
 
 const SampleNextArrow = (props) => {
   const { onClick } = props;
@@ -113,7 +114,9 @@ const CorouselCard = ({ productItems, number_of_slides = 4 }) => {
                   </div>
                 </div>
                 <div className="product-details">
-                  <h3>{productItems.name}</h3>
+                  <div className="productNameOnHover">{productItems.name}</div>
+                  {/* <h3>{productItems.name}</h3> */}
+                  
                   <div className="rate">
                     <i className="fa fa-star"></i>
                     <i className="fa fa-star"></i>
@@ -128,8 +131,8 @@ const CorouselCard = ({ productItems, number_of_slides = 4 }) => {
                     <h4>${productItems.price}.00 </h4>
 
                     <p
-                      style={{ cursor: "pointer" }}
-                      style={{ color: designVar.colors.iconTextColor }}
+                      // style={{ cursor: "pointer" }}
+                      style={{ color: designVar.colors.iconTextColor,cursor: "pointer"  }}
                     >
                       Track
                     </p>
