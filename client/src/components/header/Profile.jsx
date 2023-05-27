@@ -1,5 +1,12 @@
 import React, { useState } from "react";
-import { Button, TextField, Box, Typography, Grid } from "@mui/material";
+import {
+  Button,
+  TextField,
+  Box,
+  Typography,
+  Grid,
+  Avatar,
+} from "@mui/material";
 import { useDispatch, useSelector } from "react-redux";
 import { selectUser } from "../../slices/userSlice";
 import { getProfilePicImageURL } from "../../utils/utilities";
@@ -130,14 +137,14 @@ export const Profile = ({ handleClose }) => {
             }}
           >
             {user?.profile_pic || file ? (
-              <img
+              <Avatar
                 alt="logo"
                 src={
                   file
                     ? URL.createObjectURL(file)
                     : getProfilePicImageURL(user?.profile_pic)
                 }
-                style={{
+                sx={{
                   height: "8rem",
                   width: "8rem",
                   borderRadius: "50%",

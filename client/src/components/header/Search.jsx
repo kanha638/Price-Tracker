@@ -7,6 +7,7 @@ import { getProfilePicImageURL } from "../../utils/utilities";
 import { Button, Modal } from "@mui/material";
 import { designVar } from "../../common/data";
 import { Profile } from "./Profile";
+import { Avatar } from "@mui/material";
 const Search = () => {
   // fixed Header
   window.addEventListener("scroll", function () {
@@ -51,11 +52,11 @@ const Search = () => {
               <>
                 {" "}
                 {user.profile_pic ? (
-                  <img
+                  <Avatar
+                    alt="profile"
                     onClick={handleOpen}
                     src={getProfilePicImageURL(user.profile_pic)}
-                    alt="profile"
-                    style={{
+                    sx={{
                       height: 48,
                       cursor: "pointer",
                       width: 48,
