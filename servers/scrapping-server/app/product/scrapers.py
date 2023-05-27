@@ -19,38 +19,74 @@ class Flipkart:
         }
 
     async def get_soup(self, url):
-        '''
-        Fetches the url data and returns soup object.
+        """
+        This is a Python function that fetches html of requested url and returns a soup object along with error_message.
 
-        params: url whose data to be fetched
+        :param url: The URL of the product page on Flipkart's website that needs to be scraped for
+        product details
 
-        Returns: None is some error happens else Soup of page requested
-        '''
+        :type url: str
+
+        :return: None, error_message if error occurs while fetching the html content of requested url
+            else soup, error_message
+
+            error_message = {
+                'message': '',
+                'status' : reponse_status
+            }
+
+            :type product_details: dict
+            :type error_message: dict
+
+            soup is BeautifulSoup object.
+        """
+
+        error_message = {
+            "message": "",
+            "status": 200
+        }
+
         try:
             page = requests.get(url, headers=self.headers)
             soup = BeautifulSoup(page.content, 'html.parser')
         except Exception as e:
             print(f'Error while creating soup. {e}')
-            return None
+            error_message['message'] = "Internal server error!"
+            error_message['status'] = 500
+            return None, error_message
 
-        return soup
+        return soup, error_message
 
     async def scrape_product(self, url: str) -> dict:
         """
         This is a Python function that scrapes product details from Flipkart's website and returns them
-        in a dictionary format.
+        in a dictionary format along with error_message.
 
         :param url: The URL of the product page on Flipkart's website that needs to be scraped for
         product details
+
         :type url: str
-        :return: None if some error occurs else The function `scrape_product` returns a dictionary containing the scraped details of a
-        product from Flipkart's website. The dictionary contains the following keys: 'Title', 'Price',
-        'MRP', 'Currency', 'Availability', 'Rating', 'Rating_Count', 'Category', and 'Image_Link'.
+
+        :return: None, error_message if error occurs while getting soup of requested url
+            else product_details, error_message
+
+            error_message = {
+                'message': '',
+                'status' : reponse_status
+            }
+
+            :type product_details: dict
+            :type error_message: dict
+
+            product_details is a dictionary containing the scraped details of a
+            product from Flipkart's website.
+            The product_details consist of : 'Title', 'Price',
+            'MRP', 'Currency', 'Availability', 'Rating', 'Rating_Count', 'Category', and 'Image_Link'.
         """
 
-        soup = await self.get_soup(url=url)
+        soup, error_message = await self.get_soup(url=url)
         if soup is None:
-            return None
+            return None, error_message
 
         title = soup.find(class_='B_NuCI')
         if title:
@@ -131,7 +167,7 @@ class Flipkart:
             'Image_Link': img_link,
         }
 
-        return product
+        return product, error_message
 
     async def scrape_price(self, url: str) -> float:
         """
@@ -143,7 +179,7 @@ class Flipkart:
         value.
         """
 
-        soup = await self.get_soup(url=url)
+        soup, _ = await self.get_soup(url=url)
         if soup is None:
             return None
         price = soup.find(class_='_30jeq3 _16Jk6d')
@@ -160,13 +196,32 @@ class Amazon:
 
     async def get_soup(self, url):
         """
-        This function fetches the HTML content of a given Amazon URL using Playwright and returns None if some errors occurs else a
-        BeautifulSoup object. 
+        This is a Python function that fetches html of requested url and returns a soup object along with error_message.
 
-        :param url: The URL of the Amazon page from which data needs to be fetched
-        :return: None if some errors occurs else a BeautifulSoup object, which is a parsed representation of the HTML content of a
-        webpage fetched from the provided URL. 
+        :param url: The URL of the product page on Amazon's website that needs to be scraped for
+        product details
+
+        :type url: str
+
+        :return: None, error_message if error occurs while fetching the html content of requested url
+            else soup, error_message
+
+            error_message = {
+                'message': '',
+                'status' : reponse_status
+            }
+
+            :type product_details: dict
+            :type error_message: dict
+
+            soup is BeautifulSoup object.
         """
+
+        error_message = {
+            "message": "",
+            "status": 200
+        }
+
         async with async_playwright() as p:
             try:
                 browser = await p.chromium.launch()
@@ -175,14 +230,18 @@ class Amazon:
                 page = await context.new_page()
             except Exception as e:
                 print(f'Unable to open the browser! {e}')
-                return None
+                error_message['message'] = "Internal server error!"
+                error_message['status'] = 500
+                return None, error_message
 
             try:
                 # Wait for page to goto url
                 await page.goto(url, timeout=2000000)
             except Exception as e:
                 print(f'Unable to load page. {e}')
-                return None
+                error_message['message'] = "Internal server error!"
+                error_message['status'] = 500
+                return None, error_message
 
             try:
                 if self.pincode:
@@ -203,7 +262,9 @@ class Amazon:
                 html = await page.content()
             except Exception as e:
                 print(f'Amazon page not responding! {e}')
-                return None
+                error_message['message'] = "Amazon page not responding! Request timed out."
+                error_message['status'] = 408
+                return None, error_message
 
             # Parse the HTML content with BeautifulSoup
             soup = BeautifulSoup(html, 'html.parser')
@@ -215,23 +276,38 @@ class Amazon:
                 print(
                     f'Unable to close browser while scraping amazon url. {e}')
 
-            return soup
+            return soup, error_message
 
-    async def scrape_product(self, url) -> dict:
+    async def scrape_product(self, url: str):
         """
-        The function scrapes product details from Amazon's website and returns a dictionary containing
-        information such as title, price, availability, rating, and category.
+        This is a Python function that scrapes product details from Amazon's website and returns them
+        in a dictionary format along with error_message.
 
-        :param url: The URL of the product page on Amazon's website that needs to be scraped for product
-        details
-        :return: The function `scrape_product` returns a dictionary containing the scraped details of a
-        product from Amazon's website. The dictionary contains the following keys: 'Title', 'Price',
-        'MRP', 'Currency', 'Availability', 'Rating', 'Rating_Count', 'Category', and 'Image_Link'.
+        :param url: The URL of the product page on Amazon's website that needs to be scraped for
+        product details
+
+        :type url: str
+
+        :return: None, error_message if error occurs while getting soup of requested url
+            else product_details, error_message
+
+            error_message = {
+                'message': '',
+                'status' : reponse_status
+            }
+
+            :type product_details: dict
+            :type error_message: dict
+
+            product_details is a dictionary containing the scraped details of a
+            product from Amazon's website.
+            The product_details consist of : 'Title', 'Price',
+            'MRP', 'Currency', 'Availability', 'Rating', 'Rating_Count', 'Category', and 'Image_Link'.
         """
 
-        page = await self.get_soup(url=url)
+        page, error_message = await self.get_soup(url=url)
         if page is None:
-            return None
+            return None, error_message
 
         title = page.find('span', {'id': 'productTitle'})
         if title is not None:
@@ -318,7 +394,7 @@ class Amazon:
             'Image_Link': img_link,
         }
 
-        return product
+        return product, error_message
 
     async def scrape_price(self, url) -> float:
         '''
@@ -343,12 +419,32 @@ class Myntra:
         pass
 
     async def get_soup(self, url):
-        '''
-            Fetches the url data from amazon and returns soup object.
-            params: Myntra url whose data to be fetched
-            Returns: None if some error occurs else Soup object of page requested
-        '''
+        """
+        This is a Python function that fetches html of requested url and returns a soup object along with error_message.
 
+        :param url: The URL of the product page on Myntra's website that needs to be scraped for
+        product details
+
+        :type url: str
+
+        :return: None, error_message if error occurs while fetching the html content of requested url
+            else soup, error_message
+
+            error_message = {
+                'message': '',
+                'status' : reponse_status
+            }
+
+            :type product_details: dict
+            :type error_message: dict
+
+            soup is BeautifulSoup object.
+        """
+
+        error_message = {
+            "message": "",
+            'status': 200
+        }
         async with async_playwright() as p:
             try:
                 browser = await p.chromium.launch()
@@ -357,14 +453,18 @@ class Myntra:
                 page = await context.new_page()
             except Exception as e:
                 print(f'Unable to open the browser! {e}')
-                return None
+                error_message['message'] = "Internal server error!"
+                error_message['status'] = 500
+                return None, error_message
 
             try:
                 # Wait for page to goto url
                 await page.goto(url, timeout=2000000)
             except Exception as e:
                 print(f'Unable to load page. {e}')
-                return None
+                error_message['message'] = "Myntra page not responding! Request timed out."
+                error_message['status'] = 408
+                return None, error_message
 
             try:
                 # Get the HTML content of the page
@@ -374,7 +474,9 @@ class Myntra:
             except Exception as e:
                 print(
                     f'Got error while creating soup of page content html {e}')
-                return None
+                error_message['message'] = "Internal server error"
+                error_message['status'] = 500
+                return None, error_message
 
             try:
                 # Close the browser
@@ -382,24 +484,39 @@ class Myntra:
             except Exception as e:
                 print(f'Error while closing the browser {e}')
 
-            return soup
+            return soup, error_message
 
-    async def scrape_product(self, url) -> dict:
+    async def scrape_product(self, url):
         """
-        This is a Python function that scrapes product details from Amazon's website and returns a
-        dictionary containing information such as title, price, currency, availability, rating, and
-        image link.
+        This is a Python function that scrapes product details from Myntra's website and returns them
+        in a dictionary format along with error_message.
 
-        :param url: The URL of the product page on Amazon's website that needs to be scraped for product
-        details
-        :return: None if some error occurs else The function `scrape_product` returns a dictionary containing the scraped details of a
-        product from Amazon's website. The dictionary has keys such as 'Title', 'Price', 'Currency',
-        'MRP', 'Availability', 'Rating', 'Rating_Count', 'Category', and 'Image_Link'.
+        :param url: The URL of the product page on Myntra's website that needs to be scraped for
+        product details
+
+        :type url: str
+
+        :return: None, error_message if error occurs while getting soup of requested url
+            else product_details, error_message
+
+            error_message = {
+                'message': '',
+                'status' : reponse_status
+            }
+
+            :type product_details: dict
+            :type error_message: dict
+
+            product_details is a dictionary containing the scraped details of a
+            product from Myntra's website.
+            The product_details consist of : 'Title', 'Price',
+            'MRP', 'Currency', 'Availability', 'Rating', 'Rating_Count', 'Category', and 'Image_Link'.
         """
 
-        page = await self.get_soup(url=url)
+        page, error_message = await self.get_soup(url=url)
+
         if page is None:
-            return None
+            return None, error_message
 
         try:
             # select the div containing all categories
@@ -522,7 +639,7 @@ class Myntra:
             'Image_Link': img_link,
         }
 
-        return product
+        return product, error_message
 
     async def scrape_price(self, url) -> float:
         '''
@@ -530,7 +647,7 @@ class Myntra:
         params: url of product whose price to be tracked
         Returns: Price of the product at that particular time.
         '''
-        page = await self.get_soup(url=url)
+        page, _ = await self.get_soup(url=url)
         if page is None:
             return None
 
@@ -540,7 +657,9 @@ class Myntra:
             desired_script_tag = None
             for script_tag in script_tags:
                 try:
-                    json_data = json.loads(script_tag.string)
+                    cleaned_content = re.sub(
+                        r'[\x00-\x1F\x7F-\x9F]', '', script_tag.string)
+                    json_data = json.loads(cleaned_content)
                     if json_data.get('@type') == 'Product':
                         desired_script_tag = script_tag
                         break
@@ -549,11 +668,14 @@ class Myntra:
         except Exception as e:
             print(f'Error while scraping scripting tags. {e}')
 
-        price = float(0)
+        price = None
         try:
             if desired_script_tag is not None:
                 # Extract the contents within the script tag
-                data = json.loads(desired_script_tag.string)
+                cleaned_content = re.sub(
+                    r'[\x00-\x1F\x7F-\x9F]', '', desired_script_tag.string)
+
+                data = json.loads(cleaned_content)
                 price = float(data.get('offers', {}).get('price'))
             else:
                 price = page.find(
@@ -604,16 +726,32 @@ class Scraper:
         message.
         """
 
-        website = url.strip().split('/')[2].split('.')[1]
         try:
-            scraper_function = self.scraper_product_dict.get(website)
+            website = url.strip().split('/')[2].split('.')[1] if url.strip(
+            ).split('/')[2].__contains__('www.') else url.strip().split('/')[2].split('.')[0]
+        except Exception as e:
+            print(
+                f'Error while fetching website from url : {url}\nError : {e}')
+            error_message = {
+                "message": "Invalid URL!",
+                'status': 404
+            }
+            return None, error_message
+
+        try:
+            # get the respective scraper function
+            scraper_function = self.scraper_product_dict[website]
         except:
             error_message = {
-                "message": "Entered website is not supported now! Please check back later."
+                "message": "Entered website is not supported! Please check back later.",
+                'status': 404
             }
-            return jsonify(error_message)
 
-        return await scraper_function(url)
+            return None, error_message
+
+        product_details, error_message = await scraper_function(url)
+
+        return product_details, error_message
 
     async def scrape_price(self, url: str) -> float:
         """
