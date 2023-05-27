@@ -5,7 +5,7 @@ const Data = {
       discount: 50,
       cover:
         "https://m.media-amazon.com/images/I/41b3PmlPPuL._SX300_SY300_QL70_FMwebp_.jpg",
-      name: "HP Laptop",
+      name: "HP Laptop powered by hp company this is the best laptop in india till now",
       price: 100,
     },
     {
@@ -27,7 +27,7 @@ const Data = {
       id: 4,
       discount: 40,
       cover: "https://m.media-amazon.com/images/I/61S9aVnRZDL._SX679_.jpg",
-      name: "Smart Watch Black",
+      name: "Smart Watch Black sdf dfgdf df ghfghgh  ghgjfhsfgh ghfghsty dogtuorguhj ot uhtou htg sto t ghshgttgh",
       price: 50,
     },
     {

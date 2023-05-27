@@ -1,5 +1,8 @@
 import React, { useState } from "react";
 import { designVar } from "../../common/data";
+import './../../styles/style.css';
+
+
 const ShopCart = ({ productItems }) => {
   const [liked, setLiked] = useState(false);
   const change = () => {
@@ -31,7 +34,9 @@ const ShopCart = ({ productItems }) => {
                 </div>
               </div>
               <div className="product-details">
-                <h3>{product.name}</h3>
+              
+              <div className="productNameOnHover">{product.name}</div>
+
                 <div className="rate">
                   <i className="fa fa-star"></i>
                   <i className="fa fa-star"></i>
