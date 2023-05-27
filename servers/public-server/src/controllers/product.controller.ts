@@ -43,7 +43,7 @@ export const addProduct = async (req: Request, res: Response) => {
         try {
           let addedProduct;
           let result: ProductFetch = response.data;
-          console.log(result)
+          console.log(result);
           if (
             result.Title &&
             result.Price &&
@@ -86,13 +86,12 @@ export const addProduct = async (req: Request, res: Response) => {
           return res.status(500).json({ message: "Internal server error" });
         }
       })
-      .catch((error: AxiosResponse) => {
-        console.log(error);
-        return res.status(500).json({ message: "Internal server error" });
+      .catch((error: any) => {
+        const status = error.response.status || 500;
+        return res
+          .status(status)
+          .json({ message: error.response.data.message });
       });
-    // return res.status(500).json({
-    //   message: "Something went wrong",
-    // });
   } catch (error) {
     console.log(error);
     return res.status(500).json({

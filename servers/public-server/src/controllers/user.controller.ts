@@ -1,8 +1,8 @@
 import { PrismaClient } from "@prisma/client";
-import { NextFunction, Request, Response } from "express";
+import { Request, Response } from "express";
 import brcypt from "bcrypt";
-import jwt from "jsonwebtoken";
-import cookie from "cookie";
+import fs from "fs";
+import path from "path";
 const prisma = new PrismaClient();
 
 export const updateUserDetails = async (req: Request, res: Response) => {
@@ -88,6 +88,34 @@ export const uploadProfilePicture = async (req: Request, res: Response) => {
   try {
     const { userID } = req.params;
     const profile_pic_urn = req.file?.filename;
+    /* 
+    Removing the previous profile picture from the profile
+    folder so storage management should be good 
+     */
+
+    const previousDetails = await prisma.users.findUnique({
+      where: {
+        id: userID,
+      },
+    });
+    if (previousDetails?.profile_pic) {
+      fs.unlink(
+        `${path.join(__dirname, "../../files/Profile")}/${
+          previousDetails?.profile_pic
+        }`,
+        function (err) {
+          if (err && err.code == "ENOENT") {
+            console.info(
+              "Previous Profile pic File doesn't exist, won't remove it."
+            );
+          } else if (err) {
+            console.error("Error occurred while trying to remove file");
+          } else {
+            console.info(`removed the previous profile pic.`);
+          }
+        }
+      );
+    }
     if (userID === res.locals.userData.id) {
       await prisma.users.update({
         where: {
