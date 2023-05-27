@@ -9,7 +9,7 @@ export const Profile = ({ handleClose }) => {
   const user = useSelector(selectUser);
   const [file, setFile] = useState(null);
   const dispatch = useDispatch();
-  console.log(user);
+  // console.log(user);
 
   const profilePicChangeHandler = (e) => {
     console.log(e.target.files[0]);
@@ -27,9 +27,55 @@ export const Profile = ({ handleClose }) => {
     mobileNum: user.mobileNum,
     password: "",
   });
+  const [errors, setErrors] = useState({
+    name: false,
+    email: false,
+    mobileNum: false,
+    password: false,
+  });
+
+  const changeHandler = (e) => {
+    setErrors({ ...errors, [e.target.name]: false });
+    setDetails({ ...details, [e.target.name]: e.target.value });
+    console.log(details);
+  };
+
+  const submitHandler = (e) => {
+    e.preventDefault();
+    let { name, email, password, mobileNum } = {
+      name: false,
+      email: false,
+      password: false,
+      mobileNum: false,
+    };
+    if (details.name === "") name = true;
+    if (details.email === "") email = true;
+    if (details.mobileNum === "") mobileNum = true;
+    if (details.password === "") password = true;
+
+    setErrors({
+      name: name,
+      email: email,
+      mobileNum: mobileNum,
+      password: password,
+    });
+
+    if (
+      details.name &&
+      details.email &&
+      details.mobileNum &&
+      details.password
+    ) {
+      console.log("Profile can be updated");
+    } else {
+      return;
+    }
+
+    console.log(details);
+  };
 
   return (
-    <form>
+    <form onSubmit={submitHandler}>
       <Box
         display="flex"
         flexDirection={"column"}
@@ -166,33 +212,46 @@ export const Profile = ({ handleClose }) => {
           margin="normal"
           type={"text"}
           autoComplete="name"
-          name="credential"
-          value={user?.name}
+          name="name"
+          error={errors.name}
+          helperText={errors.name === true && "Name is required"}
+          value={details.name}
+          onChange={changeHandler}
           sx={{ width: "90%" }}
         />
         <TextField
           variant={"outlined"}
           margin="normal"
-          value={user?.email}
+          value={details.email}
           type={"text"}
           autoComplete="email"
-          name="credential"
+          name="email"
+          error={errors.email}
+          helperText={errors.email && "Email is required"}
+          onChange={changeHandler}
           sx={{ width: "90%" }}
         />
         <TextField
           variant={"outlined"}
-          value={user?.mobileNum}
+          value={details?.mobileNum}
           type={"number"}
           margin="normal"
-          name="password"
+          name="mobileNum"
+          error={errors.mobileNum}
+          helperText={errors.mobileNum && "Mobile number is required"}
+          onChange={changeHandler}
           sx={{ width: "90%" }}
         />
         <TextField
           variant={"outlined"}
           type={"password"}
           placeholder={"Enter your current password"}
+          value={details.password}
           margin="normal"
           name="password"
+          error={errors.password}
+          helperText={errors.password && "Please enter you current password."}
+          onChange={changeHandler}
           sx={{ width: "90%" }}
         />
 
