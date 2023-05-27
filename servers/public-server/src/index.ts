@@ -3,6 +3,11 @@ import cookieParser from "cookie-parser";
 import dotenv from "dotenv";
 import morgan from "morgan";
 import cors from "cors";
+import authRoutes from "./routes/auth";
+import productRoutes from "./routes/product";
+import userRoutes from "./routes/user";
+import fileRoutes from "./routes/files";
+import { createStorageFolder } from "./startup";
 
 dotenv.config();
 
@@ -16,10 +21,6 @@ app.use(
   })
 );
 
-import authRoutes from "./routes/auth";
-import productRoutes from "./routes/product";
-import userRoutes from "./routes/user";
-import fileRoutes from "./routes/files";
 app.use(morgan("dev"));
 app.use(express.json());
 app.use(cookieParser());
@@ -31,10 +32,11 @@ app.use("/api/file", fileRoutes);
 
 app.get("/", (_, res) => res.send("Hello From Price Tracker Backend"));
 app.listen(PORT, async () => {
-  console.log(`Server running at PORT:${PORT}`);
+  console.info(`Server running at PORT:${PORT}`);
+  createStorageFolder();
 
   try {
-    console.log("Database has been connected Connected !!");
+    console.info("Database has been connected Connected !!");
   } catch (err) {
     console.log(err);
   }

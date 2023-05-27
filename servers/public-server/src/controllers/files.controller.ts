@@ -1,15 +1,14 @@
 import { Request, Response } from "express";
 import { PrismaClient } from "@prisma/client";
 import fs from "fs";
-
+import path from "path";
 /* This is the controller for getting the profile picture of the user*/
 export const getProfilePicture = async (req: Request, res: Response) => {
   try {
     const { key } = req!.params;
+    const profile_path = path.join(__dirname, "../../files/Profile");
 
-    const readStream = fs.createReadStream(
-      `${process.env.FILE_PATH}/Profile/${key}`
-    );
+    const readStream = fs.createReadStream(`${profile_path}/${key}`);
     readStream.on("open", () => {
       readStream.pipe(res);
     });
