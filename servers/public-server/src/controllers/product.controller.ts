@@ -15,6 +15,7 @@ interface ProductFetch {
   Price: string;
   Rating_Count: string;
   MRP: string;
+  Website: string;
 }
 export const addProduct = async (req: Request, res: Response) => {
   try {
@@ -56,7 +57,7 @@ export const addProduct = async (req: Request, res: Response) => {
                 img_urn: result!.Image_Link,
                 product_link: product_url,
                 availabe: result!.Availability,
-                website: website,
+                website: result!.Website,
                 current_price: parseFloat(result!.Price),
                 usersId: userID,
                 product_title: result!.Title,
