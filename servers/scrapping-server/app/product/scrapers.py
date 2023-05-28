@@ -165,7 +165,7 @@ class Flipkart:
             'Rating_Count': rating_count,
             'Category': category,
             'Image_Link': img_link,
-            'Website':'flipkart'
+            'Website': 'flipkart'
         }
 
         return product, error_message
@@ -393,7 +393,7 @@ class Amazon:
             'Rating_Count': rating_count,
             'Category': category,
             'Image_Link': img_link,
-            'Website':'amazon'
+            'Website': 'amazon'
         }
 
         return product, error_message
@@ -639,7 +639,7 @@ class Myntra:
             'Rating_Count': rating_count,
             'Category': category,
             'Image_Link': img_link,
-            'Website':'myntra'
+            'Website': 'myntra'
         }
 
         return product, error_message
@@ -728,7 +728,7 @@ class Scraper:
         function for the given website URL. If the website is not supported, it returns a JSON error
         message.
         """
-
+        url = url.strip()
         try:
             website = url.strip().split('/')[2].split('.')[1] if url.strip(
             ).split('/')[2].__contains__('www.') else url.strip().split('/')[2].split('.')[0]
@@ -766,6 +766,7 @@ class Scraper:
         :return: The function `scrape_price` returns a float value, which is the price scraped from the
         given URL.
         """
+        url = url.strip()
         website = url.strip().split('/')[2].split('.')[1]
         try:
             scraper_function = self.scraper_product_dict.get(website)
