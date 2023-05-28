@@ -38,6 +38,7 @@ def add_product():
             'Rating_Count': rating_count,
             'Category': category,
             'Image_Link': img_link,
+            'Website':website_name
         }
 
         If the request method is not POST, the function returns the

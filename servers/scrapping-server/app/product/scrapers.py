@@ -165,6 +165,7 @@ class Flipkart:
             'Rating_Count': rating_count,
             'Category': category,
             'Image_Link': img_link,
+            'Website':'flipkart'
         }
 
         return product, error_message
@@ -392,6 +393,7 @@ class Amazon:
             'Rating_Count': rating_count,
             'Category': category,
             'Image_Link': img_link,
+            'Website':'amazon'
         }
 
         return product, error_message
@@ -637,6 +639,7 @@ class Myntra:
             'Rating_Count': rating_count,
             'Category': category,
             'Image_Link': img_link,
+            'Website':'myntra'
         }
 
         return product, error_message
