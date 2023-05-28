@@ -19,6 +19,16 @@ body {
   max-width: 90%;
   margin: auto;
 }
+
+@media only screen and (max-width: 450px){
+
+  .container{
+    margin: 0%;
+
+  }
+ 
+}
+
 .d_flex {
   display: flex;
   justify-content: space-between;
@@ -110,6 +120,14 @@ button {
   background-color: #ffe1e6;
   cursor: pointer;
 }
+
+
+
+/* @media only screen and (max-width: 1200px) {
+  .category {
+    background-color: rgb(229, 219, 213);
+  }
+} */
 
 /*---------category----------*/
 .btn-primary {
@@ -265,4 +283,78 @@ button {
   display: block;
   text-overflow: ellipsis;
   overflow: hidden;
+}
+
+
+/*----My products category dropdown----*/
+.mobileviewCategory{
+  display: none;
+}
+.screenviewtitle{
+  font-size: 26px;
+  font-weight:400;
+}
+@media only screen and (max-width: 1080px) {
+  .mobileviewCategory {
+    display: block;
+    align-content: start;
+  }
+  .screenviewtitle{
+    font-size: 20px;
+  font-weight:400;
+  }
+}
+.headingmyproduct{
+  /* background-color: #0f3460; */
+  display: flex;
+  /* align-items:normal; */
+  align-content: space-between;
+  width: 100%;
+}
+
+
+
+/* .container.d_flex {
+  margin-left: 0px;
+} */
+
+.MuiOutlinedInput-notchedOutline {
+  border-width: 1px !important;
+  border-color: black !important;
+  
+  /* border-bottom: 2px solid rgb(173, 16, 16); */
+  /* borderRight:"2px solid black", */
+}
+
+.Mui-focused .MuiOutlinedInput-notchedOutline {
+  border-width: 2px;
+  border-color: black !important;
+}
+
+.heading .heading-right i, .heading .heading-right {
+  text-align: left;
+  color: grey;
+}
+
+/* dropdown list manage */
+/* .css-6hp17o-MuiList-root-MuiMenu-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  position: relative;
+  padding-top: 8px;
+  padding-bottom: 8px;
+  outline: 0;
+} */
+
+@media only screen and (max-width: 700px){
+  .headingmyproductfontsize{
+    font-size: 20px;
+    color: #e94560;
+  }
+  .screenviewtitle{
+    font-size: 16px;
+  font-weight:500;
+  }
+  
 }
