@@ -25,4 +25,4 @@ jobs:
         run: |
           cd tests
           playwright install chromium
-          pytest test_scrapers.py
+          pytest -s --verbose
