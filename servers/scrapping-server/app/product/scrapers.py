@@ -313,14 +313,13 @@ class Amazon:
         if title is not None:
             title = title.text.strip()
 
-        price = page.find(class_='a-price-whole')
+        price = page.find('span', {'class': 'a-price-whole'})
         if price is not None:
             price = float(price.text.replace(',', '').replace(
                 '₹', '').replace('€', '').replace('$', '').strip())
 
         mrp_block = page.find(
-            class_='a-size-small a-color-secondary aok-align-center basisPrice')
-
+            'span', {'class': 'a-size-small a-color-secondary aok-align-center basisPrice'})
         mrp = None
         if mrp_block is not None:
             mrp = mrp_block.find('span', {'class': 'a-price a-text-price'}).find(
