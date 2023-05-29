@@ -6,7 +6,7 @@ on:
       - main
 
 jobs:
-  build:
+  test-run:
     runs-on: ubuntu-latest
     defaults:
       run:
