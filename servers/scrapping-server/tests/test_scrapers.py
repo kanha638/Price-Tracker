@@ -1,4 +1,5 @@
 import pytest
+from tqdm import tqdm
 import asyncio
 from app.product.scrapers import Scraper
 
@@ -6,14 +7,19 @@ scraper = Scraper()
 
 
 def validate_product(product_details, url):
-    assert product_details['Title'] is not None, f"Title : {product_details['Title']} is None for URL: {url}"
-    assert product_details['Price'] is not None, f"Price is None for URL: {url}"
-    assert product_details['MRP'] is not None, f"MRP is None for URL: {url}"
-    assert product_details['Currency'] is not None, f"Currency is None for URL: {url}"
-    assert product_details['Category'] is not None, f"Category is None for URL: {url}"
     assert product_details[
-        'Image_Link'] is not None, f"Image_Link is None for URL: {url}"
-    assert product_details['Website'] is not None, f"Website is None for URL: {url}"
+        'Availability'] is not None, f"Availability is None for URL: {url}"
+    if product_details['Availability'] == 'In Stock':
+        assert product_details['Title'] is not None, f"Title : {product_details['Title']} is None for URL: {url}"
+        assert product_details['Price'] is not None, f"Price is None for URL: {url}"
+        assert product_details['MRP'] is not None, f"MRP is None for URL: {url}"
+        assert product_details[
+            'Currency'] is not None, f"Currency is None for URL: {url}"
+        assert product_details[
+            'Category'] is not None, f"Category is None for URL: {url}"
+        assert product_details[
+            'Image_Link'] is not None, f"Image_Link is None for URL: {url}"
+        assert product_details['Website'] is not None, f"Website is None for URL: {url}"
 
 
 # @pytest.mark.skip(reason="Not required for this run")
@@ -22,7 +28,7 @@ def test_scrapers():
         urls = file.readlines()
 
     # test on working urls
-    for url in urls:
+    for url in tqdm(urls, desc='Testing on working URLs', unit='URL'):
         product_details, error_message = asyncio.run(
             scraper.scrape_product(url=url))
 

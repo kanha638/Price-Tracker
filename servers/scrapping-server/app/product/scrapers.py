@@ -600,6 +600,7 @@ class Myntra:
             price = float(data.get('offers', {}).get('price'))
             currency = data.get('offers', {}).get('priceCurrency')
             availability = data.get('offers', {}).get('availability')
+            availability = 'In Stock' if availability == 'InStock' else 'Out of Stock'
         except Exception as e:
             print(f'Error while scraping using scripting tags. {e}')
 
@@ -623,7 +624,12 @@ class Myntra:
             img_link = img_div.replace(
                 'background-image: url("', '').replace('");', '')
 
-            availability = 'None'
+            availability_flag = page.find(
+                'div', {'class': 'size-buttons-out-of-stock'})
+            if availability_flag is not None:
+                availability = 'Out of Stock'
+            else:
+                availability = 'In Stock'
 
         if mrp is None:
             mrp = price
