@@ -88,19 +88,18 @@ class Flipkart:
         if soup is None:
             return None, error_message
 
-        title = soup.find(class_='B_NuCI')
+        title = soup.find('span', {'class': 'B_NuCI'})
         if title:
             title = title.text.replace('\xa0\xa0', '').strip()
 
-        price = soup.find(class_='_30jeq3 _16Jk6d')
+        price = soup.find('div', {'class': '_30jeq3 _16Jk6d'})
         currency = 'INR'
         if price is not None:
             price = price.text.strip()
             price = float(price.replace(',', '').replace(
                 '₹', '').replace('€', '').replace('$', '').strip())
 
-        # ToDo : handle if MRP is not available
-        mrp = soup.find(class_='_3I9_wc _2p6lqe')
+        mrp = soup.find('div', {'class': '_3I9_wc _2p6lqe'})
         if mrp is not None:
             mrp = float(mrp.text.replace(',', '').replace(
                 '₹', '').replace('€', '').replace('$', '').strip())
@@ -118,7 +117,7 @@ class Flipkart:
             category = categories[1].text.strip() if len(
                 categories) > 1 else categories[0].text.strip()
         else:
-            categories = "Not Found"
+            category = "Not Found"
 
         rating_not_available_block = soup.find('span', {'class': '_2dMYsv'})
         if rating_not_available_block:
