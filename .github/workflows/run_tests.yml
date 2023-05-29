@@ -6,7 +6,7 @@ on:
       - main
 
 jobs:
-  build:
+  test-run:
     runs-on: ubuntu-latest
     defaults:
       run:
@@ -22,4 +22,6 @@ jobs:
           python -m pip install --upgrade pip 
           pip install -r requirements.txt
       - name: Test with pytest
-        run: echo "Hello world"
+        run: |
+          cd tests
+          pytest test_scrapers.py
