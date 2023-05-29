@@ -60,12 +60,17 @@ export const HeaderBox = ({ img }) => {
   };
 
   const [productLink, setProductLink] = useState("");
+  const [productInputError, setProductInputError] = useState(false);
 
   const addProduct = async () => {
     if (userState?.isLoggedIn === false) {
       setOpen(true);
       return;
     } else {
+      if (productLink === "") {
+        setProductInputError(true);
+        return;
+      }
       await AddProduct(
         { product_url: productLink, website: "flipkart" },
         dispatch
@@ -113,32 +118,54 @@ export const HeaderBox = ({ img }) => {
             nesciunt rerum?
           </p>
           <div style={{ width: "100%", display: "flex" }}>
-            <input
-              style={{
+            <TextField
+              sx={{
                 width: "80%",
-                background: "#ffffff",
-                height: "50px",
-                border: "solid 2px black",
+                borderRadius: "10px 0px 0px 10px",
+                border: `solid 1px ${
+                  productInputError === true ? "red" : "gray"
+                }`,
                 borderRight: "none",
-                color: "black",
-                padding: "10px",
-                borderRadius: "20px 0px 0px 20px",
+                outline: "none",
+                "& .MuiOutlinedInput-root": {
+                  borderRadius: "10px 0px 0px 10px",
+                  border: "none",
+                  "&.Mui-focused fieldset": {
+                    border: "none",
+                    borderRadius: "10px 0px 0px 10px",
+                  },
+                  "&.Mui-hovered fieldset": {
+                    borderColor: "transparent",
+                  },
+                },
+                "&:hover": {
+                  border: `solid 1px ${
+                    productInputError === true ? "red" : "gray"
+                  }`,
+                },
               }}
               value={productLink}
               name="product"
               placeholder="Paste product link here"
               onChange={(e) => {
                 setProductLink(e.target.value);
+                setProductInputError(false);
               }}
             />
-            <button
+            <Button
               style={{
                 width: "20%",
-                border: "solid 2px black",
+                marginLeft: "-2px",
+                border: `solid 1px ${
+                  productInputError === true ? "red" : "gray"
+                }`,
                 padding: "5.5px",
                 borderRadius: "0px 20px 20px 0px",
                 cursor: "pointer",
-                fontSize: "20px",
+                color: "white",
+                background: "black",
+                // fontSize: "20px",
+                height: "100%",
               }}
               disabled={userState?.isPending === true}
               onClick={addProduct}
@@ -146,10 +173,24 @@ export const HeaderBox = ({ img }) => {
               {userState?.isPending === true ? (
                 <CircularProgress size="1.9rem" color="inherit" />
               ) : (
-                "Track"
+                <div
+                  style={{
+                    display: "flex",
+                    width: "100%",
+                    justifyContent: "space-evenly",
+                    alignItems: "center",
+                  }}
+                >
+                  <i className="fa-solid fa-chart-column"></i> Track
+                </div>
               )}
-            </button>
+            </Button>
           </div>
+          {productInputError && (
+            <p style={{ marginTop: "-25px", fontSize: "14px", color: "red" }}>
+              Please enter some value
+            </p>
+          )}
 
           {userState?.addproductSuccess === true && (
             <Collapse in={successAlertopen}>
