@@ -8,6 +8,10 @@ import { useDispatch, useSelector } from "react-redux";
 import { UserState } from "../../slices/userSlice";
 import { signOut } from "../../middleware/auth";
 
+import FormHelperText from '@mui/material/FormHelperText';
+import FormControl from '@mui/material/FormControl';
+import InputLabel from '@mui/material/InputLabel';
+
 const ITEM_HEIGHT = 48;
 const ITEM_PADDING_TOP = 8;
 const MenuProps = {
@@ -49,13 +53,25 @@ const Navbar = () => {
       <header className="header">
         <div className="container d_flex">
           <div className="catgrories d_flex">
+          <FormControl sx={{ m: 1, minWidth: 120 }} size="small">
+        <InputLabel id="demo-simple-select-helper-label">select  Product  category</InputLabel>
             <Select
               labelId="demo-multiple-name-label"
               id="demo-multiple-name"
               // multiple
               placeholder="Categories"
               sx={{
+                display:"flex",
                 width: 250,
+                // borderRadius:"10px",
+                borderRadius: '10px',
+                // border:"2px solid black",
+                // borderBottom:"2px solid black",
+                // borderRight:"2px solid black",
+                // borderTop:"1px solid black",
+                // borderLeft:"1px solid black",
+                backgroundColor:"white"
+                
               }}
               input={<OutlinedInput label="Category" />}
               MenuProps={MenuProps}
@@ -70,6 +86,7 @@ const Navbar = () => {
                 </MenuItem>
               ))}
             </Select>
+      </FormControl>
           </div>
 
           <div className="navlink">
