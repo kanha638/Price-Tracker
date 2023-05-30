@@ -3,7 +3,12 @@ import { NextFunction, Request, Response } from "express";
 import brcypt from "bcrypt";
 import jwt from "jsonwebtoken";
 import cookie from "cookie";
+import axios from "axios";
 const prisma = new PrismaClient();
+
+const API_NOTIFICATION = axios.create({
+  baseURL: process.env.NOTIFICATION_SERVER_URL,
+});
 
 export const setToken = async (req: Request, res: Response) => {
   try {
@@ -128,6 +133,7 @@ export const signIn = async (
 
 export const Me = async (req: Request, res: Response) => {
   try {
+    console.log(req.headers["user-agent"]);
     const { id } = res.locals.userData;
     const user = await prisma.users.findUnique({
       where: {
@@ -177,9 +183,16 @@ export const ForgotPasssword = async (req: Request, res: Response) => {
         },
         process.env.JWT_SECRET!,
         {
-          expiresIn: "15m",
+          expiresIn: "30m",
         }
       );
+
+      await API_NOTIFICATION.post("/nf/user/resetpassword", {
+        username: user?.name,
+        email: user?.email,
+        recoveryToken: recoveryToken,
+      });
+
       return res.json({
         message: "A recovery email has been sent to your email.",
       });
@@ -189,6 +202,7 @@ export const ForgotPasssword = async (req: Request, res: Response) => {
         .json({ message: "User with this email does not exist." });
     }
   } catch (error) {
+    console.log(error);
     return res.status(500).json({ message: "Internal Server Error" });
   }
 };
