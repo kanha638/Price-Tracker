@@ -1,6 +1,6 @@
 import { React, useState } from "react";
 import { Button, TextField, Box, Typography, Grid } from "@mui/material";
-import lock from "..//..//assets//images//lock.png";
+import lock from "..//assets//images//lock.png";
 const SetPasswordPage = () => {
     const [details, setDetails] = useState({
         password: "",

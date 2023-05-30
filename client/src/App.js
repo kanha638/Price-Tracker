@@ -8,6 +8,7 @@ import Footer from "./components/footer/Footer";
 import Signin from "./pages/Signin";
 import SignUp from "./pages/Signup";
 import Home from "./pages/Home";
+import SetPasswordPage from "./pages/SetPasswordPage";
 function App() {
   const dispatch = useDispatch();
   const CallMeRoute = async () => {
@@ -23,6 +24,7 @@ function App() {
         {/* <Header /> */}
         <Routes>
           <Route path="/*" element={<Home />} />
+          <Route path="/setpasspage" element={<SetPasswordPage />} />
           <Route path="/sign-in" element={<Signin />} />
           <Route path="/sign-up" element={<SignUp />} />
         </Routes>

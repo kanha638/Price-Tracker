@@ -1,6 +1,6 @@
 import { React, useState } from "react";
 import { Button, TextField, Box, Typography, Grid } from "@mui/material";
-import email from "..//..//assets//images//email.png";
+import email from "..//assets//images//email.png";
 const EmailLink = ({ handleCloser }) => {
     const [details, setDetails] = useState({
         email: "",

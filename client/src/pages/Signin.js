@@ -10,7 +10,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { UserState } from "../slices/userSlice";
 import { signIn } from "../middleware/auth";
 import { Modal } from "@mui/material";
-import EmailLink from "../components/header/EmailLink";
+import EmailLink from "./EmailLink";
 const Signin = () => {
     const [details, setDetails] = useState({
         credential: "",
