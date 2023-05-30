@@ -35,7 +35,7 @@ const SetPasswordPage = () => {
             style={{
                 width: "100%",
                 height: "90vh",
-                backgroundColor: "grey",
+                backgroundColor: "#f8f4f3",
                 display: "flex",
                 justifyContent: "center",
                 alignItem: "center",

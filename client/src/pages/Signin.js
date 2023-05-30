@@ -200,6 +200,7 @@ const Signin = () => {
                                         fontSize: "16px",
                                         color: "blue",
                                         textDecorationLine: "underline",
+                                        cursor: "pointer"
                                     }}
                                 >
                                     Forgot Password?
