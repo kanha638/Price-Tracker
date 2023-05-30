@@ -25,7 +25,7 @@ const Signin = () => {
     const dispatch = useDispatch();
     const navigate = useNavigate();
     function changeHandler(e) {
-        console.log(e.target.name);
+        
         if (e.target.name === "credential") {
             setErrors({ ...errors, credential: false });
         }
@@ -34,7 +34,7 @@ const Signin = () => {
         }
 
         setDetails({ ...details, [e.target.name]: e.target.value });
-        console.log(details);
+        
     }
 
     const submitHandler = async (e) => {
@@ -202,7 +202,7 @@ const Signin = () => {
                                         textDecorationLine: "underline",
                                     }}
                                 >
-                                    Forget Password?
+                                    Forgot Password?
                                 </p>
                             </li>
                         </Grid>

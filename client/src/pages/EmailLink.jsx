@@ -16,14 +16,13 @@ const EmailLink = ({ handleCloser }) => {
 
     const submitHandler = (e) => {
         e.preventDefault();
-        console.log("form submit");
-        console.log(details);
+        
         let { email } = {
             email: false,
         };
 
         if (details.email === "") email = true;
-        console.log(email + "email");
+       
         setErrors({ ...errors, email: email });
         if (details.email !== "") {
             setVariable(true && !email);

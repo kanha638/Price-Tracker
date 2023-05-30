@@ -16,8 +16,7 @@ const SetPasswordPage = () => {
     };
     const submitHandler = (e) => {
         e.preventDefault();
-        // console.log("form submit");
-        console.log(details);
+        
         let { password, confirmpassword } = {
             password: false,
             confirmpassword: false,
@@ -25,12 +24,10 @@ const SetPasswordPage = () => {
 
         if (details.password === "") password = true;
         if (details.confirmpassword === "") confirmpassword = true;
-        console.log(password, confirmpassword);
+       
         setErrors({ password: password, confirmpassword: confirmpassword });
-        // setErrors({...errors,confirmpassword:})
-        if (details.password && details.confirmpassword) {
-            console.log("password reset");
-        }
+        
+        
     };
 
     return (
