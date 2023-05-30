@@ -17,6 +17,7 @@ def validate_product(product_details, url):
 
 
 @pytest.mark.skip(reason="Not required for this run")
+# @pytest.mark.fail
 def test_add_product():
     # test when request body is not correct
     payload = {
