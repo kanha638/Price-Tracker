@@ -17,7 +17,6 @@ const EmailLink = ({ handleCloser }) => {
   const [details, setDetails] = useState({
     email: "",
   });
-  const [variable, setVariable] = useState(false);
   const [errors, setErrors] = useState({
     email: false,
   });
@@ -179,15 +178,11 @@ const EmailLink = ({ handleCloser }) => {
           )}
 
           <Button
-            // onClick={handleOpen}
             sx={{
-              marginTop: 3,
               width: "90%",
               height: "50px",
               marginTop: "25px",
               marginBottom: "15px",
-            }}
-            style={{
               borderRadius: 3,
               backgroundColor: "black",
               padding: "10px 10px",
