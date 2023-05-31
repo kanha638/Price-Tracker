@@ -3,8 +3,8 @@ import { sendEmailpasswordResetLink } from "../mailers/user";
 
 export const sendResetPasswordLink = (req: Request, res: Response) => {
   try {
-    const { username, email, recoveryToken } = req.body;
-    sendEmailpasswordResetLink(username, email, recoveryToken);
+    const { username, email, recoveryToken, os, browser } = req.body;
+    sendEmailpasswordResetLink(username, email, recoveryToken, os, browser);
     return res
       .status(200)
       .json({ message: "Email has been sent to your email" });

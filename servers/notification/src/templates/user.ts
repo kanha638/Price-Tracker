@@ -2,7 +2,9 @@ import { logoSvg } from "./svgs/logo";
 
 export const resetPasswordTemplate = (
   username: string,
-  recoveryToken: string
+  recoveryToken: string,
+  os: string,
+  browser: string
 ) => {
   return `<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml">
@@ -460,7 +462,7 @@ export const resetPasswordTemplate = (
                     <td class="content-cell">
                       <div class="f-fallback">
                         <h1>Hi ${username},</h1>
-                        <p>You recently requested to reset your password for your Price-Tracker account. Use the button below to reset it. <strong>This password reset is only valid for the next 24 hours.</strong></p>
+                        <p>You recently requested to reset your password for your Price-Tracker account. Use the button below to reset it. <strong>This password reset is only valid for the next 30 minutes.</strong></p>
                         <!-- Action -->
                         <table class="body-action" align="center" width="100%" cellpadding="0" cellspacing="0" role="presentation">
                           <tr>
@@ -477,7 +479,7 @@ export const resetPasswordTemplate = (
                             </td>
                           </tr>
                         </table>
-                        <p>For security, this request was received from a {{operating_system}} device using {{browser_name}}. If you did not request a password reset, please ignore this email or <a href="{{support_url}}">contact support</a> if you have questions.</p>
+                        <p>For security, this request was received from a <strong>${os}</strong> device using <strong>${browser}</strong>. If you did not request a password reset, please ignore this email or <a href="{{support_url}}">contact support</a> if you have questions.</p>
                         <p>Thanks,
                           <br>Price-Tracker team</p>
                           <div>
