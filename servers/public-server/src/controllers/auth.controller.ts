@@ -3,7 +3,13 @@ import { NextFunction, Request, Response } from "express";
 import brcypt from "bcrypt";
 import jwt from "jsonwebtoken";
 import cookie from "cookie";
+import axios from "axios";
+import { UAParser } from "ua-parser-js";
 const prisma = new PrismaClient();
+
+const API_NOTIFICATION = axios.create({
+  baseURL: process.env.NOTIFICATION_SERVER_URL,
+});
 
 export const setToken = async (req: Request, res: Response) => {
   try {
@@ -128,6 +134,7 @@ export const signIn = async (
 
 export const Me = async (req: Request, res: Response) => {
   try {
+    console.log(req.headers["user-agent"]);
     const { id } = res.locals.userData;
     const user = await prisma.users.findUnique({
       where: {
@@ -159,6 +166,15 @@ export const signOut = async (req: Request, res: Response) => {
 export const ForgotPasssword = async (req: Request, res: Response) => {
   try {
     const { email } = req.body;
+
+    const userAgent = req.headers["user-agent"];
+    const parser = new UAParser(userAgent);
+    const result = parser.getResult();
+    console.log(result);
+
+    const browser = `${result!.browser.name}/(${result!.browser.version})`;
+    const os = `${result!.os!.name}/(${result!.os.version})`;
+
     if (!email) {
       return res.status(400).json({ message: "Please provide an email" });
     }
@@ -177,9 +193,27 @@ export const ForgotPasssword = async (req: Request, res: Response) => {
         },
         process.env.JWT_SECRET!,
         {
-          expiresIn: "15m",
+          expiresIn: "30m",
         }
       );
+
+      await prisma.users.update({
+        where: {
+          id: user!.id,
+        },
+        data: {
+          recovery_token: recoveryToken,
+        },
+      });
+
+      await API_NOTIFICATION.post("/nf/user/resetpassword", {
+        username: user?.name,
+        email: user?.email,
+        recoveryToken: recoveryToken,
+        browser: browser,
+        os: os,
+      });
+
       return res.json({
         message: "A recovery email has been sent to your email.",
       });
@@ -189,6 +223,78 @@ export const ForgotPasssword = async (req: Request, res: Response) => {
         .json({ message: "User with this email does not exist." });
     }
   } catch (error) {
+    console.log(error);
+    return res.status(500).json({ message: "Internal Server Error" });
+  }
+};
+
+export const resetpassword = async (req: Request, res: Response) => {
+  try {
+    const { password, confirmPassword } = req.body;
+    if (password !== confirmPassword) {
+      return res.status(401).json({ message: "Both password does not match" });
+    }
+    if (password.length < 7) {
+      return res
+        .status(401)
+        .json({ message: "Password length should be more than 6" });
+    }
+    let token = "";
+    if (req.headers.authorization) {
+      token = req.headers.authorization?.split(" ")[1];
+    }
+    jwt.verify(token, process.env.JWT_SECRET!, async (err: any, value: any) => {
+      try {
+        if (err) {
+          if (err.name === "TokenExpiredError") {
+            return res
+              .status(401)
+              .json({ message: "Recovery time expired please try again." });
+          } else {
+            return res.status(401).json({ message: "Invalid Token provided" });
+          }
+        } else {
+          const user = await prisma.users.findUnique({
+            where: { email: value.email },
+            select: {
+              id: true,
+              recovery_token: true,
+            },
+          });
+          if (!user) {
+            return res
+              .status(404)
+              .json({ message: "User not found/token invalid." });
+          }
+
+          if (user!.recovery_token !== token) {
+            return res.status(403).json({
+              message: "This password reset link is invalid now.",
+            });
+          }
+          const newpasswordHash = await brcypt.hash(password, 10);
+          console.log(newpasswordHash);
+
+          await prisma.users.update({
+            where: {
+              id: user!.id,
+            },
+            data: {
+              password: newpasswordHash,
+              recovery_token: "",
+            },
+          });
+
+          return res
+            .status(200)
+            .json({ message: "Password changed successfully." });
+        }
+      } catch (error) {
+        return res.status(500).json({ message: "Internal server error" });
+      }
+    });
+  } catch (error) {
+    console.log(error);
     return res.status(500).json({ message: "Internal Server Error" });
   }
 };

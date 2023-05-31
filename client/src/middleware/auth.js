@@ -2,9 +2,15 @@ import {
   AuthError,
   AuthStart,
   AuthSuccess,
+  forgotPassError,
+  forgotPassStart,
+  forgotPassSuccess,
   MeError,
   MeStart,
   MeSuccess,
+  resetPasswordError,
+  resetPasswordStart,
+  resetPasswordSuccess,
   SignOutError,
   SignOutStart,
   SignOutSuccess,
@@ -71,5 +77,36 @@ export const Me = async (dispatch) => {
   } catch (error) {
     console.log(error);
     dispatch(MeError(error.response));
+  }
+};
+
+export const forgotPassword = async (dispatch, data) => {
+  dispatch(forgotPassStart());
+  try {
+    const response = await API.post("/api/auth/forgot-pass", data, {
+      withCredentials: true,
+    });
+
+    dispatch(forgotPassSuccess());
+  } catch (error) {
+    console.log(error);
+    dispatch(forgotPassError(error.response));
+  }
+};
+
+export const resetPassword = async (dispatch, data, token) => {
+  dispatch(resetPasswordStart());
+  try {
+    const response = await API.post("/api/auth/reset-pass", data, {
+      withCredentials: true,
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    });
+
+    dispatch(resetPasswordSuccess(response.data));
+  } catch (error) {
+    console.log(error);
+    dispatch(resetPasswordError(error.response));
   }
 };
