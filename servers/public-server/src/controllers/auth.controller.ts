@@ -4,6 +4,7 @@ import brcypt from "bcrypt";
 import jwt from "jsonwebtoken";
 import cookie from "cookie";
 import axios from "axios";
+import { UAParser } from "ua-parser-js";
 const prisma = new PrismaClient();
 
 const API_NOTIFICATION = axios.create({
@@ -165,6 +166,15 @@ export const signOut = async (req: Request, res: Response) => {
 export const ForgotPasssword = async (req: Request, res: Response) => {
   try {
     const { email } = req.body;
+
+    const userAgent = req.headers["user-agent"];
+    const parser = new UAParser(userAgent);
+    const result = parser.getResult();
+    console.log(result);
+
+    const browser = `${result!.browser.name}/(${result!.browser.version})`;
+    const os = `${result!.os!.name}/(${result!.os.version})`;
+
     if (!email) {
       return res.status(400).json({ message: "Please provide an email" });
     }
@@ -191,6 +201,8 @@ export const ForgotPasssword = async (req: Request, res: Response) => {
         username: user?.name,
         email: user?.email,
         recoveryToken: recoveryToken,
+        browser: browser,
+        os: os,
       });
 
       return res.json({
