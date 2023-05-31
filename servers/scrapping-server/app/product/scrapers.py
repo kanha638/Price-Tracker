@@ -88,19 +88,18 @@ class Flipkart:
         if soup is None:
             return None, error_message
 
-        title = soup.find(class_='B_NuCI')
+        title = soup.find('span', {'class': 'B_NuCI'})
         if title:
             title = title.text.replace('\xa0\xa0', '').strip()
 
-        price = soup.find(class_='_30jeq3 _16Jk6d')
+        price = soup.find('div', {'class': '_30jeq3 _16Jk6d'})
         currency = 'INR'
         if price is not None:
             price = price.text.strip()
             price = float(price.replace(',', '').replace(
                 '₹', '').replace('€', '').replace('$', '').strip())
 
-        # ToDo : handle if MRP is not available
-        mrp = soup.find(class_='_3I9_wc _2p6lqe')
+        mrp = soup.find('div', {'class': '_3I9_wc _2p6lqe'})
         if mrp is not None:
             mrp = float(mrp.text.replace(',', '').replace(
                 '₹', '').replace('€', '').replace('$', '').strip())
@@ -118,7 +117,7 @@ class Flipkart:
             category = categories[1].text.strip() if len(
                 categories) > 1 else categories[0].text.strip()
         else:
-            categories = "Not Found"
+            category = "Not Found"
 
         rating_not_available_block = soup.find('span', {'class': '_2dMYsv'})
         if rating_not_available_block:
@@ -165,7 +164,7 @@ class Flipkart:
             'Rating_Count': rating_count,
             'Category': category,
             'Image_Link': img_link,
-            'Website':'flipkart'
+            'Website': 'flipkart'
         }
 
         return product, error_message
@@ -314,14 +313,13 @@ class Amazon:
         if title is not None:
             title = title.text.strip()
 
-        price = page.find(class_='a-price-whole')
+        price = page.find('span', {'class': 'a-price-whole'})
         if price is not None:
             price = float(price.text.replace(',', '').replace(
                 '₹', '').replace('€', '').replace('$', '').strip())
 
         mrp_block = page.find(
-            class_='a-size-small a-color-secondary aok-align-center basisPrice')
-
+            'span', {'class': 'a-size-small a-color-secondary aok-align-center basisPrice'})
         mrp = None
         if mrp_block is not None:
             mrp = mrp_block.find('span', {'class': 'a-price a-text-price'}).find(
@@ -393,7 +391,7 @@ class Amazon:
             'Rating_Count': rating_count,
             'Category': category,
             'Image_Link': img_link,
-            'Website':'amazon'
+            'Website': 'amazon'
         }
 
         return product, error_message
@@ -601,6 +599,7 @@ class Myntra:
             price = float(data.get('offers', {}).get('price'))
             currency = data.get('offers', {}).get('priceCurrency')
             availability = data.get('offers', {}).get('availability')
+            availability = 'In Stock' if availability == 'InStock' else 'Out of Stock'
         except Exception as e:
             print(f'Error while scraping using scripting tags. {e}')
 
@@ -624,7 +623,12 @@ class Myntra:
             img_link = img_div.replace(
                 'background-image: url("', '').replace('");', '')
 
-            availability = 'None'
+            availability_flag = page.find(
+                'div', {'class': 'size-buttons-out-of-stock'})
+            if availability_flag is not None:
+                availability = 'Out of Stock'
+            else:
+                availability = 'In Stock'
 
         if mrp is None:
             mrp = price
@@ -639,7 +643,7 @@ class Myntra:
             'Rating_Count': rating_count,
             'Category': category,
             'Image_Link': img_link,
-            'Website':'myntra'
+            'Website': 'myntra'
         }
 
         return product, error_message
@@ -728,7 +732,7 @@ class Scraper:
         function for the given website URL. If the website is not supported, it returns a JSON error
         message.
         """
-
+        url = url.strip()
         try:
             website = url.strip().split('/')[2].split('.')[1] if url.strip(
             ).split('/')[2].__contains__('www.') else url.strip().split('/')[2].split('.')[0]
@@ -766,6 +770,7 @@ class Scraper:
         :return: The function `scrape_price` returns a float value, which is the price scraped from the
         given URL.
         """
+        url = url.strip()
         website = url.strip().split('/')[2].split('.')[1]
         try:
             scraper_function = self.scraper_product_dict.get(website)
