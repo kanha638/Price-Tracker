@@ -122,6 +122,27 @@ const userSlice = createSlice({
       state.forgotPassSuccessStatus = false;
       state.forgotPassErrorErrorMessage = "";
     },
+    resetPasswordStart: (state) => {
+      state.setPasswordPending = true;
+      state.setPasswordStatusError = false;
+      state.setPasswordStatusSuccess = false;
+    },
+    resetPasswordSuccess: (state, action) => {
+      state.setPasswordPending = false;
+      state.setPasswordStatusError = false;
+      state.setPasswordStatusSuccess = true;
+      clearLcoalCache();
+    },
+    resetPasswordError: (state, action) => {
+      state.setPasswordPending = false;
+      state.setPasswordStatusError = true;
+      state.setPasswordStatusMessage = action.payload.data.message;
+    },
+    removeResetPasswordStatus: (state) => {
+      state.setPasswordStatusError = false;
+      state.setPasswordStatusMessage = "";
+      state.setPasswordStatusSuccess = false;
+    },
   },
 });
 export const {
@@ -146,6 +167,10 @@ export const {
   forgotPassError,
   forgotPassSuccess,
   removeforgotPassStatus,
+  resetPasswordSuccess,
+  resetPasswordStart,
+  resetPasswordError,
+  removeResetPasswordStatus,
 } = userSlice.actions;
 export const selectUser = (state) => state.user.userInfo;
 export const UserState = (state) => state.user;
