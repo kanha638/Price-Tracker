@@ -104,6 +104,24 @@ const userSlice = createSlice({
       state.addproductSuccess = false;
       state.addproductErrorMessage = "";
     },
+    forgotPassStart: (state) => {
+      state.forgotPassPending = true;
+      state.forgotPassErrorStatus = false;
+    },
+    forgotPassSuccess: (state) => {
+      state.forgotPassSuccessStatus = true;
+      state.forgotPassPending = false;
+    },
+    forgotPassError: (state, action) => {
+      state.forgotPassErrorStatus = true;
+      state.forgotPassPending = false;
+      state.forgotPassErrorErrorMessage = action.payload.data.message;
+    },
+    removeforgotPassStatus: (state) => {
+      state.forgotPassErrorStatus = false;
+      state.forgotPassSuccessStatus = false;
+      state.forgotPassErrorErrorMessage = "";
+    },
   },
 });
 export const {
@@ -124,6 +142,10 @@ export const {
   fetchAllProductsStart,
   fetchAllProductsSuccess,
   profilePicUploadSuccess,
+  forgotPassStart,
+  forgotPassError,
+  forgotPassSuccess,
+  removeforgotPassStatus,
 } = userSlice.actions;
 export const selectUser = (state) => state.user.userInfo;
 export const UserState = (state) => state.user;

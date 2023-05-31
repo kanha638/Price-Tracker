@@ -2,6 +2,9 @@ import {
   AuthError,
   AuthStart,
   AuthSuccess,
+  forgotPassError,
+  forgotPassStart,
+  forgotPassSuccess,
   MeError,
   MeStart,
   MeSuccess,
@@ -71,5 +74,19 @@ export const Me = async (dispatch) => {
   } catch (error) {
     console.log(error);
     dispatch(MeError(error.response));
+  }
+};
+
+export const forgotPassword = async (dispatch, data) => {
+  dispatch(forgotPassStart());
+  try {
+    const response = await API.post("/api/auth/forgot-pass", data, {
+      withCredentials: true,
+    });
+
+    dispatch(forgotPassSuccess());
+  } catch (error) {
+    console.log(error);
+    dispatch(forgotPassError(error.response));
   }
 };

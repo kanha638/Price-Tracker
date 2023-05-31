@@ -19,8 +19,6 @@ import IconButton from "@mui/material/IconButton";
 import Collapse from "@mui/material/Collapse";
 
 export const HeaderBox = ({ img }) => {
-  const [errorAlertopen, setErrorAlertopen] = useState(true);
-  const [successAlertopen, setSuccessAlertopen] = useState(true);
   const [open, setOpen] = React.useState(false);
   const handleClose = () => setOpen(false);
   const [details, setDetails] = useState({
@@ -193,7 +191,7 @@ export const HeaderBox = ({ img }) => {
           )}
 
           {userState?.addproductSuccess === true && (
-            <Collapse in={successAlertopen}>
+            <Collapse in={true}>
               <Alert
                 severity="success"
                 sx={{ width: "100%" }}
@@ -203,7 +201,6 @@ export const HeaderBox = ({ img }) => {
                     color="inherit"
                     size="small"
                     onClick={() => {
-                      setSuccessAlertopen(false);
                       dispatch(removeAddProductStatus());
                     }}
                   >
@@ -217,7 +214,7 @@ export const HeaderBox = ({ img }) => {
             </Collapse>
           )}
           {userState?.addproductError === true && (
-            <Collapse in={errorAlertopen}>
+            <Collapse in={true}>
               <Alert
                 severity="error"
                 sx={{ width: "100%" }}
@@ -227,7 +224,6 @@ export const HeaderBox = ({ img }) => {
                     color="inherit"
                     size="small"
                     onClick={() => {
-                      setErrorAlertopen(false);
                       dispatch(removeAddProductStatus());
                     }}
                   >
