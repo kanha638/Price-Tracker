@@ -231,7 +231,6 @@ export const ForgotPasssword = async (req: Request, res: Response) => {
 export const resetpassword = async (req: Request, res: Response) => {
   try {
     const { password, confirmPassword } = req.body;
-
     if (password !== confirmPassword) {
       return res.status(401).json({ message: "Both password does not match" });
     }
@@ -281,7 +280,7 @@ export const resetpassword = async (req: Request, res: Response) => {
               id: user!.id,
             },
             data: {
-              profile_pic: newpasswordHash,
+              password: newpasswordHash,
               recovery_token: "",
             },
           });
