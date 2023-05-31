@@ -197,6 +197,15 @@ export const ForgotPasssword = async (req: Request, res: Response) => {
         }
       );
 
+      await prisma.users.update({
+        where: {
+          id: user!.id,
+        },
+        data: {
+          recovery_token: recoveryToken,
+        },
+      });
+
       await API_NOTIFICATION.post("/nf/user/resetpassword", {
         username: user?.name,
         email: user?.email,
@@ -213,6 +222,78 @@ export const ForgotPasssword = async (req: Request, res: Response) => {
         .status(404)
         .json({ message: "User with this email does not exist." });
     }
+  } catch (error) {
+    console.log(error);
+    return res.status(500).json({ message: "Internal Server Error" });
+  }
+};
+
+export const resetpassword = async (req: Request, res: Response) => {
+  try {
+    const { password, confirmPassword } = req.body;
+
+    if (password !== confirmPassword) {
+      return res.status(401).json({ message: "Both password does not match" });
+    }
+    if (password.length < 7) {
+      return res
+        .status(401)
+        .json({ message: "Password length should be more than 6" });
+    }
+    let token = "";
+    if (req.headers.authorization) {
+      token = req.headers.authorization?.split(" ")[1];
+    }
+    jwt.verify(token, process.env.JWT_SECRET!, async (err: any, value: any) => {
+      try {
+        if (err) {
+          if (err.name === "TokenExpiredError") {
+            return res
+              .status(401)
+              .json({ message: "Recovery time expired please try again." });
+          } else {
+            return res.status(401).json({ message: "Invalid Token provided" });
+          }
+        } else {
+          const user = await prisma.users.findUnique({
+            where: { email: value.email },
+            select: {
+              id: true,
+              recovery_token: true,
+            },
+          });
+          if (!user) {
+            return res
+              .status(404)
+              .json({ message: "User not found/token invalid." });
+          }
+
+          if (user!.recovery_token !== token) {
+            return res.status(403).json({
+              message: "This password reset link is invalid now.",
+            });
+          }
+          const newpasswordHash = await brcypt.hash(password, 10);
+          console.log(newpasswordHash);
+
+          await prisma.users.update({
+            where: {
+              id: user!.id,
+            },
+            data: {
+              profile_pic: newpasswordHash,
+              recovery_token: "",
+            },
+          });
+
+          return res
+            .status(200)
+            .json({ message: "Password changed successfully." });
+        }
+      } catch (error) {
+        return res.status(500).json({ message: "Internal server error" });
+      }
+    });
   } catch (error) {
     console.log(error);
     return res.status(500).json({ message: "Internal Server Error" });

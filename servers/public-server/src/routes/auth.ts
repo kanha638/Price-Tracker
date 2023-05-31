@@ -2,6 +2,7 @@ import { Router } from "express";
 import {
   ForgotPasssword,
   Me,
+  resetpassword,
   setToken,
   signIn,
   signOut,
@@ -79,5 +80,21 @@ Body : {
 */
 
 router.post("/forgot-pass", rateLimiterForForgotPassword, ForgotPasssword);
+
+/*
+
+This Route is for Resetting the password.
+Type : POST
+URL : /api/auth/reset-pass
+Body : {
+  password:"",
+  confirmPassword:""
+}
+Headers : 
+Authorization : "Bearer recoveryToken"
+
+*/
+
+router.post("/reset-pass", rateLimiterForForgotPassword, resetpassword);
 
 export default router;
