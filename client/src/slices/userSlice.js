@@ -115,7 +115,11 @@ const userSlice = createSlice({
     forgotPassError: (state, action) => {
       state.forgotPassErrorStatus = true;
       state.forgotPassPending = false;
-      state.forgotPassErrorErrorMessage = action.payload.data.message;
+      if (action.payload.status === 429) {
+        state.forgotPassErrorErrorMessage = action.payload.data;
+      } else {
+        state.forgotPassErrorErrorMessage = action.payload.data.message;
+      }
     },
     removeforgotPassStatus: (state) => {
       state.forgotPassErrorStatus = false;
@@ -135,8 +139,10 @@ const userSlice = createSlice({
     },
     resetPasswordError: (state, action) => {
       state.setPasswordPending = false;
+      console.log(action.payload);
       state.setPasswordStatusError = true;
       if (action.payload.status === 429) {
+        console.log(action.payload);
         state.setPasswordStatusMessage = action.payload.data;
       } else {
         state.setPasswordStatusMessage = action.payload.data.message;
