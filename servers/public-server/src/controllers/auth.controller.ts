@@ -170,7 +170,6 @@ export const ForgotPasssword = async (req: Request, res: Response) => {
     const userAgent = req.headers["user-agent"];
     const parser = new UAParser(userAgent);
     const result = parser.getResult();
-    console.log(result);
 
     const browser = `${result!.browser.name}/(${result!.browser.version})`;
     const os = `${result!.os!.name}/(${result!.os.version})`;
@@ -186,7 +185,7 @@ export const ForgotPasssword = async (req: Request, res: Response) => {
     });
 
     if (user) {
-      const recoveryToken = jwt.sign(
+      let recoveryToken = jwt.sign(
         {
           id: user!.id,
           email: user!.email,
@@ -196,7 +195,8 @@ export const ForgotPasssword = async (req: Request, res: Response) => {
           expiresIn: "30m",
         }
       );
-
+      // URL encoding
+      recoveryToken = recoveryToken.replace(".", "%2E");
       await prisma.users.update({
         where: {
           id: user!.id,
@@ -243,6 +243,7 @@ export const resetpassword = async (req: Request, res: Response) => {
     if (req.headers.authorization) {
       token = req.headers.authorization?.split(" ")[1];
     }
+    token = token.replace("%2E", "."); // Decoding the recovery jwt token.
     jwt.verify(token, process.env.JWT_SECRET!, async (err: any, value: any) => {
       try {
         if (err) {
@@ -267,7 +268,7 @@ export const resetpassword = async (req: Request, res: Response) => {
               .json({ message: "User not found/token invalid." });
           }
 
-          if (user!.recovery_token !== token) {
+          if (user!.recovery_token?.replace("%2E", ".") !== token) {
             return res.status(403).json({
               message: "This password reset link is invalid now.",
             });
