@@ -1,7 +1,7 @@
 import { React, useState } from "react";
 import { Button, TextField, Box, Typography, Grid } from "@mui/material";
 import lock from "..//assets//images//lock.png";
-import { useParams } from "react-router-dom";
+import { useParams, useSearchParams } from "react-router-dom";
 import { resetPassword } from "../middleware/auth";
 import { useDispatch, useSelector } from "react-redux";
 import { UserState } from "../slices/userSlice";
@@ -17,7 +17,9 @@ const SetPasswordPage = () => {
     password: "",
     confirmPassword: "",
   });
-  const { token } = useParams();
+  const [searchParams, setSearchParams] = useSearchParams();
+
+  let token = searchParams.get("token") || "";
   const dispatch = useDispatch();
   const userState = useSelector(UserState);
   const [errors, setErrors] = useState({

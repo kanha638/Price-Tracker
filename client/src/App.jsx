@@ -24,7 +24,7 @@ function App() {
         {/* <Header /> */}
         <Routes>
           <Route path="/*" element={<Home />} />
-          <Route path="/reset-password/:token" element={<SetPasswordPage />} />
+          <Route path="/reset-password" element={<SetPasswordPage />} />
           <Route path="/sign-in" element={<Signin />} />
           <Route path="/sign-up" element={<SignUp />} />
         </Routes>
