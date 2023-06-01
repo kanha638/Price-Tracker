@@ -11,7 +11,29 @@ import { UserState } from "../slices/userSlice";
 import { signIn } from "../middleware/auth";
 import { Modal } from "@mui/material";
 import EmailLink from "./EmailLink";
+import { useEffect } from "react";
+import jwt_decode from 'jwt-decode'
+
 const Signin = () => {
+
+    function handleCallbackResponse(response){
+        console.log("Encoded JWT ID Token: "+response.credential);
+        var userToken=jwt_decode(response.credential)
+        console.log(userToken);
+      }
+    
+      useEffect(()=>{
+          /* global google */
+        google.accounts.id.initialize({
+          client_id:"985693759033-rmv490rsqv3deuq0c4iufaad8g5h38a1.apps.googleusercontent.com",
+          callback:handleCallbackResponse
+        })
+        google.accounts.id.renderButton(
+          document.getElementById("signInDiv"),
+          {theme:"outline", size:"large" }
+        )
+      },[])
+
     const [details, setDetails] = useState({
         credential: "",
         password: "",
@@ -207,6 +229,9 @@ const Signin = () => {
                                 </p>
                             </li>
                         </Grid>
+                    </div>
+                    <div id="signInDiv">
+
                     </div>
                 </Box>
             </form>
