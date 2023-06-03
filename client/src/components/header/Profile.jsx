@@ -8,14 +8,25 @@ import {
   Avatar,
 } from "@mui/material";
 import { useDispatch, useSelector } from "react-redux";
-import { selectUser } from "../../slices/userSlice";
+import {
+  removeforgotPassStatus,
+  selectUser,
+  UserState,
+} from "../../slices/userSlice";
 import { getProfilePicImageURL } from "../../utils/utilities";
 import { uploadProfilePicture } from "../../middleware/user";
+import { forgotPassword } from "../../middleware/auth";
+import Collapse from "@mui/material/Collapse";
+import Alert from "@mui/material/Alert";
+import AlertTitle from "@mui/material/AlertTitle";
+import CloseIcon from "@mui/icons-material/Close";
+import IconButton from "@mui/material/IconButton";
 
 export const Profile = ({ handleClose }) => {
   const user = useSelector(selectUser);
   const [file, setFile] = useState(null);
   const dispatch = useDispatch();
+  const userState = useSelector(UserState);
   // console.log(user);
 
   const profilePicChangeHandler = (e) => {
@@ -79,6 +90,10 @@ export const Profile = ({ handleClose }) => {
     }
 
     console.log(details);
+  };
+
+  const resetPasswordHandler = async () => {
+    await forgotPassword(dispatch, { email: user?.email });
   };
 
   return (
@@ -279,6 +294,51 @@ export const Profile = ({ handleClose }) => {
         >
           Save
         </Button>
+        {userState?.forgotPassSuccessStatus === true && (
+          <Collapse
+            in={true}
+            sx={{ width: "90%", padding: "1px", marginTop: "10px" }}
+          >
+            <Alert
+              severity="success"
+              sx={{ width: "100%" }}
+              action={
+                <IconButton aria-label="close" color="inherit" size="small">
+                  <CloseIcon fontSize="inherit" />
+                </IconButton>
+              }
+              onClick={() => {
+                dispatch(removeforgotPassStatus());
+              }}
+            >
+              <AlertTitle>Sent</AlertTitle>A recovery email has been sent to
+              your email address.
+            </Alert>
+          </Collapse>
+        )}
+
+        {userState?.forgotPassErrorStatus === true && (
+          <Collapse
+            in={true}
+            sx={{ width: "90%", padding: "1px", marginTop: "10px" }}
+          >
+            <Alert
+              severity="error"
+              sx={{ width: "100%" }}
+              action={
+                <IconButton aria-label="close" color="inherit" size="small">
+                  <CloseIcon fontSize="inherit" />
+                </IconButton>
+              }
+              onClick={() => {
+                dispatch(removeforgotPassStatus());
+              }}
+            >
+              <AlertTitle>Sent</AlertTitle>
+              {userState?.forgotPassErrorErrorMessage}
+            </Alert>
+          </Collapse>
+        )}
         <Grid container>
           <Grid
             item
@@ -291,8 +351,9 @@ export const Profile = ({ handleClose }) => {
           >
             <p>Want to reset the password?</p>
             <p
-              to="/" //link of reset password page here
               className="link-redirect"
+              style={{ cursor: "pointer" }}
+              onClick={resetPasswordHandler}
             >
               Reset Password
             </p>
