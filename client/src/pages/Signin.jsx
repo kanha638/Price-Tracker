@@ -12,22 +12,20 @@ import { GoogleAuth, signIn } from "../middleware/auth";
 import { Modal } from "@mui/material";
 import EmailLink from "./EmailLink";
 import { useEffect } from "react";
-import jwt_decode from "jwt-decode";
+import { secrets } from "../environment/config";
 
 const Signin = () => {
   const userState = useSelector(UserState);
   const dispatch = useDispatch();
   const navigate = useNavigate();
   async function handleCallbackResponse(response) {
-    var userToken = jwt_decode(response.credential);
     await GoogleAuth(response.credential, dispatch, navigate);
   }
 
   useEffect(() => {
     /* global google */
     google.accounts.id.initialize({
-      client_id:
-        "985693759033-rmv490rsqv3deuq0c4iufaad8g5h38a1.apps.googleusercontent.com",
+      client_id: secrets?.google_auth_client,
       callback: handleCallbackResponse,
     });
     google.accounts.id.renderButton(document.getElementById("signInDiv"), {

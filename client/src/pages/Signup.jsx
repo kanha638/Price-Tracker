@@ -8,7 +8,7 @@ import logo_pt from "../assets/images/favicon.jpeg";
 import { GoogleAuth, signUp } from "../middleware/auth";
 import { useDispatch, useSelector } from "react-redux";
 import { UserState } from "../slices/userSlice";
-import jwt_decode from "jwt-decode";
+import { secrets } from "../environment/config";
 
 const SignUp = () => {
   const [details, setDetails] = useState({
@@ -23,14 +23,12 @@ const SignUp = () => {
   const navigate = useNavigate();
 
   async function handleCallbackResponse(response) {
-    var userToken = jwt_decode(response.credential);
     await GoogleAuth(response.credential, dispatch, navigate);
   }
   useEffect(() => {
     /* global google */
     google.accounts.id.initialize({
-      client_id:
-        "985693759033-rmv490rsqv3deuq0c4iufaad8g5h38a1.apps.googleusercontent.com",
+      client_id: secrets?.google_auth_client,
       callback: handleCallbackResponse,
     });
     google.accounts.id.renderButton(document.getElementById("signInDiv"), {
@@ -290,7 +288,7 @@ const SignUp = () => {
                 marginTop: "20px",
               }}
             >
-              <Grid item>Sign in using social media ?</Grid>
+              <Grid item>Sign up using social media ?</Grid>
               <Grid item sx={{ display: "flex" }}>
                 <div id="signInDiv" style={{ marginTop: "5px" }}></div>
               </Grid>

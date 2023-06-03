@@ -34,7 +34,12 @@ export const signUp = async (data, dispatch, navigate) => {
   }
 };
 
-export const GoogleAuth = async (token, dispatch, navigate) => {
+export const GoogleAuth = async (
+  token,
+  dispatch,
+  navigate,
+  handleClose = () => {}
+) => {
   dispatch(AuthStart());
   try {
     const response = await API.post(
@@ -49,6 +54,7 @@ export const GoogleAuth = async (token, dispatch, navigate) => {
     );
     dispatch(AuthSuccess(response.data));
     navigate("/");
+    handleClose();
   } catch (error) {
     dispatch(AuthError(error.response));
     console.log(error);
