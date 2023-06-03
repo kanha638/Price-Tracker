@@ -1,11 +1,14 @@
 import { PrismaClient } from "@prisma/client";
-import { NextFunction, Request, Response } from "express";
+import { NextFunction, Request, response, Response } from "express";
 import brcypt from "bcrypt";
 import jwt from "jsonwebtoken";
 import cookie from "cookie";
 import axios from "axios";
 import { UAParser } from "ua-parser-js";
+import { OAuth2Client } from "google-auth-library";
 const prisma = new PrismaClient();
+
+const googleclient = new OAuth2Client(process.env.GOOGLE_CLIENT_LOGIN);
 
 const API_NOTIFICATION = axios.create({
   baseURL: process.env.NOTIFICATION_SERVER_URL,
@@ -96,6 +99,73 @@ export const signUp = async (
     return res.status(500).json({
       message: "Internal Server Error",
     });
+  }
+};
+
+export const googleAuth = async (
+  req: Request,
+  res: Response,
+  next: NextFunction
+) => {
+  try {
+    const token = req.headers.authorization?.split(" ")[1] || "";
+    if (token == "") {
+      return res.status(401).json({ message: "Token is not found.." });
+    }
+    googleclient
+      .verifyIdToken({
+        idToken: token,
+        audience: process.env.GOOGLE_CLIENT_LOGIN,
+      })
+      .then(async (response: any) => {
+        const { email, email_verified, name, picture, exp } = response.payload;
+
+        if (exp > Date.now()) {
+          return res
+            .status(401)
+            .json({ message: "Token is expired please try again." });
+        }
+        if (email_verified === true) {
+          const user = await prisma.users.findUnique({
+            where: {
+              email: email,
+            },
+          });
+          const randomPassword = `${Math.floor(Math.random() * 1000000000)}`;
+          const passwordHash = await brcypt.hash(randomPassword, 10);
+
+          if (user) {
+            res.locals.userData = user;
+            next();
+          } else {
+            const userData = await prisma.users.create({
+              data: {
+                email: email,
+                name: name,
+                password: passwordHash,
+                createdAt: new Date(),
+                mobileNum: "1234567890",
+                profile_pic: picture,
+              },
+            });
+            res.locals.userData = userData;
+            next();
+          }
+        } else {
+          return res.status(402).json({
+            message:
+              "Your email is not verified by google.please try login with email-password",
+          });
+        }
+        // return res.json({ message: "working" });
+      })
+      .catch((error) => {
+        console.log(error);
+        return res.status(500).json({ message: "Internal server error" });
+      });
+  } catch (error) {
+    console.log(error);
+    return res.status(500).json({ message: "Internal server error" });
   }
 };
 
