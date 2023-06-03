@@ -133,7 +133,10 @@ export const googleAuth = async (
           });
           const randomPassword = `${Math.floor(Math.random() * 1000000000)}`;
           const passwordHash = await brcypt.hash(randomPassword, 10);
-
+          const randomMobileNumber = `${Math.floor(
+            Math.random() * 10000000000
+          )}`;
+          console.log(randomMobileNumber);
           if (user) {
             res.locals.userData = user;
             next();
@@ -144,7 +147,7 @@ export const googleAuth = async (
                 name: name,
                 password: passwordHash,
                 createdAt: new Date(),
-                mobileNum: "1234567890",
+                mobileNum: randomMobileNumber,
                 profile_pic: picture,
               },
             });
