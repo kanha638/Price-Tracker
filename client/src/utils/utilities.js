@@ -8,5 +8,8 @@ export const serverURL =
     : backendEnv.devlopmentServer;
 
 export const getProfilePicImageURL = (key) => {
+  if (key.split("/").length > 1) {
+    return key;
+  }
   return `${serverURL}/api/file/img/${key}`;
 };
