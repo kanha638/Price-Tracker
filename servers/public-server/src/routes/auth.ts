@@ -1,6 +1,7 @@
 import { Router } from "express";
 import {
   ForgotPasssword,
+  googleAuth,
   Me,
   resetpassword,
   setToken,
@@ -31,6 +32,21 @@ Body :
 
 */
 router.post("/sign-up", rateLimiterAuth, signUp, setToken);
+
+/*
+
+This route is for registering/loggin-in a user using google account
+TYPE : POST
+URL : /api/auth/google
+Body:{
+  none
+}
+headers :{
+  authorization : Bearer token
+}
+*/
+
+router.post("/google", rateLimiterAuth, googleAuth, setToken);
 
 /*
 

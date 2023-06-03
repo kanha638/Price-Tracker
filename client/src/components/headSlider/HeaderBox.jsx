@@ -17,6 +17,7 @@ import AlertTitle from "@mui/material/AlertTitle";
 import CloseIcon from "@mui/icons-material/Close";
 import IconButton from "@mui/material/IconButton";
 import Collapse from "@mui/material/Collapse";
+import { SigninBox } from "./SigninBox";
 
 export const HeaderBox = ({ img }) => {
   const [open, setOpen] = React.useState(false);
@@ -34,7 +35,6 @@ export const HeaderBox = ({ img }) => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
   function changeHandler(e) {
-    console.log(e.target.name);
     if (e.target.name === "credential") {
       setErrors({ ...errors, credential: false });
     }
@@ -43,7 +43,6 @@ export const HeaderBox = ({ img }) => {
     }
 
     setDetails({ ...details, [e.target.name]: e.target.value });
-    console.log(details);
   }
 
   const submitHandler = async (e) => {
@@ -249,137 +248,13 @@ export const HeaderBox = ({ img }) => {
         aria-labelledby="modal-modal-title"
         aria-describedby="modal-modal-description"
       >
-        <form onSubmit={submitHandler}>
-          <Box
-            display="flex"
-            flexDirection={"column"}
-            alignItems={"center"}
-            justifyContent={"space-between"}
-            marign="auto"
-            // marginTop={5}
-            padding={2}
-            borderRadius={2}
-            sx={{
-              backgroundSize: "cover",
-              backgroundPosition: "center",
-              backgroundColor: "white",
-              minWidth: "300px",
-              maxWidth: "550px",
-              width: "90%",
-              position: "absolute",
-              top: "45%",
-              left: "50%",
-              transform: "translate(-50%, -50%)",
-              boxShadow: "0px 4px 20px rgba(0, 0, 0, 0.08)",
-            }}
-          >
-            <div
-              style={{
-                width: "90%",
-              }}
-            >
-              <span
-                to="/"
-                className="link-redirect"
-                style={{ color: "black", cursor: "pointer" }}
-                onClick={handleClose}
-              >
-                <i
-                  class="fa-solid fa-arrow-left"
-                  style={{ fontSize: "25px" }}
-                ></i>
-              </span>
-            </div>
-            <Link to="/">
-              <img
-                alt="logo"
-                src={logo_pt}
-                style={{
-                  height: "120px",
-                  width: "120px",
-                  borderRadius: "50%",
-                  cursor: "pointer",
-                }}
-              />
-            </Link>
-            <Typography
-              variant="h4"
-              style={{ fontSize: "40px", marginTop: "20px" }}
-              padding={0}
-              textAlign="center"
-            >
-              Login
-            </Typography>
-
-            <TextField
-              variant={"outlined"}
-              margin="normal"
-              placeholder="Email / mobile-number"
-              type={"text"}
-              autoComplete="email"
-              name="credential"
-              onChange={changeHandler}
-              value={details.credential}
-              sx={{ width: "90%" }}
-              error={errors.credential}
-              helperText={errors.credential && "Please enter you email/mobile."}
-            />
-            <TextField
-              // id="outlined-password-input"
-              variant={"outlined"}
-              placeholder="Password"
-              type={"password"}
-              margin="normal"
-              name="password"
-              value={details.password}
-              onChange={changeHandler}
-              sx={{ width: "90%" }}
-              error={errors.password}
-              helperText={errors.password && "Please enter you password."}
-            />
-            <div style={{ width: "90%" }}>
-              {userState?.isErrors === true && (
-                <p style={{ marginTop: "30px", color: "red" }}>
-                  {userState?.errorMessage?.authForms}
-                </p>
-              )}
-
-              <Button
-                sx={{
-                  marginTop: 3,
-                  width: "100%",
-                  height: "50px",
-                }}
-                style={{
-                  borderRadius: 3,
-                  backgroundColor: "black",
-                  padding: "10px 10px",
-                  fontSize: "20px",
-                }}
-                variant="contained"
-                type="submit"
-              >
-                Login
-              </Button>
-              <Grid container>
-                <Grid
-                  item
-                  sx={{
-                    display: "flex",
-                    width: "100%",
-                    marginTop: "20px",
-                    justifyContent: "space-between",
-                  }}
-                >
-                  <p>Don't have an account ?</p>
-                  <Link to="/sign-up" className="link-redirect">
-                    Sign Up
-                  </Link>
-                </Grid>
-              </Grid>
-            </div>
-          </Box>
-        </form>
+        <SigninBox
+          submitHandler={submitHandler}
+          handleClose={handleClose}
+          details={details}
+          changeHandler={changeHandler}
+          errors={errors}
+        />
       </Modal>
     </div>
   );

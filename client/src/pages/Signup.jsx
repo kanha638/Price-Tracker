@@ -1,14 +1,14 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { TextField, Typography } from "@mui/material";
 import { Link, useNavigate } from "react-router-dom";
 import Grid from "@mui/material/Grid";
 import { Button } from "@mui/material";
 import { Box } from "@mui/material";
-import { useState } from "react";
 import logo_pt from "../assets/images/favicon.jpeg";
-import { signUp } from "../middleware/auth";
+import { GoogleAuth, signUp } from "../middleware/auth";
 import { useDispatch, useSelector } from "react-redux";
 import { UserState } from "../slices/userSlice";
+import { secrets } from "../environment/config";
 
 const SignUp = () => {
   const [details, setDetails] = useState({
@@ -19,6 +19,26 @@ const SignUp = () => {
     confirmPassword: "",
   });
   const userState = useSelector(UserState);
+  const dispatch = useDispatch();
+  const navigate = useNavigate();
+
+  async function handleCallbackResponse(response) {
+    await GoogleAuth(response.credential, dispatch, navigate);
+  }
+  useEffect(() => {
+    /* global google */
+    google.accounts.id.initialize({
+      client_id: secrets?.google_auth_client,
+      callback: handleCallbackResponse,
+    });
+    google.accounts.id.renderButton(document.getElementById("signInDiv"), {
+      type: "icon",
+      shape: "rectangle",
+      theme: "filled_black",
+      text: "continue with",
+      width: "240px",
+    });
+  }, []);
 
   const [errors, setErrors] = useState({
     name: false,
@@ -28,8 +48,6 @@ const SignUp = () => {
     confirmPassword: false,
   });
 
-  const dispatch = useDispatch();
-  const navigate = useNavigate();
   function changeHandler(e) {
     switch (e.target.name) {
       case "name":
@@ -260,6 +278,21 @@ const SignUp = () => {
             >
               SignUp
             </Button>
+            <Grid
+              container
+              sx={{
+                width: "100%",
+                display: "flex",
+                flexDirection: "column",
+                gap: "10px",
+                marginTop: "20px",
+              }}
+            >
+              <Grid item>Sign up using social media ?</Grid>
+              <Grid item sx={{ display: "flex" }}>
+                <div id="signInDiv" style={{ marginTop: "5px" }}></div>
+              </Grid>
+            </Grid>
             <Grid container>
               <Grid
                 item

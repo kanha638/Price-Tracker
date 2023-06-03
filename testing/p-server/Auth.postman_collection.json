@@ -2,7 +2,7 @@
 	"info": {
 		"_postman_id": "9aa77b4a-6782-4e6e-a63d-fd91cbd70705",
 		"name": "Auth",
-		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"schema": "https://schema.getpostman.com/json/collection/v2.0.0/collection.json",
 		"_exporter_id": "19552521"
 	},
 	"item": [
@@ -20,19 +20,7 @@
 						}
 					}
 				},
-				"url": {
-					"raw": "http://localhost:8005/api/auth/sign-up",
-					"protocol": "http",
-					"host": [
-						"localhost"
-					],
-					"port": "8005",
-					"path": [
-						"api",
-						"auth",
-						"sign-up"
-					]
-				}
+				"url": "http://localhost:8005/api/auth/sign-up"
 			},
 			"response": []
 		},
@@ -41,19 +29,7 @@
 			"request": {
 				"method": "GET",
 				"header": [],
-				"url": {
-					"raw": "http://localhost:8005/api/auth/me",
-					"protocol": "http",
-					"host": [
-						"localhost"
-					],
-					"port": "8005",
-					"path": [
-						"api",
-						"auth",
-						"me"
-					]
-				}
+				"url": "http://localhost:8005/api/auth/me"
 			},
 			"response": []
 		},
@@ -62,19 +38,7 @@
 			"request": {
 				"method": "GET",
 				"header": [],
-				"url": {
-					"raw": "http://localhost:8005/api/auth/sign-out",
-					"protocol": "http",
-					"host": [
-						"localhost"
-					],
-					"port": "8005",
-					"path": [
-						"api",
-						"auth",
-						"sign-out"
-					]
-				}
+				"url": "http://localhost:8005/api/auth/sign-out"
 			},
 			"response": []
 		},
@@ -92,19 +56,31 @@
 						}
 					}
 				},
-				"url": {
-					"raw": "http://localhost:8005/api/auth/sign-in",
-					"protocol": "http",
-					"host": [
-						"localhost"
-					],
-					"port": "8005",
-					"path": [
-						"api",
-						"auth",
-						"sign-in"
-					]
-				}
+				"url": "http://localhost:8005/api/auth/sign-in"
+			},
+			"response": []
+		},
+		{
+			"name": "Reset Pass",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6ImNsZXlsemR3MzAwMDByMW5xbXZ3NW5hY2ciLCJlbWFpbCI6InRpd2FyaWthbmhhMjZAZ21haWwuY29tIiwiaWF0IjoxNjg1NTE3Njk1LCJleHAiOjE2ODU1MTk0OTV9.bzmJuoyj7kHvxM_Re9-LxEvgMq2ROACV9z5DUHxBACg",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"password\":\"hello12311\",\n    \"confirmPassword\":\"hello12311\"\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": "http://localhost:8005/api/auth/reset-pass"
 			},
 			"response": []
 		},
@@ -115,26 +91,29 @@
 				"header": [],
 				"body": {
 					"mode": "raw",
-					"raw": "{\n    \"email\":\"tiwarikanha26@gmail.com\"\n}",
+					"raw": "{\n    \"email\":\"tiwarikanha26@gmail.com\"\n}\n",
 					"options": {
 						"raw": {
 							"language": "json"
 						}
 					}
 				},
-				"url": {
-					"raw": "http://localhost:8005/api/auth/forgot-pass",
-					"protocol": "http",
-					"host": [
-						"localhost"
-					],
-					"port": "8005",
-					"path": [
-						"api",
-						"auth",
-						"forgot-pass"
-					]
-				}
+				"url": "http://localhost:8005/api/auth/forgot-pass"
+			},
+			"response": []
+		},
+		{
+			"name": "gooogle login/sign-up",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "Bearer eyJhbGciOiJSUzI1NiIsImtpZCI6IjYwODNkZDU5ODE2NzNmNjYxZmRlOWRhZTY0NmI2ZjAzODBhMDE0NWMiLCJ0eXAiOiJKV1QifQ.eyJpc3MiOiJodHRwczovL2FjY291bnRzLmdvb2dsZS5jb20iLCJuYmYiOjE2ODU3NzAyNjAsImF1ZCI6Ijk4NTY5Mzc1OTAzMy1ybXY0OTByc3F2M2RldXEwYzRpdWZhYWQ4ZzVoMzhhMS5hcHBzLmdvb2dsZXVzZXJjb250ZW50LmNvbSIsInN1YiI6IjExNDAyNjczOTIyMzE3NzU2MDI1NCIsImVtYWlsIjoidGl3YXJpa2FuaGEyNkBnbWFpbC5jb20iLCJlbWFpbF92ZXJpZmllZCI6dHJ1ZSwiYXpwIjoiOTg1NjkzNzU5MDMzLXJtdjQ5MHJzcXYzZGV1cTBjNGl1ZmFhZDhnNWgzOGExLmFwcHMuZ29vZ2xldXNlcmNvbnRlbnQuY29tIiwibmFtZSI6IkthbmhhIFRpd2FyaSIsInBpY3R1cmUiOiJodHRwczovL2xoMy5nb29nbGV1c2VyY29udGVudC5jb20vYS9BQWNIVHRjQzlKQWs2UnJqdFp1Snl3RGZfWDh3QWswTElJRzkxUGRWLW5vVTJRPXM5Ni1jIiwiZ2l2ZW5fbmFtZSI6IkthbmhhIiwiZmFtaWx5X25hbWUiOiJUaXdhcmkiLCJpYXQiOjE2ODU3NzA1NjAsImV4cCI6MTY4NTc3NDE2MCwianRpIjoiMWRlNTZkOGU2MDMyOTE2ZTdiMjRiNTFiODkwY2E2NTRkZWVhZGU4ZSJ9.oqo9LbJdA68pq3hWee5pzz5GJyt8ksHP2PBmgp4zPdWeL8BMavEcIMidVc8RJ0trSfp-0KkvPxqKpbBRUKyx6F0sH-Jmylth94KVmpXuM4195nCAq8dvIH9LAkq_cILynJJ_SZGLwLlmObzm7n8EPmg-LSa9aneRlINGxJixo7DcpABEOFayITUVeGwkLI4wltDPzAC9dgUpiSbXDQg_c07KlmMGKOCWM5fVbKL_9ymZmYiyqpXxlFqMbNWX-GX3Z9oH7-y-3KQaVVypS33G5ofxfTAtQ10s7yBYoPLDv7UdfGYyTYBAS4Jjolg1z_mjLXGgQ8hUlpohfe9jEcJp-g",
+						"type": "text"
+					}
+				],
+				"url": "http://localhost:8005/api/auth/google"
 			},
 			"response": []
 		}
