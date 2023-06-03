@@ -33,6 +33,27 @@ export const signUp = async (data, dispatch, navigate) => {
     console.log(error);
   }
 };
+
+export const GoogleAuth = async (token, dispatch, navigate) => {
+  dispatch(AuthStart());
+  try {
+    const response = await API.post(
+      "/api/auth/google",
+      {},
+      {
+        withCredentials: true,
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      }
+    );
+    dispatch(AuthSuccess(response.data));
+    navigate("/");
+  } catch (error) {
+    dispatch(AuthError(error.response));
+    console.log(error);
+  }
+};
 export const signIn = async (
   data,
   dispatch,
