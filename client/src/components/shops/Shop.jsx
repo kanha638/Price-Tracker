@@ -1,20 +1,17 @@
 import React, { useState } from "react";
 import Catg from "./Catg";
-import ShopCart from "./ShopCart";
+import ShopCart, { ShopCartSkeleton } from "./ShopCart";
 import "./style.css";
 
 import { useTheme } from "@mui/material/styles";
 import Select from "@mui/material/Select";
 import OutlinedInput from "@mui/material/OutlinedInput";
 import MenuItem from "@mui/material/MenuItem";
-import { Categories } from "./../../common/data"
-import InputLabel from '@mui/material/InputLabel';
-
-import FormHelperText from '@mui/material/FormHelperText';
-import FormControl from '@mui/material/FormControl';
-
-
-const names = ["HealthCare", "Sports", "Personal Hygene", "Sex", "Clothes"];
+import { Categories } from "./../../common/data";
+import InputLabel from "@mui/material/InputLabel";
+import FormControl from "@mui/material/FormControl";
+import { useSelector } from "react-redux";
+import { UserState } from "../../slices/userSlice";
 
 const ITEM_HEIGHT = 48;
 const ITEM_PADDING_TOP = 8;
@@ -37,15 +34,30 @@ function getStyles(name, personName, theme) {
 }
 
 const Shop = ({ productItems, title }) => {
-
   const theme = useTheme();
   const [personName, setPersonName] = useState([]);
+  const [product, setProduct] = useState(productItems);
+  const [flag, setFlag] = useState(false);
+  const [searchText, setSearchText] = useState("");
 
-  const [age, setAge] = React.useState('');
-
-  const handleChange = (event) => {
-    setAge(event.target.value);
+  const handleChange = (e) => {
+    setFlag(true);
+    setSearchText(e.target.value);
+    const val = e.target.value;
+    const result = productItems.filter((element) => {
+      return (
+        String(element.product_title)
+          .toLowerCase()
+          .includes(String(val).toLowerCase()) ||
+        String(element?.current_price)
+          .toLowerCase()
+          .includes(String(val).toLowerCase())
+      );
+    });
+    setProduct(result);
   };
+
+  const userState = useSelector(UserState);
 
   return (
     <>
@@ -54,27 +66,40 @@ const Shop = ({ productItems, title }) => {
           <Catg />
 
           <div className="contentWidth">
-            <div className="heading d_flex headingmyproduct"
-              sx={{ alignContent: 'space-between' }}
+            <div
+              className="heading d_flex headingmyproduct"
+              sx={{ alignContent: "space-between" }}
             >
-              <div className="heading-left screenviewtitle">
-                {/* <span className="headingmyproductfontsize"
-                style={{}}
-                > */}
-                {title}
-                {/* </span> */}
+              <div
+                style={{
+                  display: "flex",
+                  width: "100%",
+                  justifyContent: "space-between",
+                }}
+              >
+                <div className="heading-left screenviewtitle">{title}</div>
+                <div style={{ background: "white" }}>
+                  <input
+                    placeholder="Search something"
+                    style={{ padding: "10px", width: "220px" }}
+                    value={searchText}
+                    onChange={handleChange}
+                  />
+                  <i
+                    className="fa-solid fa-magnifying-glass"
+                    style={{ background: "white" }}
+                  ></i>
+                </div>
               </div>
               <div className="heading-right mobileviewCategory">
-
                 <FormControl sx={{ m: 1, minWidth: 100 }} size="small">
-                  <InputLabel id="demo-simple-select-helper-label">Category</InputLabel>
+                  <InputLabel id="demo-simple-select-helper-label">
+                    Category
+                  </InputLabel>
                   <Select
                     className="ab"
                     labelId="demo-multiple-name-label"
-                    // label="dsda"
-
                     id="demo-multiple-name"
-                    // multiple
                     placeholder="Categories"
                     sx={{
                       display: "flex",
@@ -83,16 +108,13 @@ const Shop = ({ productItems, title }) => {
                       borderRadius: "5px",
                       borderColor: "black",
                       backgroundColor: "white",
-                      '@media screen and (max-width: 514px)': {
-                       minWidth:110,
-                        
+                      "@media screen and (max-width: 514px)": {
+                        minWidth: 110,
                       },
-
                     }}
                     input={<OutlinedInput label="Category" />}
                     MenuProps={MenuProps}
                   >
-
                     {Categories.map((value) => (
                       <MenuItem
                         key={value.name}
@@ -103,14 +125,97 @@ const Shop = ({ productItems, title }) => {
                       </MenuItem>
                     ))}
                   </Select>
-
                 </FormControl>
-
               </div>
             </div>
             <div className="product-content  grid1">
-              <ShopCart productItems={productItems} />
-              <ShopCart productItems={productItems} />
+              {userState?.myProductFetchStatusPending === true ? (
+                <ShopCartSkeleton />
+              ) : (
+                <ShopCart
+                  productItems={flag === true ? product : productItems}
+                />
+              )}
+            </div>
+          </div>
+        </div>
+      </section>
+    </>
+  );
+};
+
+export const ShopSkel = ({ title }) => {
+  const theme = useTheme();
+  const [personName, setPersonName] = useState([]);
+  return (
+    <>
+      <section className="shop background">
+        <div className="container d_flex ">
+          <Catg />
+
+          <div className="contentWidth">
+            <div
+              className="heading d_flex headingmyproduct"
+              sx={{ alignContent: "space-between" }}
+            >
+              <div
+                style={{
+                  display: "flex",
+                  width: "100%",
+                  justifyContent: "space-between",
+                }}
+              >
+                <div className="heading-left screenviewtitle">{title}</div>
+                <div style={{ background: "white" }}>
+                  <input
+                    placeholder="Search something"
+                    style={{ padding: "10px", width: "220px" }}
+                  />
+                  <i
+                    className="fa-solid fa-magnifying-glass"
+                    style={{ background: "white" }}
+                  ></i>
+                </div>
+              </div>
+              <div className="heading-right mobileviewCategory">
+                <FormControl sx={{ m: 1, minWidth: 100 }} size="small">
+                  <InputLabel id="demo-simple-select-helper-label">
+                    Category
+                  </InputLabel>
+                  <Select
+                    className="ab"
+                    labelId="demo-multiple-name-label"
+                    id="demo-multiple-name"
+                    placeholder="Categories"
+                    sx={{
+                      display: "flex",
+                      minWidth: 250,
+                      maxHeight: "45px",
+                      borderRadius: "5px",
+                      borderColor: "black",
+                      backgroundColor: "white",
+                      "@media screen and (max-width: 514px)": {
+                        minWidth: 110,
+                      },
+                    }}
+                    input={<OutlinedInput label="Category" />}
+                    MenuProps={MenuProps}
+                  >
+                    {Categories.map((value) => (
+                      <MenuItem
+                        key={value.name}
+                        value={value.value}
+                        style={getStyles(value.name, personName, theme)}
+                      >
+                        {value.name}
+                      </MenuItem>
+                    ))}
+                  </Select>
+                </FormControl>
+              </div>
+            </div>
+            <div className="product-content  grid1">
+              <ShopCartSkeleton />
             </div>
           </div>
         </div>
