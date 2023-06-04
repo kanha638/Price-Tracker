@@ -1,7 +1,6 @@
 import React, { useState } from "react";
 import { designVar } from "../../common/data";
-import './../../styles/style.css';
-
+import "./../../styles/style.css";
 
 const ShopCart = ({ productItems }) => {
   const [liked, setLiked] = useState(false);
@@ -22,9 +21,20 @@ const ShopCart = ({ productItems }) => {
                     backgroundColor: designVar.colors.iconBackgroundColor,
                   }}
                 >
-                  {product.discount}% Off
+                  {product?.mrp
+                    ? Math.round(
+                        ((product?.mrp - product?.current_price) /
+                          product?.mrp) *
+                          100
+                      )
+                    : "NA"}
+                  {product?.mrp ? "% Off" : ""}
                 </span>
-                <img src={product.cover} alt="" />
+                <img
+                  src={product?.img_urn}
+                  alt=""
+                  style={{ width: "100%", height: "250px" }}
+                />
                 <div className="product-like" style={{ cursor: "pointer" }}>
                   <i
                     className={`fa-${liked ? "solid" : "regular"} fa-heart`}
@@ -34,8 +44,9 @@ const ShopCart = ({ productItems }) => {
                 </div>
               </div>
               <div className="product-details">
-              
-              <div className="productNameOnHover">{product.name}</div>
+                <div className="productNameOnHover">
+                  {product.product_title}
+                </div>
 
                 <div className="rate">
                   <i className="fa fa-star"></i>
@@ -48,7 +59,10 @@ const ShopCart = ({ productItems }) => {
                   className="price"
                   style={{ color: designVar.colors.iconTextColor }}
                 >
-                  <h4>${product.price}.00 </h4>
+                  <h4>
+                    {product?.currecy_type === "INR" ? "₹ " : "$ "}
+                    {product.current_price}.00{" "}
+                  </h4>
                 </div>
               </div>
             </div>

@@ -5,6 +5,9 @@ import {
   fetchAllProductsError,
   fetchAllProductsStart,
   fetchAllProductsSuccess,
+  myProductsFetchError,
+  myProductsFetchStart,
+  myProductsFetchSuccess,
 } from "../slices/userSlice";
 import axios from "axios";
 import { serverURL } from "../utils/utilities";
@@ -32,5 +35,19 @@ export const fetchAllProducts = async (dispatch) => {
   } catch (error) {
     console.log(error);
     dispatch(fetchAllProductsError(error.response));
+  }
+};
+
+export const fetchMyProducts = async (dispatch, setMyProducts = () => {}) => {
+  dispatch(myProductsFetchStart());
+  try {
+    const response = await API.get("/api/product/product-added/my", {
+      withCredentials: true,
+    });
+
+    setMyProducts(response.data);
+    dispatch(myProductsFetchSuccess(response.data));
+  } catch (error) {
+    dispatch(myProductsFetchError(error.response));
   }
 };

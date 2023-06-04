@@ -16,6 +16,7 @@ const userSlice = createSlice({
       authForms: "",
     },
     allProducts: [],
+    myProducts: [],
   },
   reducers: {
     AuthStart: (state) => {
@@ -153,6 +154,29 @@ const userSlice = createSlice({
       state.setPasswordStatusMessage = "";
       state.setPasswordStatusSuccess = false;
     },
+
+    myProductsFetchStart: (state) => {
+      state.myProductFetchStatusPending = true;
+      state.myProductFetchStatusError = false;
+      state.myProductFetchStatusSuccess = false;
+    },
+    myProductsFetchSuccess: (state, action) => {
+      state.myProductFetchStatusPending = false;
+      state.myProductFetchStatusError = false;
+      state.myProductFetchStatusSuccess = true;
+      state.myProducts = action.payload;
+    },
+    myProductsFetchError: (state, action) => {
+      state.myProductFetchStatusPending = false;
+      state.myProductFetchStatusError = true;
+      state.myProductFetchStatusSuccess = false;
+      state.myProductFetchStatusErrorrMessage = action.payload.data.message;
+    },
+    RemoveMyProductsfetchStatus: (state) => {
+      state.myProductFetchStatusError = false;
+      state.myProductFetchStatusSuccess = false;
+      state.myProductFetchStatusErrorrMessage = "";
+    },
   },
 });
 export const {
@@ -181,6 +205,10 @@ export const {
   resetPasswordStart,
   resetPasswordError,
   removeResetPasswordStatus,
+  myProductsFetchError,
+  myProductsFetchStart,
+  myProductsFetchSuccess,
+  RemoveMyProductsfetchStatus,
 } = userSlice.actions;
 export const selectUser = (state) => state.user.userInfo;
 export const UserState = (state) => state.user;
