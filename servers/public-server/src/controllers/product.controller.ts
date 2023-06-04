@@ -273,6 +273,7 @@ export const getAddedProducts = async (req: Request, res: Response) => {
         rating_count: true,
         currecy_type: true,
         usersId: true,
+        img_urn: true,
       },
       orderBy: {
         createdAt: "desc",
