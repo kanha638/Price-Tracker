@@ -19,7 +19,7 @@ async def get_clean_price(price):
             ',', '').replace('₹', '').replace('€', '').replace('$', '').strip())
     except:
         price = None
-    
+
     return price
 
 
@@ -115,8 +115,8 @@ async def get_soup(url):
             # Get the HTML content of the page
             html = await page.content()
         except Exception as e:
-            print(f'Amazon page not responding! {e}')
-            error_message['message'] = f"Page not responding! Request timed out. {url}"
+            print(f'{website} page not responding! {e}')
+            error_message['message'] = f"{website} page not responding! Request timed out. {url}"
             error_message['status'] = 408
             return None, error_message
 
