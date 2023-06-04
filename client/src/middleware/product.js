@@ -8,6 +8,9 @@ import {
   myProductsFetchError,
   myProductsFetchStart,
   myProductsFetchSuccess,
+  subscribedProductfetchError,
+  subscribedProductfetchStart,
+  subscribedProductfetchSuccess,
 } from "../slices/userSlice";
 import axios from "axios";
 import { serverURL } from "../utils/utilities";
@@ -51,3 +54,16 @@ export const fetchMyProducts = async (dispatch, setMyProducts = () => {}) => {
     dispatch(myProductsFetchError(error.response));
   }
 };
+export const fetchSubscribedProducts = async (dispatch, setSubscribedProducts = () => {}) =>{
+  dispatch(subscribedProductfetchStart());
+  try {
+    const response = await API.get("/api/product/subscribed/my",{
+      withCredentials:true
+    });
+
+    setSubscribedProducts(response.data);
+    dispatch(subscribedProductfetchSuccess(response.data));
+  } catch (error) {
+    dispatch(subscribedProductfetchError(error.response));
+  }
+}

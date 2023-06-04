@@ -177,6 +177,31 @@ const userSlice = createSlice({
       state.myProductFetchStatusSuccess = false;
       state.myProductFetchStatusErrorrMessage = "";
     },
+
+    //for subscribed Product
+    subscribedProductfetchStart : (state) =>{
+      state.subscribedProductfetchStatusSuccess = false;
+      state.subscribedProductfetchStatusPending = true;
+      state.subscribedProductfetchStatusError = false;
+    },
+    subscribedProductfetchError: (state, action) =>{
+      state.subscribedProductfetchStatusPending = false;
+      state.subscribedProductfetchStatusSuccess = false;
+      state.subscribedProductfetchStatusError = true;
+      state.subscribedProductfetchStatusErrorMessage = action.payload.data.message;
+    },
+    subscribedProductfetchSuccess: (state, action) =>{
+      state.subscribedProductfetchStatusSuccess = true;
+      state.subscribedProductfetchStatusPending = false;
+      state.subscribedProductfetchStatusError = false;
+      state.subscribedProducts = action.payload;
+    },
+    RemoveSubscribedProductfetchstatus: (state) =>{
+      state.subscribedProductfetchStatusSuccess = false;
+      state.subscribedProductfetchStatusError = false;
+      state.RemoveSubscribedProductfetchstatusMessage = "";
+    }
+
   },
 });
 export const {
@@ -209,6 +234,10 @@ export const {
   myProductsFetchStart,
   myProductsFetchSuccess,
   RemoveMyProductsfetchStatus,
+  subscribedProductfetchStart,
+  subscribedProductfetchError,
+  subscribedProductfetchSuccess,
+  RemoveSubscribedProductfetchstatus
 } = userSlice.actions;
 export const selectUser = (state) => state.user.userInfo;
 export const UserState = (state) => state.user;
