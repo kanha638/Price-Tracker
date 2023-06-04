@@ -1,7 +1,6 @@
 from flask import jsonify
 import json
-from app.product.globals import currencies, get_soup, get_data_from_script_tag, get_clean_price
-import re
+from app.product.utils import currencies, get_soup, get_data_from_script_tag, get_clean_price
 
 
 class Flipkart:
