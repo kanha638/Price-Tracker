@@ -2,6 +2,14 @@ import React, { useState } from "react";
 import { Skeleton } from "@mui/material";
 import { designVar } from "../../common/data";
 import { LazyLoadImage } from "react-lazy-load-image-component";
+import Rating from "@mui/material/Rating";
+
+const productImgLinks = {
+  flipkart:
+    "https://cdn.icon-icons.com/icons2/726/PNG/512/flipkart_icon-icons.com_62650.png",
+  myntra:
+    "https://cdn.iconscout.com/icon/free/png-256/free-myntra-2709168-2249158.png",
+};
 export const ShopBox = ({ product }) => {
   const [liked, setLiked] = useState(false);
   const change = () => {
@@ -58,21 +66,62 @@ export const ShopBox = ({ product }) => {
         <div className="product-details">
           <div className="productNameOnHover">{product.product_title}</div>
 
-          <div className="rate">
-            <i className="fa fa-star"></i>
-            <i className="fa fa-star"></i>
-            <i className="fa fa-star"></i>
-            <i className="fa fa-star"></i>
-            <i className="fa fa-star"></i>
+          <div className="rate" style={{ display: "flex", gap: "10px" }}>
+            <Rating
+              sx={{ fontSize: "20px" }}
+              name="read-only"
+              value={product?.rating}
+              precision={0.1}
+              readOnly
+            />
           </div>
           <div
             className="price"
-            style={{ color: designVar.colors.iconTextColor }}
+            style={{
+              color: designVar.colors.iconTextColor,
+              display: "flex",
+              justifyContent: "flex-start",
+              gap: "5px",
+              alignItems: "flex-end",
+              marginTop: "5px",
+            }}
           >
-            <h4>
+            <h4 style={{ display: "flex", alignItems: "flex-end" }}>
               {product?.currecy_type === "INR" ? "₹ " : "$ "}
               {product.current_price}.00{" "}
             </h4>
+            <p
+              style={{
+                textDecoration: "line-through",
+                color: "black",
+                fontSize: "12px",
+              }}
+            >
+              {product?.mrp && (
+                <>
+                  {" "}
+                  {product?.currecy_type === "INR" ? "₹ " : "$ "}
+                  {product?.mrp}
+                </>
+              )}
+            </p>
+
+            {product?.website === "amazon" ? (
+              <i
+                className="fa-brands fa-amazon"
+                style={{ position: "absolute", right: 10 }}
+              ></i>
+            ) : (
+              <img
+                src={productImgLinks[product?.website]}
+                style={{
+                  width: "20px",
+                  height: "20px",
+                  position: "absolute",
+                  right: 10,
+                }}
+              />
+            )}
           </div>
         </div>
       </div>
@@ -100,6 +149,7 @@ export const ShopBoxSkel = () => {
             style={{ color: designVar.colors.iconTextColor }}
           >
             <Skeleton variant="rectangular" width="50%" height={25} />
+            <Skeleton variant="rectangular" width="10%" height={25} />
           </div>
         </div>
       </div>
