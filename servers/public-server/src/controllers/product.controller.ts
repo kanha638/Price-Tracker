@@ -244,6 +244,7 @@ export const getSubscribedProducts = async (req: Request, res: Response) => {
         currecy_type: true,
         usersId: true,
         img_urn: true,
+        website: true,
       },
       orderBy: {
         createdAt: "desc",
@@ -275,6 +276,7 @@ export const getAddedProducts = async (req: Request, res: Response) => {
         currecy_type: true,
         usersId: true,
         img_urn: true,
+        website: true,
       },
       orderBy: {
         createdAt: "desc",
