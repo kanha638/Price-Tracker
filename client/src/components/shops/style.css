@@ -76,10 +76,10 @@
   .contentWidth {
     width: 100%;
     /* border: solid 2px black; */
-    display: flex;
+    /* display: flex;
     flex-direction: column;
     justify-content: center;
-    align-items: center;
+    align-items: center; */
   }
   .shop .category {
     display: none;

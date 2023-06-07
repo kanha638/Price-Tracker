@@ -16,6 +16,7 @@ const userSlice = createSlice({
       authForms: "",
     },
     allProducts: [],
+    myProducts: [],
   },
   reducers: {
     AuthStart: (state) => {
@@ -153,6 +154,54 @@ const userSlice = createSlice({
       state.setPasswordStatusMessage = "";
       state.setPasswordStatusSuccess = false;
     },
+
+    myProductsFetchStart: (state) => {
+      state.myProductFetchStatusPending = true;
+      state.myProductFetchStatusError = false;
+      state.myProductFetchStatusSuccess = false;
+    },
+    myProductsFetchSuccess: (state, action) => {
+      state.myProductFetchStatusPending = false;
+      state.myProductFetchStatusError = false;
+      state.myProductFetchStatusSuccess = true;
+      state.myProducts = action.payload;
+    },
+    myProductsFetchError: (state, action) => {
+      state.myProductFetchStatusPending = false;
+      state.myProductFetchStatusError = true;
+      state.myProductFetchStatusSuccess = false;
+      state.myProductFetchStatusErrorrMessage = action.payload.data.message;
+    },
+    RemoveMyProductsfetchStatus: (state) => {
+      state.myProductFetchStatusError = false;
+      state.myProductFetchStatusSuccess = false;
+      state.myProductFetchStatusErrorrMessage = "";
+    },
+
+    //for subscribed Product
+    subscribedProductfetchStart : (state) =>{
+      state.subscribedProductfetchStatusSuccess = false;
+      state.subscribedProductfetchStatusPending = true;
+      state.subscribedProductfetchStatusError = false;
+    },
+    subscribedProductfetchError: (state, action) =>{
+      state.subscribedProductfetchStatusPending = false;
+      state.subscribedProductfetchStatusSuccess = false;
+      state.subscribedProductfetchStatusError = true;
+      state.subscribedProductfetchStatusErrorMessage = action.payload.data.message;
+    },
+    subscribedProductfetchSuccess: (state, action) =>{
+      state.subscribedProductfetchStatusSuccess = true;
+      state.subscribedProductfetchStatusPending = false;
+      state.subscribedProductfetchStatusError = false;
+      state.subscribedProducts = action.payload;
+    },
+    RemoveSubscribedProductfetchstatus: (state) =>{
+      state.subscribedProductfetchStatusSuccess = false;
+      state.subscribedProductfetchStatusError = false;
+      state.RemoveSubscribedProductfetchstatusMessage = "";
+    }
+
   },
 });
 export const {
@@ -181,6 +230,14 @@ export const {
   resetPasswordStart,
   resetPasswordError,
   removeResetPasswordStatus,
+  myProductsFetchError,
+  myProductsFetchStart,
+  myProductsFetchSuccess,
+  RemoveMyProductsfetchStatus,
+  subscribedProductfetchStart,
+  subscribedProductfetchError,
+  subscribedProductfetchSuccess,
+  RemoveSubscribedProductfetchstatus
 } = userSlice.actions;
 export const selectUser = (state) => state.user.userInfo;
 export const UserState = (state) => state.user;

@@ -1,11 +1,27 @@
-import React from "react";
-import Data from "../../assets/dummyData";
-import Shop from "../shops/Shop";
+import React, { useState, useEffect } from "react";
+import { useDispatch, useSelector } from "react-redux";
+import { fetchMyProducts } from "../../middleware/product";
+import { UserState } from "../../slices/userSlice";
+import Shop, { ShopSkel } from "../shops/Shop";
 
 const MyProducts = () => {
+  const userState = useSelector(UserState);
+  const dispatch = useDispatch();
+  const [myProducts, setMyProducts] = useState([]);
+
+  useEffect(() => {
+    const getMyProducts = () => {
+      fetchMyProducts(dispatch, setMyProducts);
+    };
+    getMyProducts();
+  }, []);
   return (
     <>
-      <Shop productItems={Data.productItems} title={"My Products"} />
+      {userState?.myProductFetchStatusPending === true ? (
+        <ShopSkel title={"My Products"} />
+      ) : (
+        <Shop productItems={myProducts} title={"My Products"} />
+      )}
     </>
   );
 };
