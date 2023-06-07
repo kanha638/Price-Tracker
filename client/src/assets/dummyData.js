@@ -27,7 +27,7 @@ const Data = {
       id: 4,
       discount: 40,
       cover: "https://m.media-amazon.com/images/I/61S9aVnRZDL._SX679_.jpg",
-      name: "Smart Watch Black sdf dfgdf df ghfghgh  ghgjfhsfgh ghfghsty dogtuorguhj ot uhtou htg sto t ghshgttgh",
+      name: "Smart Watch Black ",
       price: 50,
     },
     {

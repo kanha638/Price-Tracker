@@ -136,9 +136,9 @@ const Navbar = () => {
               onClick={() => setMobileMenu(!MobileMenu)}
             >
               {MobileMenu ? (
-                <i className="fas fa-times close home-btn"></i>
+                <i className="fas fa-times close home-btn" style={{top:"6.4rem",right:"40%"}}></i>
               ) : (
-                <i className="fas fa-bars open"></i>
+                <i className="fas fa-bars open" style={{top:"7.2rem",right:"2rem"}}></i>
               )}
             </button>
           </div>

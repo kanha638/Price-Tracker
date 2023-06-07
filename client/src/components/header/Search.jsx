@@ -47,7 +47,7 @@ const Search = () => {
             </button>
           </div>
 
-          <div className="icon f_flex width">
+          <div className="icon width">
             {userState?.isLoggedIn ? (
               <>
                 {" "}
@@ -99,6 +99,7 @@ const Search = () => {
                       alignItems: "center",
                       gap: "5px",
                       border: "solid 2px green",
+                      top:"0.5rem"
                     }}
                   >
                     <i class="fa-brands fa-github"></i>

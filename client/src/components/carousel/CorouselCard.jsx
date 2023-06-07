@@ -4,6 +4,7 @@ import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
 import { designVar } from "../../common/data";
 import './../../styles/style.css';
+import { useNavigate } from "react-router-dom";
 
 const SampleNextArrow = (props) => {
   const { onClick } = props;
@@ -26,6 +27,8 @@ const SamplePrevArrow = (props) => {
   );
 };
 const CorouselCard = ({ productItems, number_of_slides = 4 }) => {
+  const navigate = useNavigate();
+
   const [liked, setLiked] = useState(false);
   const change = () => {
     setLiked((val) => !val);
@@ -78,10 +81,10 @@ const CorouselCard = ({ productItems, number_of_slides = 4 }) => {
       <Slider {...settings}>
         {productItems.map((productItems) => {
           return (
-            <div className="box">
+            <div className="box" onClick={()=> navigate(`/product/${productItems.id}`)}>
               <div
                 className="product mtop"
-                style={{ width: "90%", height: "100%" }}
+                style={{ width: "90%", height: "100%", cursor:"pointer"}}
               >
                 <div
                   className="img"

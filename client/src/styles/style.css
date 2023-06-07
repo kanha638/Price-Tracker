@@ -20,27 +20,46 @@ body {
   margin: auto;
 }
 
-@media only screen and (max-width: 450px){
+@media only screen and (max-width:700px){
 
-  .container{
-    margin: 0%;
-
+  .c_flex {
+    display: flex;
+    margin: auto;
+   }
+   .d_flex{
+  display: flex;
+  /* right:10rem; */
+}
+  .f_flex {
+    display: flex;
+  }
+  .width{
+    display: flex;
   }
  
 }
+@media only screen and (min-width:701px){
+  .container{
+    margin: 0%;
+   
+  }
+  .d_flex {
+    display: flex;
+    justify-content: space-between;
+  }
+  .c_flex {
+    display: flex;
+    margin: auto;
+  }
+  .f_flex {
+    display: flex;
+  }
+  .width{
+    display: flex;
+    margin-left: 5rem;
+  }
+}
 
-.d_flex {
-  display: flex;
-  justify-content: space-between;
-}
-.c_flex {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-}
-.f_flex {
-  display: flex;
-}
 a {
   text-decoration: none;
   color: black;
@@ -78,6 +97,76 @@ button {
 .boxShadow {
   box-shadow: rgb(43 52 69 / 10%) 0px 4px 16px;
 }
+
+.p-page{
+  display:flex;
+}
+.p-id1{
+  flex: 50%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  /* border-right:1px solid black; */
+}
+.p-img{
+  width:80%;
+  height: 80%;
+}
+.p-Btn{
+  width: 30%;
+  height: 40px;
+  padding: 10px;
+  font-size: 15px;
+}
+.p-Btn-1{
+  color: white;
+}
+.p-Btn-2{
+  color:black;
+}
+.p-id2{
+  text-align: center;
+  flex: 50%;
+  justify-content: center;
+  align-items: center;
+  display: flex;
+  flex-direction: column;
+  line-height: 1.8rem;
+  /* border:1px solid black; */
+}
+@media only screen and (max-width:760px){
+ .p-page{
+  display:flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+ }
+ .p-Btn{
+  width:45%;
+  height:35px;
+ }
+ .p-img{
+  /* display:flex;
+  flex:"100%";
+  margin:auto; */
+  margin-top: 2rem;
+  width:65%;
+  height:65%
+ }
+ .p-id2{
+  width:80%;
+  margin: 3rem;
+  /* justify-content: center;
+  align-items: center;
+  display: flex; */
+  /* text-align: center; */
+  /* display:flex;
+  flex:"100%";
+  margin:auto; */
+ }
+}
+
+
 /*-----Sign-in/Sign-up------*/
 .link-redirect {
   font-size: 17px;
