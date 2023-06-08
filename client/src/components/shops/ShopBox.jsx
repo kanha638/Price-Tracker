@@ -1,11 +1,21 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Skeleton } from "@mui/material";
 import { designVar } from "../../common/data";
 import { LazyLoadImage } from "react-lazy-load-image-component";
+import { useDispatch, useSelector } from "react-redux";
+import { UserState } from "../../slices/userSlice";
+import { likeProduct } from "../../middleware/product";
 export const ShopBox = ({ product }) => {
+  const userState = useSelector(UserState);
+  const dispatch = useDispatch();
   const [liked, setLiked] = useState(false);
-  const change = () => {
-    setLiked((val) => !val);
+
+
+  const change = async () => {
+    // setLiked((val) => !val);
+      
+      await  likeProduct(dispatch,setLiked,product?.id);
+  
   };
   return (
     <div className="box" style={{ width: "90%", height: "100%" }}>

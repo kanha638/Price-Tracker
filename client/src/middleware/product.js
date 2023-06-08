@@ -5,6 +5,9 @@ import {
   fetchAllProductsError,
   fetchAllProductsStart,
   fetchAllProductsSuccess,
+  likeProductError,
+  likeProductPending,
+  likeProductSuccess,
   myProductsFetchError,
   myProductsFetchStart,
   myProductsFetchSuccess,
@@ -65,5 +68,20 @@ export const fetchSubscribedProducts = async (dispatch, setSubscribedProducts = 
     dispatch(subscribedProductfetchSuccess(response.data));
   } catch (error) {
     dispatch(subscribedProductfetchError(error.response));
+  }
+}
+
+export const likeProduct = async (dispatch, setlikeOnThisProduct = () => {}, id) =>{
+  dispatch(likeProductPending());
+  try{
+    const response = await API.get(`/api/product/subscribe/${id}`, {
+      withCredentials:true
+    });
+
+    setlikeOnThisProduct(true);
+    dispatch(likeProductSuccess(response.data));
+  }
+  catch(error){
+    dispatch(likeProductError(error.response));
   }
 }

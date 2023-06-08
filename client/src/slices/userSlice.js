@@ -200,6 +200,29 @@ const userSlice = createSlice({
       state.subscribedProductfetchStatusSuccess = false;
       state.subscribedProductfetchStatusError = false;
       state.RemoveSubscribedProductfetchstatusMessage = "";
+    },
+    likeProductSuccess: (state,action)=>{
+      state.likeProductStatuspending = false;
+      state.likeProductStatusSuccess = true;
+      state.likeProductStatusError=false;
+      state.likeProductSuccessMessage= action.payload;
+    },
+    likeProductPending: (state)=>{
+      state.likeProductStatuspending = true;
+      state.likeProductStatusSuccess = false;
+      state.likeProductStatusError=false;
+    },
+    likeProductError: (state,action)=>{
+      state.likeProductStatuspending = false;
+      state.likeProductStatusSuccess = false;
+      state.likeProductStatusError=true;
+      state.likeProductErrorMessage = action.payload.data.message;
+    },
+    unlikeproduct: (state) =>{
+      state.likeProductStatuspending = false;
+      state.likeProductStatusSuccess = false;
+      state.likeProductStatusError=false;
+      state.unlikeproductMessage = "";
     }
 
   },
@@ -237,7 +260,11 @@ export const {
   subscribedProductfetchStart,
   subscribedProductfetchError,
   subscribedProductfetchSuccess,
-  RemoveSubscribedProductfetchstatus
+  RemoveSubscribedProductfetchstatus,
+  likeProductSuccess,
+  likeProductError,
+  likeProductPending,
+  unlikeproduct
 } = userSlice.actions;
 export const selectUser = (state) => state.user.userInfo;
 export const UserState = (state) => state.user;
