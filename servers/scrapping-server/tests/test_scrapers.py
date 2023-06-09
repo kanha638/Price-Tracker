@@ -39,8 +39,9 @@ def test_scrapers():
     # test url with spaces
     url = 'https: // www.myntra.com/tops/enamor/enamor-white-solid-tank-top/17908692/buy'
     response, error_message = asyncio.run(scraper.scrape_product(url=url))
-    assert response is None, f"Test failed for URL: {url}"
-    assert error_message['status'] == 408, f"Test failed for URL: {url}"
+    assert response is not None, f"Test failed for URL: {url}"
+    assert error_message['status'] == 200, f"Test failed for URL: {url}"
+    validate_product(product_details=response, url=url)
 
     # test incorrect url
     url = 'hi'
