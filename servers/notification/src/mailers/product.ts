@@ -11,7 +11,6 @@ export const sendEmailsendPriceDropMail = (
   productImgLink: string,
   productPageLink: string,
 ) => {
-  console.log("Inside mailers>sendEmailsendPriceDropMail");
   try {
     const mailOptions = {
       from: EMAIL_USERNAME,

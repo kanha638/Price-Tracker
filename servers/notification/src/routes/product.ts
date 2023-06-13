@@ -9,13 +9,14 @@ const router = Router();
    PATH : `/product/sendpricedropmail`
    REQUEST TYPE : POST 
    Body :{
-      username: string,
-      email: string,
-      oldPrice: string,
-      newPrice: string,
-      productTitle: string,
-      productImgLink: string,
-      productPageLink: string,
+      username: "",
+      email: "",
+      oldPrice: "",
+      newPrice: "",
+      currency: "",
+      productTitle: "",
+      productImgLink: "",
+      productPageLink: "",
     }
    Response : 
    Success : {message:"Email has been sent"}
