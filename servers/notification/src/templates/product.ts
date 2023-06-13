@@ -1,4 +1,8 @@
+import dotenv from "dotenv"
 import { logoSvg } from "./svgs/logo";
+dotenv.config();
+
+const priceTrackerURL = process.env.CLIENT_URL;
 
 export const priceDropMailTemplate = (
   username: string,
@@ -411,7 +415,7 @@ export const priceDropMailTemplate = (
             <tr>
               <td class="email-masthead">
                 <a
-                  href="https://example.com"
+                  href="${priceTrackerURL}"
                   class="f-fallback email-masthead_name"
                 >
                   Price Tracker
