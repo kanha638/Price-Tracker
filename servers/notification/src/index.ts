@@ -7,6 +7,7 @@ import appConfig from "./app-config";
 import nodemailer from "nodemailer";
 dotenv.config();
 import userRoutes from "./routes/user";
+import productRoutes from "./routes/product"
 
 const app = express();
 const PORT = appConfig.PORT || 4200;
@@ -32,6 +33,7 @@ app.use(morgan("dev"));
 app.use(express.json());
 app.use(cookieParser());
 app.use("/nf/user", userRoutes);
+app.use("/nf/product", productRoutes);
 
 app.get("/", (_, res) => res.send("Hello From Notication Service."));
 app.listen(PORT, async () => {
