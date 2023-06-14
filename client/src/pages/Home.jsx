@@ -2,7 +2,7 @@ import React from "react";
 import { Routes, Route } from "react-router-dom";
 import Error404 from "../components/Error404";
 import Header from "../components/header/Header";
-
+import Product from "./Product";
 import LandingPage from "../components/LandingPage/LandingPage";
 import MyProducts from "../components/myproducts/MyProducts";
 import SubscribedProducts from "../components/subscribedProducts/SubscribedProducts";
@@ -14,6 +14,7 @@ const Home = () => {
       <Routes>
         <Route path="/" element={<LandingPage />} />
         <Route path="subscribed/my" element={<SubscribedProducts />} />
+        <Route path="/product/:productId" element={<Product />} />
         <Route path="products/my" element={<MyProducts />} />
         <Route
           path="settings/notification"

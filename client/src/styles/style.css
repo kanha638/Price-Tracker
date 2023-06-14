@@ -29,6 +29,61 @@ body {
  
 }
 
+.p-img{
+  width:80%;
+  height:80%;
+}
+.grid-2{
+  padding-top:9rem;
+  padding-right: 5rem;
+  margin-bottom: 2rem;
+}
+.p-name{
+  word-break:break-all;
+  font-size: x-large;
+}
+.p-price{
+  text-align:left;
+  font-size:large;
+  margin-top:0.8rem;
+}
+.p-discount{
+  text-align:left;
+  font-size:large;
+}
+.p-tag{
+  font-size: small; 
+  text-align:left;
+}
+
+@media only screen and (max-width:890px) and (min-width:500px){
+  .p-img{
+    width:55%;
+    height:55%;
+  }
+  .grid-2{
+    padding-top:8rem;
+    padding-right: 0rem;
+  }
+}
+@media only screen and (max-width:500px) {
+  .grid-2{
+    padding-top:3rem;
+    padding-right: 0rem;
+  }
+  .p-name{
+  font-size: large;
+  }
+  .p-discount{
+    font-size: small;
+  }
+  .p-price{
+    font-size: small;
+  }
+  .p-tag{
+    font-size: x-small;
+  }
+}
 .d_flex {
   display: flex;
   justify-content: space-between;
