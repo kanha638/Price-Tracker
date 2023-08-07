@@ -189,7 +189,7 @@ export const unSubscribeProduct = async (req: Request, res: Response) => {
 
 export const getProductDatabyID = async (req: Request, res: Response) => {
   try {
-    const { productID } = req.body;
+    const { productID } = req.params;
 
     const result = await prisma.products.findUnique({
       where: {
@@ -206,6 +206,7 @@ export const getProductDatabyID = async (req: Request, res: Response) => {
         rating_count: true,
         currecy_type: true,
         usersId: true,
+        img_urn:true,
         prices: {
           select: {
             price: true,

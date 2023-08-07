@@ -17,3 +17,5 @@ export const uploadProfilePicture = async (file, dispatch, setFile, userID) => {
     console.log(error);
   }
 };
+
+

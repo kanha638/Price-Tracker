@@ -4,6 +4,7 @@ import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
 import { designVar } from "../../common/data";
 import './../../styles/style.css';
+import { Link } from "react-router-dom";
 
 const SampleNextArrow = (props) => {
   const { onClick } = props;
@@ -114,7 +115,10 @@ const CorouselCard = ({ productItems, number_of_slides = 4 }) => {
                   </div>
                 </div>
                 <div className="product-details">
-                  <div className="productNameOnHover">{productItems.name}</div>
+                <Link to={`/product/${productItems.id}`}>
+                   <div className="productNameOnHover">{productItems.name}</div>
+                </Link>
+                  
                   {/* <h3>{productItems.name}</h3> */}
                   
                   <div className="rate">

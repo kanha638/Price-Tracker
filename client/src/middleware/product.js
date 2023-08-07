@@ -5,6 +5,9 @@ import {
   fetchAllProductsError,
   fetchAllProductsStart,
   fetchAllProductsSuccess,
+  GetProductFromIDError,
+  GetProductFromIDStart,
+  GetProductFromIDSuccess,
   myProductsFetchError,
   myProductsFetchStart,
   myProductsFetchSuccess,
@@ -65,5 +68,30 @@ export const fetchSubscribedProducts = async (dispatch, setSubscribedProducts = 
     dispatch(subscribedProductfetchSuccess(response.data));
   } catch (error) {
     dispatch(subscribedProductfetchError(error.response));
+  }
+}
+
+export const getProductByID = async (id, setProduct = () => { },dispatch) => {
+  dispatch(GetProductFromIDStart())
+  try {
+    console.log(id)
+    const result = await API.get(`/api/product/${id}`, { withCredentials: true });
+   setProduct(result?.data);
+   dispatch(GetProductFromIDSuccess())
+  } catch (error) {
+    console.log(error);
+    console.log("some error occured");
+    dispatch(GetProductFromIDError())
+  }
+}
+
+
+export const getProductImageFromID = async (id) => {
+  try {
+    const result = await API.get(`/api/file/product_img/:${id}`, { withCredentials: true });
+    return result.data.img_urn;
+  } catch (error) {
+    console.log(error);
+    console.log("Some error occured on fetching product img")
   }
 }
