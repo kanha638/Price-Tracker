@@ -17,8 +17,15 @@ const userSlice = createSlice({
     },
     allProducts: [],
     myProducts: [],
+    number_nf: getItemFromLocalCache("number_nf") === null ? 0 : getItemFromLocalCache("number_nf"),
+    notifications : []
   },
   reducers: {
+
+    SetNotificationNumber: (state, action) => {
+      state.number_nf = action.payload;
+      setItemInLocalCache("number_nf", action.payload);
+    },
     AuthStart: (state) => {
       state.isPending = true;
     },
@@ -200,7 +207,48 @@ const userSlice = createSlice({
       state.subscribedProductfetchStatusSuccess = false;
       state.subscribedProductfetchStatusError = false;
       state.RemoveSubscribedProductfetchstatusMessage = "";
-    }
+    },
+
+    // for notification 
+
+    NotificationsfetchStart : (state) =>{
+      state.notificationfetchStatusSuccess = false;
+      state.notificationfetchStatusPending = true;
+      state.notificationfetchStatusError = false;
+    },
+    NotificationsfetchError: (state, action) =>{
+      state.notificationfetchStatusPending = false;
+      state.notificationfetchStatusSuccess = false;
+      state.notificationfetchStatusError = true;
+      state.notificationfetchStatusErrorMessage = action.payload.data.message;
+    },
+    NotificationsfetchSuccess: (state, action) =>{
+      state.notificationfetchStatusSuccess = true;
+      state.notificationfetchStatusPending = false;
+      state.notificationfetchStatusError = false;
+      state.notifications = action.payload;
+    },
+    NotificationsProductfetchstatus: (state) =>{
+      state.notificationfetchStatusSuccess = false;
+      state.notificationfetchStatusError = false;
+      state.notificationfetchstatusMessage = "";
+    },
+    GetProductFromIDStart: (state) => {
+      state.getProductFromIdSuccess = false;
+      state.getProductFromIdPending = true;
+      state.getProductFromIdError = false;
+    },
+    GetProductFromIDSuccess: (state) => {
+      state.getProductFromIdSuccess = true;
+      state.getProductFromIdPending = false;
+      state.getProductFromIdError = false;
+    },
+    GetProductFromIDError: (state) => {
+      state.getProductFromIdSuccess = false;
+      state.getProductFromIdPending = false;
+      state.getProductFromIdError = true;
+    },
+
 
   },
 });
@@ -237,7 +285,15 @@ export const {
   subscribedProductfetchStart,
   subscribedProductfetchError,
   subscribedProductfetchSuccess,
-  RemoveSubscribedProductfetchstatus
+  RemoveSubscribedProductfetchstatus,
+  SetNotificationNumber,
+  NotificationsProductfetchstatus,
+  NotificationsfetchError,
+  NotificationsfetchStart,
+  NotificationsfetchSuccess,
+  GetProductFromIDError,
+  GetProductFromIDStart,
+  GetProductFromIDSuccess
 } = userSlice.actions;
 export const selectUser = (state) => state.user.userInfo;
 export const UserState = (state) => state.user;

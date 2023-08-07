@@ -3,6 +3,7 @@ import { Skeleton } from "@mui/material";
 import { designVar } from "../../common/data";
 import { LazyLoadImage } from "react-lazy-load-image-component";
 import Rating from "@mui/material/Rating";
+import { Link } from "react-router-dom";
 
 const productImgLinks = {
   flipkart:
@@ -64,7 +65,9 @@ export const ShopBox = ({ product }) => {
           </div>
         </div>
         <div className="product-details">
-          <div className="productNameOnHover">{product.product_title}</div>
+          <Link to={`/product/${product?.id}`}>
+            <div className="productNameOnHover">{product.product_title}</div>
+          </Link>
 
           <div className="rate" style={{ display: "flex", gap: "10px" }}>
             <Rating

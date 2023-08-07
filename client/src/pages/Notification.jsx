@@ -1,10 +1,22 @@
-import React from "react";
+import React, { useEffect } from "react";
 import profileimg from "../assets/images/favicon.jpeg";
 import Box from "@mui/material/Box";
 import Button from "@mui/material/Button";
+import { useDispatch, useSelector } from "react-redux";
+import { getNotifications } from "../middleware/notification";
+import { UserState } from "../slices/userSlice";
+import { Link } from "react-router-dom";
 
 const a = [{ a: "7" }, { a: "7" }, { a: "7" }, { a: "7" }, { a: "7" }];
 const Notification = () => {
+  const dispatch = useDispatch()
+  const userState = useSelector(UserState);
+  useEffect(() => {
+    const fetchNF = async () => {
+      await getNotifications(dispatch);
+    }
+    fetchNF();
+  },[])
   return (
     <>
       <Box
@@ -23,7 +35,7 @@ const Notification = () => {
           paddingBottom: "40px",
         }}
       >
-        {a.map((data, idx) => {
+        {userState?.notifications.map((data, idx) => {
           return (
             <>
               <Box
@@ -59,10 +71,9 @@ const Notification = () => {
                         color: "gray",
                       }}
                     >
-                      Dheeraj, a system engineer at Infosys also wanted change
-                      due to these reasons. Like others, he believed he deserved
-                      better, and soon embarked on a journey of upskilling...
+                      {data?.text}
                     </p>
+                    <Link to={`/product/${data?.product_id}`}>
                     <Button
                       variant="outlined"
                       sx={{
@@ -84,6 +95,7 @@ const Notification = () => {
                     >
                       Go to product
                     </Button>
+                    </Link>
                   </div>
                 </div>
               </Box>

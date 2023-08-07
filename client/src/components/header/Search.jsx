@@ -1,13 +1,14 @@
-import { React, useState } from "react";
+import { React, useEffect, useState } from "react";
 import logo from "../../assets/images/favicon.jpeg";
 import { Link } from "react-router-dom";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { selectUser, UserState } from "../../slices/userSlice";
 import { getProfilePicImageURL } from "../../utils/utilities";
 import { Button, Modal } from "@mui/material";
 import { designVar } from "../../common/data";
 import { Profile } from "./Profile";
 import { Avatar } from "@mui/material";
+import { getNumberOfNotification } from "../../middleware/notification";
 const Search = () => {
   // fixed Header
   window.addEventListener("scroll", function () {
@@ -20,6 +21,13 @@ const Search = () => {
   const [open, setOpen] = useState(false);
   const handleOpen = () => setOpen(true);
   const handleClose = () => setOpen(false);
+  const dispatch = useDispatch();
+
+
+  useEffect(() => {
+    const fetchDataInterval = setInterval(getNumberOfNotification(dispatch), 10000);
+    return ()=> clearInterval(fetchDataInterval)
+  },[])
   return (
     <>
       <section className="search">
@@ -78,7 +86,7 @@ const Search = () => {
                         backgroundColor: designVar.colors.iconBackgroundColor,
                       }}
                     >
-                      2
+                      {userState?.number_nf}
                     </span>
                   </Link>
                 </div>

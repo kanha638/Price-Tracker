@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { useParams } from "react-router-dom";
+import { Link, useParams } from "react-router-dom";
 import Data from "../assets/dummyData";
 
 import { Button } from "@mui/material";
@@ -8,6 +8,8 @@ import { styled } from "@mui/material/styles";
 import Box from "@mui/material/Box";
 import Paper from "@mui/material/Paper";
 import Grid from "@mui/material/Grid";
+import { getProductByID } from "../middleware/product";
+import { useDispatch, useSelector } from "react-redux";
 
 const Item = styled(Paper)(({ theme }) => ({
   backgroundColor: theme.palette.mode === "dark" ? "#1A2027" : "#fff",
@@ -20,10 +22,13 @@ const Item = styled(Paper)(({ theme }) => ({
 const Product = () => {
   const [product, setProduct] = useState(null);
   let { productId } = useParams();
+  const dispatch = useDispatch();
 
   useEffect(() => {
-    const item = Data.productItems.find((p) => p.id === parseInt(productId));
-    if (item) setProduct(item);
+    const getPFromID = async () => {
+      await getProductByID(productId,setProduct,dispatch)
+    }
+    getPFromID()
   }, []);
 
   return (
@@ -36,7 +41,7 @@ const Product = () => {
                 <div style={{textAlign:"center",paddingTop:"3rem"}}>
                   <img
                     className="p-img"
-                    src={product.cover}
+                    src={product?.img_urn}
                     alt={product.id}
                   ></img>
                 </div>
@@ -48,10 +53,10 @@ const Product = () => {
                       <p
                       className="p-name"
                       >
-                        {product.name}
+                        {product?.product_title}
                       </p>
                       <p  className="p-price" >
-                        Today: ₹ {product.price}{" "}
+                        Today: ₹ {product.current_price}{" "}
                       </p>
                       <p  className="p-discount" >
                         ({product.discount}% off)
@@ -61,27 +66,28 @@ const Product = () => {
                       </p>
                     </div>
                     <div style={{display:"flex",justifyContent:"center"}}>
+                     
+                     <Link href={product?.product_link}>
                       <Button
                       className="p-btn"
                         sx={{
                           marginTop: 3,
-                          width: "21%",
-                          height: "20%",
+                          width: "",
+                          height: "40px",
                           backgroundColor: "black",
                           color: "white",
-                          marginRight: "1rem",
+                          // marginRight: "1rem",
                         }}
                         variant="contained"
                         type="submit"
                       >
                         SHOP
-                      </Button>
+                        </Button>
+                        </Link>
                       <Button
                       className="p-btn"
                         sx={{
                           marginTop: 3,
-                        //   width: "30%",
-                        //   height: "40px",
                           backgroundColor: "white",
                           color: "black"
                         }}
