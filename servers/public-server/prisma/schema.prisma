@@ -22,6 +22,7 @@ model Users {
     createdAt      DateTime
     my_products    Products[]
     recovery_token String?
+    notification    Notification[]
 }
 
 model Products {
@@ -51,4 +52,17 @@ model PriceAlter {
     date       DateTime
     Products   Products? @relation(fields: [productsId], references: [id])
     productsId Int?
+}
+
+model Notification {
+    id            String       @id @default(cuid())
+    Users         Users?       @relation(fields: [usersId], references: [id])
+    auth          Boolean      @default(false)
+    usersId       String?
+    text          String?
+    product_link  String?
+    product_id    String?
+    read          Boolean      @default(false)
+    time            DateTime
+    deleted      Boolean        @default(false)
 }
