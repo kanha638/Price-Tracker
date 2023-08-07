@@ -60,46 +60,33 @@ class Tracker:
             old_prices.append(price)
 
         # Scrape the new price and update in db if new price is not equal to old price
-        batch_size = 8
+        batch_size = 2
         cursor = self.conn.cursor()
 
         i = 0
         while i < len(urls):
             urls_batch = urls[i: i + batch_size]
-            # print(urls_batch)
             new_prices = await self.scrape_all_urls(urls=urls_batch)
+
             for j in range(i, i + len(urls_batch)):
                 if new_prices[j - i] is not None and new_prices[j - i] != old_prices[j]:
                     formatted_time = datetime.now().strftime('%Y-%m-%d %H:%M:%S')
 
-                    try:
-                        cursor.execute(
-                            'INSERT INTO "PriceAlter" ("id", "price", "date", "productsId") VALUES (%s, %s, %s, %s)', (str(uuid.uuid4()), str(new_prices[j - i]), str(formatted_time), str(ids[j]),))
-                    except Exception as e:
-                        print(
-                            f'Error occured while inserting data to PriceAlter. {e}')
-                        # handle the error
-                        pass
-
-                    try:
-                        cursor.execute(
-                            'UPDATE "Products" SET current_price = %s WHERE id = %s',
-                            (str(new_prices[j - i]), str(ids[j]),))
-                    except Exception as e:
-                        print(
-                            f'Error occured while updating Products. {e}')
-                        # handle the error
-                        pass
-
                     if new_prices[j - i] < old_prices[j]:
                         # get product information
-                        cursor.execute('SELECT product_title, img_urn, currency_type, subscribers FROM "Products" where id = %s', str(ids[j]))
+                        cursor.execute('SELECT product_title, img_urn, currecy_type, subscribers FROM "Products" where id = %s', (str(ids[j]),))
                         product_title, product_img_link, currency, subscriber_mails = cursor.fetchall()[0]
                         
                         for subscriber_mail in subscriber_mails:
-                            # get the username
-                            cursor.execute('SELECT id, name FROM "Users" WHERE email = %s', str(subscriber_mail))
-                            user_id, username = cursor.fetchall()[0]
+                            # get the username, userId
+                            try:
+                                cursor.execute('SELECT id, name FROM "Users" WHERE email = %s', (subscriber_mail,))
+                            except Exception as e:
+                                print(f'Error while executing username, userid : {e}')
+                            try:
+                                user_id, username = cursor.fetchall()[0]
+                            except Exception as e:
+                                print(f'Error while fetching data from query username, userid : {e}')
 
                             # make a request to notification server
                             payload = {
@@ -113,16 +100,41 @@ class Tracker:
                                 'productPageLink' : urls[j]
                             }
 
+                            print(f'Sent request to nf server for price drop mail')
                             response = requests.post(nf_server_url, json=payload)
 
                             # insert an entry of notification in "Notification" table
                             text = f'Price changed from {currency} {old_prices[j]} to {currency} {new_prices[j - i]}! Now you can save extra {currency} {old_prices[j] - new_prices[j - i]}.'
                             try:
-                                cursor.execute('INSERT INTO "Notification" ("id", "usersId", "text", "product_link", "product_id", "time") VALUES (%s, %s, %s, %s, %s, %s)', (str(uuid.uuid4()), str(user_id), text, str(urls[j]), str(ids[j]), str(formatted_time),))
+                                cursor.execute('INSERT INTO "Notification" ("id", "usersId", "text", "product_link", "product_id", "time") VALUES (%s, %s, %s, %s, %s, %s)', (str(uuid.uuid4()), str(user_id), text, str(urls[j]), str(ids[j]), formatted_time,))
+                                self.conn.commit()
+                                print('Successfully inserted data to Notification table')
                             except:
                                 print('Error occured while inserting notification to Notification table')
                                 # handle error
 
+                    try:
+                        cursor.execute(
+                            'INSERT INTO "PriceAlter" ("id", "price", "date", "productsId") VALUES (%s, %s, %s, %s)', (str(uuid.uuid4()), new_prices[j - i], formatted_time, ids[j],))
+                        self.conn.commit()
+                        print('successfully updated PriceAlter')
+                    except Exception as e:
+                        print(
+                            f'Error occured while inserting data to PriceAlter. {e}')
+                        # handle the error
+                        pass
+
+                    try:
+                        cursor.execute(
+                            'UPDATE "Products" SET current_price = %s WHERE id = %s',
+                            (str(new_prices[j - i]), str(ids[j]),))
+                        self.conn.commit()
+                        print('successfully updated Products table')
+                    except Exception as e:
+                        print(
+                            f'Error occured while updating Products. {e}')
+                        # handle the error
+                        pass
             i += batch_size
         self.conn.commit()
 

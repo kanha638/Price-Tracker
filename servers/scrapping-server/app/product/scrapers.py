@@ -262,7 +262,7 @@ class Amazon:
         params: url of product whose price to be tracked
         Returns: Price of the product at that particular time.
         '''
-        page = await get_soup(url=url)
+        page, _ = await get_soup(url=url)
         if page is None:
             return None
 
@@ -670,7 +670,7 @@ class Scraper:
         url = url.strip()
         website = url.strip().split('/')[2].split('.')[1]
         try:
-            scraper_function = self.scraper_product_dict.get(website)
+            scraper_function = self.scraper_price_dict.get(website)
         except:
             error_message = {
                 "message": "Entered website is not supported now! Please check back later."

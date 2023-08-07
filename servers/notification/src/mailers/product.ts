@@ -12,10 +12,11 @@ export const sendEmailsendPriceDropMail = (
   productPageLink: string,
 ) => {
   try {
+
     const mailOptions = {
       from: EMAIL_USERNAME,
       to: email,
-      subject: `Price Drop! Now Save Big on Your Favourite Product! 🔥`,
+      subject: `Price Drop! Now Save ${currency} ${parseFloat(oldPrice) - parseFloat(newPrice)} on Your Favourite Product! 🔥`,
       html: priceDropMailTemplate(username, oldPrice, newPrice, currency, productTitle, productImgLink, productPageLink),
     };
     transporter.sendMail(mailOptions, (error, info) => {
