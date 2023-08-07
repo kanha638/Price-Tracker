@@ -7,7 +7,9 @@ from datetime import datetime
 import uuid
 from app.creds import DATABASE_URL
 import time
+import requests
 
+nf_server_url = ''
 
 class Tracker:
     def __init__(self) -> None:
@@ -88,6 +90,38 @@ class Tracker:
                             f'Error occured while updating Products. {e}')
                         # handle the error
                         pass
+
+                    if new_prices[j - i] < old_prices[j]:
+                        # get product information
+                        cursor.execute('SELECT product_title, product_link, img_urn, currency_type, subscribers FROM "Products" where id = %s', str(ids[j]))
+                        product_title, product_link, product_img_link, currency, subscriber_mails = cursor.fetchall()[0]
+                        
+                        for subscriber_mail in subscriber_mails:
+                            # get the username
+                            cursor.execute('SELECT id, name FROM "Users" WHERE email = %s', str(subscriber_mail))
+                            user_id, username = cursor.fetchall()[0]
+
+                            # make a request to notification server
+                            payload = {
+                                'username' : username,
+                                'email' : subscriber_mail,
+                                'oldPrice' : old_prices[j],
+                                'newPrice' : new_prices[j - i],
+                                'currency' : currency,
+                                'productTitle' : product_title,
+                                'productImgLink' : product_img_link,
+                                'productPageLink' : product_link
+                            }
+
+                            response = requests.post(nf_server_url, json=payload)
+
+                            # insert an entry of notification in "Notification" table
+                            text = f'Price changed from {currency} {old_prices[j]} to {currency} {new_prices[j - i]}! Now you can save extra {currency} {old_prices[j] - new_prices[j - i]}.'
+                            try:
+                                cursor.execute('INSERT INTO "Notification" ("id", "usersId", "text", "product_link", "product_id", "time") VALUES (%s, %s, %s, %s, %s, %s)', str(uuid.uuid4()), str(user_id), text, str(product_link), str(ids[j]), str(formatted_time))
+                            except:
+                                print('Error occured while inserting notification to Notification table')
+                                # handle error
 
             i += batch_size
         self.conn.commit()
