@@ -7,8 +7,8 @@ import authRoutes from "./routes/auth";
 import productRoutes from "./routes/product";
 import userRoutes from "./routes/user";
 import fileRoutes from "./routes/files";
+import notificationRoutes from "./routes/notification"
 import { createStorageFolder } from "./startup";
-
 dotenv.config();
 
 const app = express();
@@ -29,14 +29,15 @@ app.use("/api/auth", authRoutes);
 app.use("/api/product", productRoutes);
 app.use("/api/user", userRoutes);
 app.use("/api/file", fileRoutes);
+app.use("/api/nf",notificationRoutes)
+
 
 app.get("/", (_, res) => res.send("Hello From Price Tracker Backend"));
 app.listen(PORT, async () => {
   console.info(`Server running at PORT:${PORT}`);
   createStorageFolder();
-
   try {
-    console.info("Database has been connected Connected !!");
+    // console.info("Database has been connected Connected !!");
   } catch (err) {
     console.log(err);
   }
