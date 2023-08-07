@@ -9,7 +9,7 @@ from app.creds import DATABASE_URL
 import time
 import requests
 
-nf_server_url = ''
+nf_server_url = 'http://localhost:4200/nf/product/sendpricedropmail'
 
 class Tracker:
     def __init__(self) -> None:
@@ -93,8 +93,8 @@ class Tracker:
 
                     if new_prices[j - i] < old_prices[j]:
                         # get product information
-                        cursor.execute('SELECT product_title, product_link, img_urn, currency_type, subscribers FROM "Products" where id = %s', str(ids[j]))
-                        product_title, product_link, product_img_link, currency, subscriber_mails = cursor.fetchall()[0]
+                        cursor.execute('SELECT product_title, img_urn, currency_type, subscribers FROM "Products" where id = %s', str(ids[j]))
+                        product_title, product_img_link, currency, subscriber_mails = cursor.fetchall()[0]
                         
                         for subscriber_mail in subscriber_mails:
                             # get the username
@@ -110,7 +110,7 @@ class Tracker:
                                 'currency' : currency,
                                 'productTitle' : product_title,
                                 'productImgLink' : product_img_link,
-                                'productPageLink' : product_link
+                                'productPageLink' : urls[j]
                             }
 
                             response = requests.post(nf_server_url, json=payload)
@@ -118,7 +118,7 @@ class Tracker:
                             # insert an entry of notification in "Notification" table
                             text = f'Price changed from {currency} {old_prices[j]} to {currency} {new_prices[j - i]}! Now you can save extra {currency} {old_prices[j] - new_prices[j - i]}.'
                             try:
-                                cursor.execute('INSERT INTO "Notification" ("id", "usersId", "text", "product_link", "product_id", "time") VALUES (%s, %s, %s, %s, %s, %s)', str(uuid.uuid4()), str(user_id), text, str(product_link), str(ids[j]), str(formatted_time))
+                                cursor.execute('INSERT INTO "Notification" ("id", "usersId", "text", "product_link", "product_id", "time") VALUES (%s, %s, %s, %s, %s, %s)', (str(uuid.uuid4()), str(user_id), text, str(urls[j]), str(ids[j]), str(formatted_time),))
                             except:
                                 print('Error occured while inserting notification to Notification table')
                                 # handle error
