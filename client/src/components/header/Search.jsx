@@ -71,7 +71,7 @@ const Search = () => {
                   ></i>
                 )}
                 <div className="notification">
-                  <Link to="/notification">
+                  <Link to="/settings/notification">
                     <i className="fa fa-bell icon-circle"></i>
                     <span
                       style={{
