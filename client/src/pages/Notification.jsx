@@ -60,7 +60,7 @@ const Notification = () => {
                 <div style={{ display: "flex" }}>
                   <img
                     style={{ width: 60, height: 60, marginRight: "1rem" }}
-                    src={profileimg}
+                    src={  profileimg}
                     alt="not found"
                   ></img>
                   <div>

@@ -49,9 +49,21 @@ const HeadSliderCard = () => {
   const [currentIndex, setCurrentIndex] = useState(0);
   const dataArray = [
     "https://m.media-amazon.com/images/I/41b3PmlPPuL._SX300_SY300_QL70_FMwebp_.jpg",
-    "https://m.media-amazon.com/images/I/71hDrHwTsVL._SX679_PIbundle-6,TopRight,0,0_AA679SH20_.jpg",
+    "https://m.media-amazon.com/images/I/61utX8kBDlL._UY695_.jpg",
     "https://m.media-amazon.com/images/I/61S9aVnRZDL._SX679_.jpg",
   ];
+
+  const descriptons = [
+    "ASIAN Men's Wonder-13 Sports Running Shoes",
+    "ASIAN Men's Wonder-13 Sports Running Shoes",
+    "ASIAN Men's Wonder-13 Sports Running Shoes"
+  ]
+
+  const discount = [
+    "61",
+    "22",
+    "50"
+  ]
   useEffect(() => {
     const interval = setInterval(() => {
       setCurrentIndex((prevIndex) => (prevIndex + 1) % dataArray.length);
@@ -63,7 +75,7 @@ const HeadSliderCard = () => {
   return (
     <>
       <Slider {...settings}>
-        <HeaderBox img={dataArray[currentIndex]} />
+        <HeaderBox img={dataArray[currentIndex]} disc={discount[currentIndex]} description ={descriptons[currentIndex]} />
       </Slider>
     </>
   );

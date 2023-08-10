@@ -18,7 +18,7 @@ import {
 import axios from "axios";
 import { serverURL } from "../utils/utilities";
 const API = axios.create({ baseURL: serverURL });
-export const AddProduct = async (data, dispatch, setOpen = () => {}) => {
+export const AddProduct = async (data, dispatch, setOpen = () => {},navigate) => {
   dispatch(AddProductStart());
   try {
     const response = await API.post("/api/product/add-product", data, {
@@ -27,6 +27,7 @@ export const AddProduct = async (data, dispatch, setOpen = () => {}) => {
     console.log(response.data);
     dispatch(AddProductSuccess(response.data));
     setOpen(false);
+    navigate(`/product/${response?.data?.id}`)
   } catch (error) {
     console.log(error);
     dispatch(AddProductError(error.response));
