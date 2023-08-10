@@ -19,7 +19,7 @@ import IconButton from "@mui/material/IconButton";
 import Collapse from "@mui/material/Collapse";
 import { SigninBox } from "./SigninBox";
 
-export const HeaderBox = ({ img }) => {
+export const HeaderBox = ({ img ,disc,description}) => {
   const [open, setOpen] = React.useState(false);
   const handleClose = () => setOpen(false);
   const [details, setDetails] = useState({
@@ -70,7 +70,9 @@ export const HeaderBox = ({ img }) => {
       }
       await AddProduct(
         { product_url: productLink, website: "flipkart" },
-        dispatch
+        dispatch,
+        setOpen,
+        navigate
       );
     }
   };
@@ -105,14 +107,11 @@ export const HeaderBox = ({ img }) => {
           >
             {" "}
             <h1 style={{ fontWeight: "bolder", fontSize: "2.9rem" }}>
-              50% Off on this product
+              { disc}% Off on this product
             </h1>
           </Link>
           <p>
-            Lorem ipsum dolor sit amet consectetur adipisicing elit. Eum, omnis
-            laboriosam provident in iusto atque, nostrum consequuntur fuga, sed
-            laudantium error fugit sequi labore recusandae tempora dicta ipsa
-            nesciunt rerum?
+           {description}
           </p>
           <div style={{ width: "100%", display: "flex" }}>
             <TextField

@@ -12,17 +12,17 @@ datasource db {
 }
 
 model Users {
-    id             String     @id @default(cuid())
+    id             String         @id @default(cuid())
     name           String
-    email          String     @unique
-    mobileNum      String     @unique
+    email          String         @unique
+    mobileNum      String         @unique
     profile_pic    String?
     password       String
-    disabled       Boolean    @default(false)
+    disabled       Boolean        @default(false)
     createdAt      DateTime
     my_products    Products[]
     recovery_token String?
-    notification    Notification[]
+    notification   Notification[]
 }
 
 model Products {
@@ -55,14 +55,15 @@ model PriceAlter {
 }
 
 model Notification {
-    id            String       @id @default(cuid())
-    Users         Users?       @relation(fields: [usersId], references: [id])
-    auth          Boolean      @default(false)
-    usersId       String?
-    text          String?
-    product_link  String?
-    product_id    String?
-    read          Boolean      @default(false)
-    time            DateTime
-    deleted      Boolean        @default(false)
+    id           String   @id @default(cuid())
+    Users        Users?   @relation(fields: [usersId], references: [id])
+    auth         Boolean  @default(false)
+    usersId      String?
+    text         String?
+    product_link String?
+    product_id   String?
+    read         Boolean  @default(false)
+    time         DateTime
+    deleted      Boolean  @default(false)
+    product_img  String?
 }

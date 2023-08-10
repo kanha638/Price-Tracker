@@ -20,7 +20,8 @@ export const getNotifications = async (req: Request, res: Response) => {
         product_id: true,
         usersId: true,
         product_link: true,
-        time : true
+        time: true,
+        product_img : true
       },
       orderBy: {
         time:"desc"
