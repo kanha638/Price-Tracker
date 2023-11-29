@@ -1,3 +1,4 @@
+import logging
 from flask import jsonify
 from app.product.utils import currencies, get_soup, get_data_from_script_tag, get_clean_price
 
@@ -33,10 +34,14 @@ class Flipkart:
             'MRP', 'Currency', 'Availability', 'Rating', 'Rating_Count', 'Category', and 'Image_Link'.
         """
 
+        logging.info(f'Scrape : {url}')
         soup, error_message = await get_soup(url=url)
         if soup is None:
+            logging.debug("soup is None")
+            logging.debug(error_message)
             return None, error_message
 
+        logging.info('Fetching product details from the product page soup.')
         title = soup.find('span', {'class': 'B_NuCI'})
         if title:
             title = title.text.replace('\xa0\xa0', '').strip()
@@ -53,11 +58,10 @@ class Flipkart:
         else:
             mrp = price
 
-        availability = soup.find(class_='_1dVbu9')
-        if availability is None:
-            availability = 'In Stock'
-        else:
-            availability = 'Out of Stock'
+        availability = "Out of Stock"
+        buy_now_btn = soup.find('button', {'class' : '_2KpZ6l _2U9uOA ihZ75k _3AWRsL'})
+        if buy_now_btn and buy_now_btn.find('span').text.strip() == "Buy Now":
+            availability = "In Stock"
 
         categories = soup.find_all('a', {'class': '_2whKao'})
         if categories:
@@ -113,6 +117,8 @@ class Flipkart:
             'Image_Link': img_link,
             'Website': 'flipkart'
         }
+
+        logging.info(product)
 
         return product, error_message
 
@@ -203,7 +209,8 @@ class Amazon:
         avalability_block = page.find('div', {'id': 'availability'})
         availability = None
         if avalability_block is not None:
-            if avalability_block.find('span', {'class': 'a-color-success'}):
+            availability_span = avalability_block.find('span', {'class': 'a-color-success'})
+            if availability_span and availability_span.text.strip() == "In Stock":
                 availability = 'In Stock'
             else:
                 availability = 'Out of Stock'
@@ -318,7 +325,7 @@ class Myntra:
             else:
                 category = 'Not Found'
         except Exception as e:
-            print(f'Error while scraping category. {e}')
+            logging.error(f'Error while scraping category. {e}', exc_info=True)
 
         try:
             # select the span containing MRP
@@ -328,7 +335,7 @@ class Myntra:
                 mrp = mrp.find('s')
                 mrp = await get_clean_price(mrp.text)
         except Exception as e:
-            print(f'Error while scraping MRP. {e}')
+            logging.error(f'Error while scraping MRP. {e}', exc_info=True)
 
         try:
             # select the image rating div
@@ -350,7 +357,7 @@ class Myntra:
                     mul = 1000
                 rating_count = float(rating_count) * mul
         except Exception as e:
-            print(f'Error while scraping rating {e}')
+            logging.error(f'Error while scraping rating {e}', exc_info=True)
 
         data = await get_data_from_script_tag(page=page, tag_type="Product")
         try:
@@ -361,7 +368,7 @@ class Myntra:
             availability = data.get('offers', {}).get('availability')
             availability = 'In Stock' if availability == 'InStock' else 'Out of Stock'
         except Exception as e:
-            print(f'Error while scraping using scripting tags. {e}')
+            logging.error(f'Error while scraping using scripting tags. {e}', exc_info=True)
 
             # Extract data using html tags
             title = page.find('h1', {'class': 'pdp-title'}).text.strip()
@@ -422,14 +429,14 @@ class Myntra:
         try:
             price = float(data.get('offers', {}).get('price'))
         except Exception as e:
-            print(f'Error while scraping price. {e}')
+            logging.error(f'Error while scraping price. {e}', exc_info=True)
             try:
                 price = page.find(
                     'span', {'class': 'pdp-price'}).find('strong')
                 if price is not None:
                     price = await get_clean_price(price=price.text)
             except Exception as e:
-                print(f'Error while scraping price. {e}')
+                logging.error(f'Error while scraping price. {e}', exc_info=True)
                 price = None
 
         return price
@@ -449,7 +456,7 @@ class Ajio:
                 'div', {'class': 'promo-discounted-price pr-promotions'}).find_all('span')[1].text
             sale_price = await get_clean_price(sale_price)
         except Exception as e:
-            print(f'Error while scraping sale price. {e}')
+            logging.error(f'Error while scraping sale price. {e}', exc_info=True)
             try:
                 sale_price = self.page.find(
                     'div', {'class': 'price-info ellipsis'})
@@ -457,7 +464,7 @@ class Ajio:
                     sale_price.span.decompose()
                 sale_price = await get_clean_price(price=sale_price.text)
             except Exception as e:
-                print(f'Error while scraping sale price 2nd. {e}')
+                logging.error(f'Error while scraping sale price 2nd. {e}', exc_info=True)
                 sale_price = None
 
         return sale_price
@@ -510,7 +517,7 @@ class Ajio:
             category = data.get('category').split('>')[-1].strip()
             availability = 'In Stock' if availability == 'InStock' or availability == 'LimitedAvailability' else 'Out of Stock'
         except Exception as e:
-            print(f'Error while scraping using scripting tags. {e}')
+            logging.error(f'Error while scraping using scripting tags. {e}', exc_info=True)
             brand = page.find('h2', {'class': 'brand-name'}).text
             title = brand + ' ' + page.find('h1', {'class': 'prod-name'}).text
             price = page.find('div', {'class': 'prod-sp'}).text
@@ -529,8 +536,8 @@ class Ajio:
                     img_link = curr_img_link
                     break
         except Exception as e:
-            print(
-                f'Error while fetching higher resolution image link. {e}. URL : {url}')
+            logging.error(
+                f'Error while fetching higher resolution image link. {e}. URL : {url}', exc_info=True)
 
         try:
             mrp = page.find('span', {'class': 'prod-cp'}).text
@@ -578,7 +585,7 @@ class Ajio:
 
             return price
         except Exception as e:
-            print(f'Error while scraping price {e}, URL : {url}')
+            logging.error(f'Error while scraping price {e}, URL : {url}', exc_info=True)
 
         return None
 
@@ -634,8 +641,8 @@ class Scraper:
                 }
                 return None, error_message
         except Exception as e:
-            print(
-                f'Error while fetching website from url : {url}\nError : {e}')
+            logging.error(
+                f'Error while fetching website from url : {url}\nError : {e}', exc_info=True)
             error_message = {
                 "message": "Invalid URL!",
                 'status': 404

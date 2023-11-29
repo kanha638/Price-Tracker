@@ -1,6 +1,7 @@
 from flask import Blueprint, request, jsonify
 from app.product.scrapers import Scraper
 import asyncio
+import logging
 
 product = Blueprint('product', __name__)
 
@@ -44,6 +45,8 @@ def add_product():
         If the request method is not POST, the function returns the
         string 'Invalid request.'
     """
+    
+    from run import scraper
 
     if request.method == 'POST':
         error_message = {
@@ -63,11 +66,12 @@ def add_product():
             return jsonify(error_message), error_message['status']
 
         try:
-            scraper = Scraper()
+            logging.info(f"Fetch product details for url : {product_url}")
             product_details, error_message = asyncio.run(
                 scraper.scrape_product(url=product_url))
+            logging.info(f'Result : {product_details}')
         except Exception as e:
-            print(f'Error:: {e}')
+            logging.error(f'Error:: {e}', exc_info=True)
             error_message = {
                 "message": "Internal server error!",
                 "status": 500
