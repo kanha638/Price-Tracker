@@ -1,3 +1,4 @@
+import logging
 from bs4 import BeautifulSoup
 from playwright.async_api import async_playwright
 import requests
@@ -66,7 +67,7 @@ async def get_soup(url):
             page = requests.get(url, headers=headers)
             soup = BeautifulSoup(page.content, 'html.parser')
         except Exception as e:
-            print(f'Error while creating soup. {e}')
+            logging.error(f'Error while creating soup. {e}', exc_info=True)
             error_message['message'] = "Internal server error!"
             error_message['status'] = 500
             return None, error_message
@@ -80,7 +81,7 @@ async def get_soup(url):
                 user_agent="Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/96.0.4664.93 Safari/537.36")
             page = await context.new_page()
         except Exception as e:
-            print(f'Unable to open the browser! {e}')
+            logging.error(f'Unable to open the browser! {e}', exc_info=True)
             error_message['message'] = "Internal server error!"
             error_message['status'] = 500
             return None, error_message
@@ -89,7 +90,7 @@ async def get_soup(url):
             # Wait for page to goto url
             await page.goto(url, timeout=2000000)
         except Exception as e:
-            print(f'Unable to load page. {e}')
+            logging.error(f'Unable to load page. {e}', exc_info=True)
             error_message['message'] = "Internal server error!"
             error_message['status'] = 408
             return None, error_message
@@ -109,13 +110,13 @@ async def get_soup(url):
                         # Reload the page after clicking apply button for pincode
                         await page.reload()
             except Exception as e:
-                print(f'Unable to set pincode in amazon! {e}')
+                logging.error(f'Unable to set pincode in amazon! {e}', exc_info=True)
 
         try:
             # Get the HTML content of the page
             html = await page.content()
         except Exception as e:
-            print(f'{website} page not responding! {e}')
+            logging.error(f'{website} page not responding! {e}', exc_info=True)
             error_message['message'] = f"{website} page not responding! Request timed out. {url}"
             error_message['status'] = 408
             return None, error_message
@@ -127,8 +128,8 @@ async def get_soup(url):
             # Close the browser
             await browser.close()
         except Exception as e:
-            print(
-                f'Unable to close browser while scraping amazon url. {e}')
+            logging.error(
+                f'Unable to close browser while scraping amazon url. {e}', exc_info=True)
 
         return soup, error_message
 
@@ -158,10 +159,10 @@ async def get_data_from_script_tag(page, tag_type):
                     desired_script_tag = script_tag
                     break
             except Exception as e:
-                print(
-                    f'Error while find type of script tag. {e}')
+                logging.error(
+                    f'Error while find type of script tag. {e}', exc_info=True)
     except Exception as e:
-        print(f'Error while scraping scripting tags. {e}')
+        logging.error(f'Error while scraping scripting tags. {e}', exc_info=True)
 
     # Extract the contents within the script tag
     try:
@@ -171,7 +172,7 @@ async def get_data_from_script_tag(page, tag_type):
 
         data = json.loads(cleaned_content)
     except Exception as e:
-        print(f'Error while loading data from desired script tag. {e}')
+        logging.error(f'Error while loading data from desired script tag. {e}', exc_info=True)
         data = None
 
     return data

@@ -1,6 +1,7 @@
 from flask import Blueprint, request, jsonify
 from app.product.scrapers import Scraper
 import asyncio
+import logging
 
 product = Blueprint('product', __name__)
 
@@ -68,7 +69,7 @@ def add_product():
             product_details, error_message = asyncio.run(
                 scraper.scrape_product(url=product_url))
         except Exception as e:
-            print(f'Error:: {e}')
+            logging.error(f'Error:: {e}', exc_info=True)
             error_message = {
                 "message": "Internal server error!",
                 "status": 500

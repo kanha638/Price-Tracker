@@ -1,3 +1,4 @@
+import logging
 import atexit
 import traceback
 import asyncio
@@ -34,7 +35,7 @@ class Tracker:
     def free_resources(self):
         # close the connection to db
         self.conn.close()
-        print('closed the connection to db..')
+        logging.info('closed the connection to db..')
 
     async def scrape_all_urls(self, urls):
         start = time.perf_counter()
@@ -43,16 +44,16 @@ class Tracker:
             task = asyncio.create_task(self.scraper.scrape_price(url))
             tasks.append(task)
 
-        print(f'Started scraping price for {len(urls)} urls..')
+        logging.info(f'Started scraping price for {len(urls)} urls..')
         prices = await asyncio.gather(*tasks)
 
         end = time.perf_counter()
-        print(
+        logging.info(
             f'Finished scraping price for {len(urls)} urls in {end - start} seconds...')
         return prices
 
     async def track_price(self):
-        print(f'Started tracking price at {datetime.now()} ....')
+        logging.info(f'Started tracking price at {datetime.now()} ....')
         start = time.time()
         # First fetch the data from db
         cursor = self.conn.cursor()
@@ -88,11 +89,11 @@ class Tracker:
                             try:
                                 cursor.execute('SELECT id, name FROM "Users" WHERE email = %s', (subscriber_mail,))
                             except Exception as e:
-                                print(f'Error while executing username, userid : {e}')
+                                logging.error(f'Error while executing username, userid : {e}', exc_info=True)
                             try:
                                 user_id, username = cursor.fetchall()[0]
                             except Exception as e:
-                                print(f'Error while fetching data from query username, userid : {e}')
+                                logging.error(f'Error while fetching data from query username, userid : {e}', exc_info=True)
 
                             # make a request to notification server
                             payload = {
@@ -106,7 +107,7 @@ class Tracker:
                                 'productPageLink' : urls[j]
                             }
 
-                            print(f'Sent request to nf server for price drop mail')
+                            logging.info(f'Sent request to nf server for price drop mail')
                             response = requests.post(NOTIFICATION_SERVER_URL, json=payload)
                             # TODO : implement retry mechanism if mail is not delivered
                             
@@ -115,19 +116,19 @@ class Tracker:
                             try:
                                 cursor.execute('INSERT INTO "Notification" ("id", "usersId", "text", "product_link", "product_id", "time") VALUES (%s, %s, %s, %s, %s, %s)', (str(uuid.uuid4()), str(user_id), text, str(urls[j]), str(ids[j]), formatted_time,))
                                 self.conn.commit()
-                                print('Successfully inserted data to Notification table')
-                            except:
-                                print('Error occured while inserting notification to Notification table')
+                                logging.info('Successfully inserted data to Notification table')
+                            except Exception as e:
+                                logging.error(f'Error occured while inserting notification to Notification table : {e}', exc_info=True)
                                 # handle error
 
                     try:
                         cursor.execute(
                             'INSERT INTO "PriceAlter" ("id", "price", "date", "productsId") VALUES (%s, %s, %s, %s)', (str(uuid.uuid4()), new_prices[j - i], formatted_time, ids[j],))
                         self.conn.commit()
-                        print('successfully updated PriceAlter')
+                        logging.info('successfully updated PriceAlter')
                     except Exception as e:
-                        print(
-                            f'Error occured while inserting data to PriceAlter. {e}')
+                        logging.error(
+                            f'Error occured while inserting data to PriceAlter. {e}', exc_info=True)
                         # handle the error
                         pass
 
@@ -136,10 +137,10 @@ class Tracker:
                             'UPDATE "Products" SET current_price = %s WHERE id = %s',
                             (str(new_prices[j - i]), str(ids[j]),))
                         self.conn.commit()
-                        print('successfully updated Products table')
+                        logging.info('successfully updated Products table')
                     except Exception as e:
-                        print(
-                            f'Error occured while updating Products. {e}')
+                        logging.error(
+                            f'Error occured while updating Products. {e}', exc_info=True)
                         # handle the error
                         pass
             i += batch_size
@@ -148,5 +149,5 @@ class Tracker:
         cursor.close()
 
         end = time.time()
-        print(f'Finished tracking at {datetime.now()} ...')
-        print(f'Total time taken {end - start} seconds...')
+        logging.info(f'Finished tracking at {datetime.now()} ...')
+        logging.info(f'Total time taken {end - start} seconds...')
