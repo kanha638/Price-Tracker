@@ -58,11 +58,10 @@ class Flipkart:
         else:
             mrp = price
 
-        availability = soup.find(class_='_1dVbu9')
-        if availability is None:
-            availability = 'In Stock'
-        else:
-            availability = 'Out of Stock'
+        availability = "Out of Stock"
+        buy_now_btn = soup.find('button', {'class' : '_2KpZ6l _2U9uOA ihZ75k _3AWRsL'})
+        if buy_now_btn and buy_now_btn.find('span').text.strip() == "Buy Now":
+            availability = "In Stock"
 
         categories = soup.find_all('a', {'class': '_2whKao'})
         if categories:
@@ -213,8 +212,6 @@ class Amazon:
             availability_span = avalability_block.find('span', {'class': 'a-color-success'})
             if availability_span and availability_span.text.strip() == "In Stock":
                 availability = 'In Stock'
-            # if avalability_block.find('span', {'class': 'a-color-success'}):
-            #     availability = "In Stock"
             else:
                 availability = 'Out of Stock'
         else:
