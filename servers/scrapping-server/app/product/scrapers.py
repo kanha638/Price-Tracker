@@ -210,8 +210,11 @@ class Amazon:
         avalability_block = page.find('div', {'id': 'availability'})
         availability = None
         if avalability_block is not None:
-            if avalability_block.find('span', {'class': 'a-color-success'}):
+            availability_span = avalability_block.find('span', {'class': 'a-color-success'})
+            if availability_span and availability_span.text.strip() == "In Stock":
                 availability = 'In Stock'
+            # if avalability_block.find('span', {'class': 'a-color-success'}):
+            #     availability = "In Stock"
             else:
                 availability = 'Out of Stock'
         else:

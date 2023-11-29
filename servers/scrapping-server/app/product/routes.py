@@ -66,8 +66,10 @@ def add_product():
             return jsonify(error_message), error_message['status']
 
         try:
+            logging.info(f"Fetch product details for url : {product_url}")
             product_details, error_message = asyncio.run(
                 scraper.scrape_product(url=product_url))
+            logging.info(f'Result : {product_details}')
         except Exception as e:
             logging.error(f'Error:: {e}', exc_info=True)
             error_message = {
