@@ -5,11 +5,17 @@ import psycopg2 as pg
 from app.product.scrapers import Scraper
 from datetime import datetime
 import uuid
-from app.creds import DATABASE_URL
 import time
 import requests
 
-nf_server_url = 'http://localhost:4200/nf/product/sendpricedropmail'
+from dotenv import load_dotenv
+import os
+ROOT_DIR = os.path.abspath(os.path.join(os.path.dirname(__file__), '..', '..'))
+dotenv_path = os.path.join(ROOT_DIR, '.env')
+load_dotenv(dotenv_path=dotenv_path)
+DATABASE_URL = os.getenv('DATABASE_URL')
+
+NOTIFICATION_SERVER_URL = 'http://localhost:4200/nf/product/sendpricedropmail'
 
 class Tracker:
     def __init__(self) -> None:
@@ -101,8 +107,9 @@ class Tracker:
                             }
 
                             print(f'Sent request to nf server for price drop mail')
-                            response = requests.post(nf_server_url, json=payload)
-
+                            response = requests.post(NOTIFICATION_SERVER_URL, json=payload)
+                            # TODO : implement retry mechanism if mail is not delivered
+                            
                             # insert an entry of notification in "Notification" table
                             text = f'Price changed from {currency} {old_prices[j]} to {currency} {new_prices[j - i]}! Now you can save extra {currency} {old_prices[j] - new_prices[j - i]}.'
                             try:

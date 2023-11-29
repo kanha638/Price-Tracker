@@ -1,12 +1,15 @@
-from app.product.trackers import Tracker
-from app import create_app
-from apscheduler.schedulers.background import BackgroundScheduler
 import asyncio
+from apscheduler.schedulers.background import BackgroundScheduler
+from app import create_app
 
-
+# create instances
 app = create_app()
+
+from app.product.trackers import Tracker
 tracker = Tracker() 
 
+from app.product.scrapers import Scraper
+scraper = Scraper()
 
 def call_tracker():
     asyncio.run(tracker.track_price())

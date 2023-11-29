@@ -44,6 +44,8 @@ def add_product():
         If the request method is not POST, the function returns the
         string 'Invalid request.'
     """
+    
+    from run import scraper
 
     if request.method == 'POST':
         error_message = {
@@ -63,7 +65,6 @@ def add_product():
             return jsonify(error_message), error_message['status']
 
         try:
-            scraper = Scraper()
             product_details, error_message = asyncio.run(
                 scraper.scrape_product(url=product_url))
         except Exception as e:
