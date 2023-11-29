@@ -59,21 +59,6 @@ async def get_soup(url):
         "status": 200
     }
 
-    if website == "flipkart":
-        headers = {
-            'user-agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/102.0.0.0 Safari/537.36',
-        }
-        try:
-            page = requests.get(url, headers=headers)
-            soup = BeautifulSoup(page.content, 'html.parser')
-        except Exception as e:
-            logging.error(f'Error while creating soup. {e}', exc_info=True)
-            error_message['message'] = "Internal server error!"
-            error_message['status'] = 500
-            return None, error_message
-
-        return soup, error_message
-
     async with async_playwright() as p:
         try:
             browser = await p.chromium.launch()

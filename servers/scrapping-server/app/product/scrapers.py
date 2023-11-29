@@ -34,10 +34,14 @@ class Flipkart:
             'MRP', 'Currency', 'Availability', 'Rating', 'Rating_Count', 'Category', and 'Image_Link'.
         """
 
+        logging.info(f'Scrape : {url}')
         soup, error_message = await get_soup(url=url)
         if soup is None:
+            logging.debug("soup is None")
+            logging.debug(error_message)
             return None, error_message
 
+        logging.info('Fetching product details from the product page soup.')
         title = soup.find('span', {'class': 'B_NuCI'})
         if title:
             title = title.text.replace('\xa0\xa0', '').strip()
@@ -114,6 +118,8 @@ class Flipkart:
             'Image_Link': img_link,
             'Website': 'flipkart'
         }
+
+        logging.info(product)
 
         return product, error_message
 

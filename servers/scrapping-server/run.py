@@ -32,7 +32,7 @@ scheduler.start()
 if __name__ == "__main__":
     try:
         logging.info("Started the server...")
-        app.run(debug=False)
+        app.run(debug=True)
     except (KeyboardInterrupt, SystemExit):
         tracker.free_resources()
         scheduler.shutdown()
