@@ -107,7 +107,11 @@ class Tracker:
                                 'productPageLink' : urls[j]
                             }
 
+<<<<<<< HEAD
                             logging.info(f'Sent request to nf server for price drop mail')
+=======
+                            print(f'Sent request to nf server for price drop mail')
+>>>>>>> b3bbe0f (create instance of scraper when app starts)
                             response = requests.post(NOTIFICATION_SERVER_URL, json=payload)
                             # TODO : implement retry mechanism if mail is not delivered
                             
