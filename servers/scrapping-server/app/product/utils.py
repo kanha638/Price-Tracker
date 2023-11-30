@@ -70,15 +70,23 @@ async def get_soup(url):
             error_message['message'] = "Internal server error!"
             error_message['status'] = 500
             return None, error_message
+        
+        # block images
+        await page.route(
+            "**/*",
+            lambda route: route.abort() if route.request.resource_type == "image" else route.continue_()
+        )
 
         try:
             # Wait for page to goto url
-            await page.goto(url, timeout=2000000)
+            await page.goto(url, timeout=20000)
         except Exception as e:
             logging.error(f'Unable to load page. {e}', exc_info=True)
             error_message['message'] = "Internal server error!"
             error_message['status'] = 408
             return None, error_message
+
+        await page.screenshot(path='screenshot.png')
 
         # set pincode if website is amazon
         if website == 'amazon':
