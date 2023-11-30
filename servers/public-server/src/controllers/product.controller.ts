@@ -5,7 +5,10 @@ import { NextFunction, Request, response, Response } from "express";
 const axios = require("axios").default;
 import { AxiosResponse } from "axios";
 const prisma = new PrismaClient();
-const API = axios.create({ baseURL: process.env.SCRAPPING_SERVER_URL });
+const API = axios.create({ 
+  baseURL: process.env.SCRAPPING_SERVER_URL,
+  timeout: 30000,
+});
 
 interface ProductFetch {
   Title: string;
@@ -88,10 +91,17 @@ export const addProduct = async (req: Request, res: Response) => {
         }
       })
       .catch((error: any) => {
-        const status = error.response.status || 500;
-        return res
-          .status(status)
-          .json({ message: error.response.data.message });
+        if (error.code === 'ECONNABORTED') {
+          return res.status(408).json({
+            message: 'Scraping took too long. Please try again later.'
+          });
+        }
+        else {
+          const status = error.response.status || 500;
+          return res
+            .status(status)
+            .json({ message: error.response.data.message });
+          }
       });
   } catch (error) {
     console.log(error);
