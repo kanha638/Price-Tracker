@@ -34,7 +34,6 @@ class Flipkart:
             'MRP', 'Currency', 'Availability', 'Rating', 'Rating_Count', 'Category', and 'Image_Link'.
         """
 
-        logging.info(f'Scrape : {url}')
         soup, error_message = await get_soup(url=url)
         if soup is None:
             logging.debug("soup is None")

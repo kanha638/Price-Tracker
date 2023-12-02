@@ -1,7 +1,6 @@
 import logging
 from bs4 import BeautifulSoup
 from playwright.async_api import async_playwright
-import requests
 import re
 import json
 
@@ -23,6 +22,14 @@ async def get_clean_price(price):
 
     return price
 
+
+async def request_handler(route):
+    if route.request.resource_type == "image" or route.request.resource_type == "font":
+        await route.abort()
+        return
+
+    # Continue the intercepted request
+    await route.continue_()
 
 async def get_soup(url):
     """
@@ -71,25 +78,28 @@ async def get_soup(url):
             error_message['status'] = 500
             return None, error_message
         
-        # block images
-        await page.route(
-            "**/*",
-            lambda route: route.abort() if route.request.resource_type == "image" else route.continue_()
-        )
+        # block loading images and font
+        if website == 'amazon' or website == 'myntra':
+            # Enable request interception
+            await page.route("**/*", lambda route: request_handler(route))
 
         try:
             # Wait for page to goto url
-            await page.goto(url, timeout=20000)
+            await page.goto(url, timeout=30000)
         except Exception as e:
             logging.error(f'Unable to load page. {e}', exc_info=True)
             error_message['message'] = "Internal server error!"
             error_message['status'] = 408
             return None, error_message
 
+        # for debug purpose
         await page.screenshot(path='screenshot.png')
 
-        # set pincode if website is amazon
-        if website == 'amazon':
+        if (website == 'flipkart'):
+            await page.wait_for_selector('.B_NuCI')
+        elif website == 'amazon':
+            # set pincode if website is amazon
+            
             pincode = '303108'  # update when we get pincode from user
             try:
                 if pincode:
@@ -102,9 +112,14 @@ async def get_soup(url):
                         await page.click('#GLUXZipUpdate > span > input')
                         # Reload the page after clicking apply button for pincode
                         await page.reload()
+                        await page.wait_for_selector('#productTitle')
             except Exception as e:
                 logging.error(f'Unable to set pincode in amazon! {e}', exc_info=True)
-
+        elif website == 'myntra':
+            await page.wait_for_selector('.pdp-name')
+        elif website == 'ajio':
+            await page.wait_for_selector('.prod-name')
+        
         try:
             # Get the HTML content of the page
             html = await page.content()
@@ -122,7 +137,7 @@ async def get_soup(url):
             await browser.close()
         except Exception as e:
             logging.error(
-                f'Unable to close browser while scraping amazon url. {e}', exc_info=True)
+                f'Unable to close browser. {e}', exc_info=True)
 
         return soup, error_message
 
