@@ -23,7 +23,6 @@ def validate_product(product_details, url):
 
 
 # @pytest.mark.skip(reason="Not required for this run")
-@pytest.mark.fail
 def test_scrapers():
     with open('good_urls.txt', 'r') as file:
         urls = file.readlines()
