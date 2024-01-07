@@ -7,7 +7,7 @@ import { AxiosResponse } from "axios";
 const prisma = new PrismaClient();
 const API = axios.create({ 
   baseURL: process.env.SCRAPPING_SERVER_URL,
-  timeout: 30000,
+  timeout: 40000,
 });
 
 interface ProductFetch {

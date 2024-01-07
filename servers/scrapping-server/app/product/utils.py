@@ -93,14 +93,14 @@ async def get_soup(url):
             return None, error_message
 
         # for debug purpose
-        await page.screenshot(path='screenshot.png')
+        # await page.screenshot(path='screenshot.png')
+        # if (website == 'flipkart'):
+        #     await page.wait_for_selector('.B_NuCI')
 
-        if (website == 'flipkart'):
-            await page.wait_for_selector('.B_NuCI')
-        elif website == 'amazon':
+        if website == 'amazon':
             # set pincode if website is amazon
             
-            pincode = '303108'  # update when we get pincode from user
+            pincode = '110038'  # update when we get pincode from user
             try:
                 if pincode:
                     await page.click('#nav-global-location-popover-link')
@@ -115,10 +115,10 @@ async def get_soup(url):
                         await page.wait_for_selector('#productTitle')
             except Exception as e:
                 logging.error(f'Unable to set pincode in amazon! {e}', exc_info=True)
-        elif website == 'myntra':
-            await page.wait_for_selector('.pdp-name')
-        elif website == 'ajio':
-            await page.wait_for_selector('.prod-name')
+        # elif website == 'myntra':
+        #     await page.wait_for_selector('.pdp-name')
+        # elif website == 'ajio':
+        #     await page.wait_for_selector('.prod-name')
         
         try:
             # Get the HTML content of the page
