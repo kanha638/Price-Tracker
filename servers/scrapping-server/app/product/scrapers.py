@@ -34,7 +34,6 @@ class Flipkart:
             'MRP', 'Currency', 'Availability', 'Rating', 'Rating_Count', 'Category', and 'Image_Link'.
         """
 
-        logging.info(f'Scrape : {url}')
         soup, error_message = await get_soup(url=url)
         if soup is None:
             logging.debug("soup is None")
@@ -216,6 +215,10 @@ class Amazon:
                 availability = 'Out of Stock'
         else:
             availability = 'Out of Stock'
+
+        buy_now_btn = page.find('input', {'id': 'buy-now-button'})
+        if buy_now_btn and buy_now_btn.attrs['title'] == "Buy Now":
+            availability = "In Stock"
 
         categories_div = page.find(
             'div', {'id': 'wayfinding-breadcrumbs_feature_div'})

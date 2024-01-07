@@ -6,7 +6,6 @@ app_url = 'http://127.0.0.1:5000/product/register'
 
 
 @pytest.mark.skip(reason="Not required for this run")
-@pytest.mark.fail
 def test_add_product():
     # test when request body is not correct
     payload = {

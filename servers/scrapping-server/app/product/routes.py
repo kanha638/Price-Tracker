@@ -2,6 +2,7 @@ from flask import Blueprint, request, jsonify
 from app.product.scrapers import Scraper
 import asyncio
 import logging
+import time
 
 product = Blueprint('product', __name__)
 
@@ -45,7 +46,7 @@ def add_product():
         If the request method is not POST, the function returns the
         string 'Invalid request.'
     """
-    
+    start_time = time.time()
     from run import scraper
 
     if request.method == 'POST':
@@ -77,6 +78,8 @@ def add_product():
                 "status": 500
             }
 
+        end_time = time.time()
+        logging.info(f'Finished scraping product details in {end_time - start_time} seconds...')
         return jsonify(product_details) if product_details is not None else jsonify(error_message), error_message['status']
 
     return 'Invalid request.'
